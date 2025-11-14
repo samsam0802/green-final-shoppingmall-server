@@ -1,8 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.controller;
 
-import kr.kro.moonlightmoist.shopapi.config.S3Config;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
