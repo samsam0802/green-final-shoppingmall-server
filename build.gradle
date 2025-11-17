@@ -45,6 +45,9 @@ dependencies {
 
 	// 파일 처리 관련 (이미 포함될 수 있음)
 	implementation 'commons-io:commons-io:2.11.0'
+
+	// 테스트 코드 작성에 사용할 H2 Database
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {

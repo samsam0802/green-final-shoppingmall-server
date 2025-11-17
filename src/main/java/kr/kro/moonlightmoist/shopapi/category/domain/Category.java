@@ -39,4 +39,17 @@ public class Category {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void deleteCategory() {
+        this.deleted = true;
+    }
+
+    public void recoverCategory() {
+        this.deleted = false;
+    }
+
 }
