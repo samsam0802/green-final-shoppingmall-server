@@ -1,9 +1,13 @@
 package kr.kro.moonlightmoist.shopapi.util;
 
 import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
+import kr.kro.moonlightmoist.shopapi.cart.domain.Cart;
+import kr.kro.moonlightmoist.shopapi.cart.domain.CartProduct;
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.Faq;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.InquiryType;
+import kr.kro.moonlightmoist.shopapi.order.domain.Order;
+import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
 import kr.kro.moonlightmoist.shopapi.product.domain.ExposureStatus;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
@@ -96,6 +100,44 @@ public class EntityFactory {
                 .inquiryType(InquiryType.ETC)
                 .title("결제가 되지않습니다")
                 .answer("재결제를 해보시길 권장드립니다")
+                .build();
+    }
+    public static Cart createCart(User user) {
+        return Cart.builder()
+                .user(user)
+                .build();
+    }
+
+
+    public static DeliveryPolicy createDeliveryPolicy() {
+        return DeliveryPolicy.builder()
+                .name("이름")
+                .policyType("CONDITIONAL_FREE")
+                .basicDeliveryFee(3000)
+                .freeConditionAmount(30000)
+                .defaultPolicy(true)
+                .deleted(false)
+                .build();
+    }
+
+    public static Order createOrder(User user, DeliveryPolicy deliveryPolicy) {
+        return Order.builder()
+                .user(user)
+                .orderNumber("주문번호")
+                .paymentMethod("CARD")
+                .deliveryPolicy(deliveryPolicy)
+                .deliveryFee(deliveryPolicy.getBasicDeliveryFee())
+                .expectedDeliveryDate(LocalDate.of(2025,01,01))
+                .totalProductAmount(30000)
+                .discountAmount(3000)
+                .usedpoints(3000)
+                .finalAmount(30000)
+                .recipientName("이름")
+                .recipientPhone("01012345678")
+                .postalCode("123456")
+                .streetAddress("도로명주소")
+                .detailedAddress("상세주소")
+                .deliveryRequest("배송요청사항")
                 .build();
     }
 

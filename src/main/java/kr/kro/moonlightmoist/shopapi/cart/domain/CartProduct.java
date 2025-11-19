@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.cart.domain;
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
+import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,13 +24,13 @@ public class CartProduct extends BaseTimeEntity {
     @JoinColumn(name = "cart_id",nullable = false)
     private Cart cart;
     @ManyToOne
-    @JoinColumn(name = "product_id",nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_option_id",nullable = false)
+    private ProductOption productOption;
     @Column(nullable = false)
     private int quantity;
-    @Column(nullable = false)
-    private String optionName;
-    @Column(nullable = false)
-    private int ProductOptionPrice;
 
+    public void changeQty(int quantity) {
+        this.quantity = quantity;
+    }
 }
+
