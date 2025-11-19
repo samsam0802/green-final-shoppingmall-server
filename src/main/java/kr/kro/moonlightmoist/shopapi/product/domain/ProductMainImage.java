@@ -1,12 +1,12 @@
 package kr.kro.moonlightmoist.shopapi.product.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Table;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
-@Entity
+@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -14,14 +14,6 @@ import java.time.LocalDateTime;
 @ToString
 @Table(name = "product_main_images")
 public class ProductMainImage extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
 
     @Column(nullable = false)
     private String imageUrl;

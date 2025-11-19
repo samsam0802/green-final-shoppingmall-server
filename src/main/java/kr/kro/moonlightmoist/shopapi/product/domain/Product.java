@@ -7,6 +7,8 @@ import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -49,10 +51,38 @@ public class Product extends BaseTimeEntity {
     private String description;
 
     @Column(name = "is_cancelable", nullable = false)
-    private boolean cancelable;
+    @Builder.Default
+    private boolean cancelable = true;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean deleted;
+    @Builder.Default
+    private boolean deleted = false;
 
+    @ElementCollection
+    @CollectionTable(
+            joinColumns = @JoinColumn(name = "product_id")
+    )
+    @Builder.Default
+    private List<ProductMainImage> mainImages = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(
+            joinColumns = @JoinColumn(name = "product_id")
+    )
+    @Builder.Default
+    private List<ProductDetailImage> detailImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<ProductOption> productOptions = new ArrayList<>();
+
+
+    public void changeProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void deleteProduct() {
+        this.deleted = true;
+    }
 }
 

@@ -2,7 +2,6 @@ package kr.kro.moonlightmoist.shopapi.common.domain;
 
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +11,15 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @EnableJpaAuditing
-class BaseTimeEntityTest {
+class BaseTimeEntityUnitTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
 
     @Test
     @DisplayName("생성일자 자동 주입 테스트")

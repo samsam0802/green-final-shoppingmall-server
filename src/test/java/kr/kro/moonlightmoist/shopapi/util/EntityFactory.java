@@ -31,7 +31,7 @@ public class EntityFactory {
 
     public static Product createProduct(Category category, Brand brand) {
         return Product.builder()
-                .productName("임시상품이름")
+                .productName("임시상품")
                 .brand(brand)
                 .category(category)
                 .productCode("임시상품코드")

@@ -1,8 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.category.repository;
 
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
-import kr.kro.moonlightmoist.shopapi.product.domain.Product;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,16 +9,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @EnableJpaAuditing
-class CategoryRepositoryTest {
+class CategoryRepositoryUnitTest {
 
     @Autowired
     CategoryRepository categoryRepository;

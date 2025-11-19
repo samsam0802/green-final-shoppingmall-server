@@ -25,5 +25,12 @@ public class Brand extends BaseTimeEntity {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted;
 
-}
+    public void changeName(String name) {
+        this.name = name;
+    }
 
+    public void deleteBrand() {
+        this.deleted = true;
+    }
+
+}
