@@ -39,7 +39,7 @@ class BaseTimeEntityUnitTest {
 
     @Test
     @DisplayName("수정일자 자동 업데이트 테스트")
-    public void baseTimeEntity_updatedAt_Test() {
+    public void baseTimeEntity_updatedAt_Test() throws InterruptedException {
         Category category = Category.builder()
                 .name("메이크업")
                 .depth(0)
@@ -52,6 +52,9 @@ class BaseTimeEntityUnitTest {
         assertThat(savedCategory.getCreatedAt()).isNotNull();
         assertThat(savedCategory.getUpdatedAt()).isNotNull();
         LocalDateTime firstUpdateAt = savedCategory.getUpdatedAt();
+
+        // 명시적인 시간 차이 생성
+        Thread.sleep(10);
 
         categoryRepository.flush();
         Category foundCategory = categoryRepository.findByName("메이크업").get();

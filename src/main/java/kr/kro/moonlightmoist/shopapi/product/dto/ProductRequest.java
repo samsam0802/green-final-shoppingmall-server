@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class ProductRequest {
 
     private String productName;
+    private String productCode;
     private String searchKeywords;
     private ExposureStatus exposureStatus;
     private SaleStatus saleStatus;

@@ -1,5 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.product.repository;
 
+import jakarta.persistence.EntityManager;
 import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.brand.repository.BrandRepository;
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
@@ -36,6 +37,9 @@ class ProductOptionRepositoryUnitTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private EntityManager em;
 
     private Brand brand;
     private Category category;
@@ -89,10 +93,40 @@ class ProductOptionRepositoryUnitTest {
     @Test
     @DisplayName("상품옵션 등록 시 상품과의 연관관계 검증")
     public void saveProductOption_WithProductRelation_Success() {
-        ProductOption savedOption = productOptionRepository.save(createProductOption("옵션", product));
+        ProductOption newOption = createProductOption("옵션", null);
+        product.addProductOption(newOption);
+        Product savedProduct = productRepository.save(product);
 
-        assertThat(savedOption.getProduct().getId()).isEqualTo(product.getId());
-//        assertThat(product.getProductOptions()).hasSize(1);
+        ProductOption savedOption = savedProduct.getProductOptions().get(0);
+
+        assertThat(savedProduct.getProductOptions()).hasSize(1);
+        assertThat(savedOption.getProduct()).isEqualTo(savedProduct);
+        assertThat(savedOption.getOptionName()).isEqualTo("옵션");
+    }
+
+    @Test
+    @DisplayName("상품 옵션 이름 수정 테스트")
+    public void updateProductOption_Success() {
+        ProductOption option = productOptionRepository.save(createProductOption("옵션", product));
+
+        option.changeOptionName("옵션22");
+        productOptionRepository.flush();
+        em.clear();
+
+        Optional<ProductOption> foundOption = productOptionRepository.findById(option.getId());
+
+        assertThat(foundOption).isPresent();
+        assertThat(foundOption.get().getOptionName()).isEqualTo("옵션22");
+    }
+
+    @Test
+    @DisplayName("상품 옵션 소프트 삭제 테스트")
+    public void deleteProductOption_Success() {
+        ProductOption option = productOptionRepository.save(createProductOption("옵션", product));
+
+        option.deleteProductOption();
+
+        assertThat(option.isDeleted()).isTrue();
     }
 
     private ProductOption createProductOption(String name, Product product) {

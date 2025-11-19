@@ -5,6 +5,7 @@ import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -52,8 +53,35 @@ public class ProductOption extends BaseTimeEntity {
     @Builder.Default
     private boolean deleted = false;
 
+    public void changeOptionName(String name) {
+        this.optionName = name;
+    }
+
     public void deleteProductOption() {
         this.deleted = true;
     }
-}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductOption that = (ProductOption) o;
+
+        if (this.getId() == null || that.getId() == null) {
+            return false; // id가 없다면(새로운 엔티티) 논리적으로 다르다고 판단
+        }
+
+        return this.getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.getId() == null) {
+            return Objects.hash(0);
+        }
+        // id가 있다면 id를 기반으로 해시 코드 생성
+        return Objects.hash(this.getId());
+    }
+
+}

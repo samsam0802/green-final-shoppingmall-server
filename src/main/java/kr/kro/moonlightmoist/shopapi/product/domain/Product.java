@@ -87,13 +87,15 @@ public class Product extends BaseTimeEntity {
     }
 
     public void addProductOption(ProductOption option) {
-        productOptions.add(option);
+        this.productOptions.add(option);
         option.setProduct(this);
     }
 
     public void removeProductOption(ProductOption option) {
-        productOptions.remove(option);
-        option.setProduct(null);
+        boolean removed = this.productOptions.remove(option);
+        if (removed) {
+            option.setProduct(null);
+        }
     }
 
 }
