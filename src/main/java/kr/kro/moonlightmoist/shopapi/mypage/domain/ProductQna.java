@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.mypage.domain;
 
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.product.domain.Product;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import lombok.*;
 
@@ -26,9 +27,9 @@ public class ProductQna extends BaseTimeEntity {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "product_id", nullable = false)
-//    private Product product 상품 fk 필요
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
     private String title;

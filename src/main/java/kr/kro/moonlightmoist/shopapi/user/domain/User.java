@@ -76,6 +76,20 @@ public class User extends BaseTimeEntity {
         this.smsAgreement = smsAgreement;
     }
 
+    public void updateUserGrade (UserGrade userGrade) {
+        this.userGrade = userGrade;
+    }
+
+    public void withdrawal() {
+        this.deleted = true;
+        this.deletedAt = LocalDate.now();
+    }
+
+    public void RollBackWithdrawal() {
+        this.deleted = false;
+        this.deletedAt = null;
+    }
+
 
 
 }

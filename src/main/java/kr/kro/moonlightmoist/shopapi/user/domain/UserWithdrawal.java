@@ -8,6 +8,7 @@ import lombok.*;
 @Table(name = "user_with_drawal")
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -24,5 +25,9 @@ public class UserWithdrawal extends BaseTimeEntity { // 회원탈퇴 테이블
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+    public void RollBackWithdrawalReason() {
+        this.userWithdrawalReason = null;
+    }
 
 }
