@@ -3,6 +3,8 @@ package kr.kro.moonlightmoist.shopapi.user.domain;
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import lombok.*;
+import org.hibernate.type.EntityType;
+
 import java.time.LocalDate;
 
 @Entity // DB와 1:1 매핑되는 클래스  JPA가 관리한다.
@@ -62,9 +64,17 @@ public class User extends BaseTimeEntity {
     private UserRole userRole;
 
     // 여러명의 유저는 회원등급을 가진다.
-    @ManyToOne
-    @JoinColumn(name = "usergrade_id", nullable = false)
+    @Enumerated(EntityType.STRING)
+    @Column(nullable = false)
     private UserGrade userGrade; // 회원 등급
+
+    public void updateAddressAndAgreement (String address, String addressDetail, String postalCode, boolean emailAgreement, boolean smsAgreement) {
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.postalCode = postalCode;
+        this.emailAgreement = emailAgreement;
+        this.smsAgreement = smsAgreement;
+    }
 
 
 

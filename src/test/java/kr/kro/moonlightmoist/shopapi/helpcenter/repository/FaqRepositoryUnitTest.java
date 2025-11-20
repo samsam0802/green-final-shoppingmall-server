@@ -39,10 +39,7 @@ class FaqRepositoryUnitTest {
     @DisplayName("자주묻는질문 생성테스트")
     public void createFaqData () {
 
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade savedUserGrade = userGradeRepository.save(userGrade);
-
-        User user = EntityFactory.createUser(savedUserGrade);
+        User user = EntityFactory.createUser();
         User savedUser = userRepository.save(user);
 
         Faq newFaq = Faq.builder()
@@ -64,10 +61,7 @@ class FaqRepositoryUnitTest {
     @DisplayName("자주묻는질문 삭제테스트")
     public void deleteFaqData () {
 
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade savedUserGrade = userGradeRepository.save(userGrade);
-
-        User user = EntityFactory.createUser(savedUserGrade);
+        User user = EntityFactory.createUser();
         User savedUser = userRepository.save(user);
 
             Faq newFaq = Faq.builder()

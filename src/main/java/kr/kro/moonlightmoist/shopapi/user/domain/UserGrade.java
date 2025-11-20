@@ -1,34 +1,23 @@
 package kr.kro.moonlightmoist.shopapi.user.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-@Entity // 엔티티 설정 JPA와 1:1매핑 JPA가 관리
-@Table(name = "user_grades") // 테이블생성
+
+@Getter
 @AllArgsConstructor // 전체필드 생성자 -> 빌더를 사용하려면 꼭 필요하다.
-@NoArgsConstructor // 기본 생성자.
-@Getter // 데이터 가져오기
-@Builder // 빌더패턴 생성
 @ToString // 객체의 모든 필드를 포함하는 문자열 자동 생성, 디버깅이나 로그 기록 시 엔티티 객체의 상태를 쉽게 확인하기 위해
-public class UserGrade {
+public enum UserGrade {
+    BRONZE(0, 0, 0, "기본 등급"),
+    SILVER(10000, 3, 50000, "5만원이상 무료배송"),
+    GOLD(50000, 5, 30000, "3만원이상 무료배송"),
+    DIAMOND(100000, 7, 10000, "1만원이상 무료배송"),
+    VIP(300000, 10, 0, "10%할인, 무조건 무료배송");
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // pk
-
-    @Column(nullable = false)
-    private String grade;   // 등급이름
-
-    @Column(nullable = false)
-    private int minTotalPoints; // 최소 누적 포인트
-
-    @Column(nullable = false)
-    private int disCountRate; // 할인율
-
-    @Column(nullable = false)
-    private int freeDeliveryMinAmount; // 무료 배송 기준
-
-    @Column(nullable = false)
-    private String description; // 등급 설명(혜택)
+    private final int minTotalPoint;
+    private final int discountRate;
+    private final int freeDeliveryMinAmount;
+    private final String description;
 
 }

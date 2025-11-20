@@ -51,18 +51,8 @@ public class EntityFactory {
                 .build();
     }
 
-    public static UserGrade createUserGrade () {
-        return UserGrade.builder()
-                .grade("BRONZE")
-                .minTotalPoints(0)
-                .freeDeliveryMinAmount(30000)
-                .description("브론즈는 혜택이 없습니다.")
-                .disCountRate(0)
-                .build();
-    }
 
-
-    public static User createUser (UserGrade userGrade) {
+    public static User createUser () {
         return User.builder()
                 .loginId("user")
                 .passwordHash("123123")
@@ -75,9 +65,10 @@ public class EntityFactory {
                 .birthDate(LocalDate.of(2025,11,11))
                 .emailAgreement(true)
                 .smsAgreement(false)
-                .userGrade(userGrade)
+                .userGrade(UserGrade.BRONZE)
                 .userRole(UserRole.USER)
                 .build();
+
     }
 
     public static ProductOption createProductOption (String name, Product product) {

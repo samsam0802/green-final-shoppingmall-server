@@ -32,16 +32,6 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
     @DisplayName("유저생성 테스트")
     public void createUser() {
 
-        UserGrade userGrade = UserGrade.builder()
-                .grade("BRONZE")
-                .minTotalPoints(0)
-                .freeDeliveryMinAmount(30000)
-                .description("브론즈는 혜택이 없습니다.")
-                .disCountRate(0)
-                .build();
-        UserGrade savedUserGrade = userGradeRepository.save(userGrade);
-
-
         User newUser = User.builder()
                 .loginId("user")
                 .passwordHash("123123")
@@ -54,7 +44,7 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
                 .birthDate(LocalDate.of(2025,11,11))
                 .emailAgreement(true)
                 .smsAgreement(false)
-                .userGrade(savedUserGrade)
+                .userGrade(UserGrade.BRONZE)
                 .userRole(UserRole.USER)
                 .build();
 
@@ -71,7 +61,7 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
         assertThat(savedUser.getBirthDate()).isEqualTo(LocalDate.of(2025,11,11));
         assertThat(savedUser.isEmailAgreement()).isTrue();
         assertThat(savedUser.isSmsAgreement()).isFalse();
-        assertThat(savedUser.getUserGrade().getGrade()).isEqualTo("BRONZE");
+        assertThat(savedUser.getUserGrade()).isEqualTo(UserGrade.BRONZE);
         assertThat(savedUser.getUserRole()).isEqualTo(UserRole.USER);
     }
 
@@ -80,11 +70,10 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
     @Test
     @DisplayName("로그인 Id로 유저 조회하기")
     public void findByLoginId() {
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade saveUserGrade = userGradeRepository.save(userGrade);
-
-        User user = EntityFactory.createUser(userGrade);
+        User user = EntityFactory.createUser();
         User savedUser = userRepository.save(user);
+
+
         Optional<User> testUser = userRepository.findByLoginId("user");
 
         assertThat(testUser).isPresent();
@@ -94,18 +83,16 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
     @Test
     @DisplayName("중복 로그인Id 저장테스트")
     public void duplicateLoginId() {
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade saveUserGrade = userGradeRepository.save(userGrade);
 
-//        User user = EntityFactory.createUser(userGrade);
-//        User savedUser = userRepository.save(user);
+        User user = EntityFactory.createUser();
+        User savedUser = userRepository.save(user);
 
         User testUser = User.builder()
                 .name("")
                 .email("")
                 .loginId("user")
                 .userRole(UserRole.USER)
-                .userGrade(userGrade)
+                .userGrade(UserGrade.BRONZE)
                 .birthDate(LocalDate.of(2025,11,11))
                 .smsAgreement(true)
                 .emailAgreement(true)
@@ -125,10 +112,7 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
     @Test
     @DisplayName("유저 삭제테스트")
     public void deleteUser() {
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade saveUserGrade = userGradeRepository.save(userGrade);
-
-        User user = EntityFactory.createUser(userGrade);
+        User user = EntityFactory.createUser();
         User savedUser = userRepository.save(user);
 
         userRepository.deleteById(user.getId());
@@ -138,28 +122,29 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
 
     }
 
-//    @Test
-//    @DisplayName("유저 수정테스트")
-//    public void updateUser() {
-//
-//        UserGrade userGrade = EntityFactory.createUserGrade();
-//        userGradeRepository.save(userGrade);
-//
-//        User user = EntityFactory.createUser(userGrade);
-//        userRepository.save(user);
-//
-//        비즈니스 로직을 만들어서 수정하고싶은 필드만 변경할 수 있는 메서드를 만들어야하는데
-//        프론트에서 Form을 받으면 해당 Form에 있는 데이터로 변경 해야하는데 이건 Builder나, Setter로 하면 되는것 아닌지
-//
-//
-//        왜 아래 같은 메서드..?생성자 ? 를 만들어야하는지.
-//
-//        public void updateBasicInfo (String name, String phoneNumber, String email){
-//            this.name = name;           // 기존 필드 수정
-//            this.phoneNumber = phoneNumber;
-//            this.email = email;
-//        }
-//
-//    }
+    @Test
+    @DisplayName("유저 수정테스트")
+    public void updateUser() { // 유저를 수정
+
+        User user = EntityFactory.createUser(); // 유저 권한을 가진 유저 생성
+        User savedUser = userRepository.save(user);// 유저 권한을 가진 유저 DB에 저장 후 DB에서 꺼냄
+
+//        User savedUser = userRepository.save(EntityFactory.createUser(userGrade)); 한줄로 처리가능한 코드
+
+        User updateUser = User.builder()
+                .address("주소변경")
+                .addressDetail("상세주소변경")
+                .postalCode("12345")
+                .emailAgreement(false)
+                .smsAgreement(false)
+                .build();
+
+        // DB에서 저장된 유저를 가져와서, 주소와 동의 메서드를 호출 변경 할 인자를 전달
+        savedUser.updateAddressAndAgreement(updateUser.getAddress(), updateUser.getAddressDetail(), updateUser.getPostalCode(), updateUser.isEmailAgreement(), updateUser.isSmsAgreement());
+
+        userRepository.save(savedUser);
+
+
+    }
 
 }

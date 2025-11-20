@@ -34,10 +34,7 @@ class UserWithdrawalRepositoryUnitTest {
     @Test
     @DisplayName("회원탈퇴 생성테스트")
     public void createUserWithdrawal() {
-        UserGrade userGrade = EntityFactory.createUserGrade(); // 유저 권한
-        UserGrade savedUserGrade = userGradeRepository.save(userGrade); // 권한 DB 저장
-
-        User user = EntityFactory.createUser(savedUserGrade); // 유저 생성
+        User user = EntityFactory.createUser(); // 유저 생성
         User savedUser = userRepository.save(user); // 유저 DB 저장
 
 
@@ -56,10 +53,7 @@ class UserWithdrawalRepositoryUnitTest {
     @Test
     @DisplayName("회원탈퇴 삭제테스트")
     public void deleteUserWithdrawal() {
-        UserGrade userGrade = EntityFactory.createUserGrade();
-        UserGrade savedUserGrade = userGradeRepository.save(userGrade);
-
-        User user = EntityFactory.createUser(savedUserGrade);
+        User user = EntityFactory.createUser();
         User savedUser = userRepository.save(user);
 
 
