@@ -76,9 +76,22 @@ public class EntityFactory {
                 .build();
     }
 
+    public static ProductOption createProductOption (String name, Product product) {
+        return ProductOption.builder()
+                .product(product)
                 .optionName(name)
+                .purchasePrice(1000)
+                .sellingPrice(5000)
+                .currentStock(30)
+                .initialStock(50)
+                .safetyStock(10)
+                .imageUrl("url")
+                .displayOrder(1)
+                .build();
+    }
+
     public static Faq createFaq (User user) {
-        return Faq.builder()
+        return  Faq.builder()
                 .user(user)
                 .inquiryType(InquiryType.ETC)
                 .title("결제가 되지않습니다")
