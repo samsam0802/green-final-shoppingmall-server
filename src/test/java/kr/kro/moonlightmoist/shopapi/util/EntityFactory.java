@@ -94,7 +94,7 @@ public class EntityFactory {
     }
     public static Cart createCart(User user) {
         return Cart.builder()
-                .user(user)
+                .owner(user)
                 .build();
     }
 

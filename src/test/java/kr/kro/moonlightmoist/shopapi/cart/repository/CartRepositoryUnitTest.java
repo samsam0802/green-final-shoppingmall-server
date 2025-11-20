@@ -31,12 +31,12 @@ class CartRepositoryUnitTest {
         User savedUser = userRepository.save(user);
 
         Cart cart = Cart.builder()
-                .user(savedUser)
+                .owner(savedUser)
                 .build();
         Cart savedCart = cartRepository.save(cart);
 
         assertThat(savedCart.getId()).isNotNull();
-        assertThat(savedCart.getUser()).isNotNull();
+        assertThat(savedCart.getOwner()).isNotNull();
         assertThat(savedCart.getCreatedAt()).isNotNull();
         assertThat(savedCart.getUpdatedAt()).isNotNull();
     }
