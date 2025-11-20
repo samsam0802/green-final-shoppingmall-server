@@ -21,8 +21,8 @@ public class Cart extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    @JoinColumn(name = "user_id",nullable = false)
-    private User user;
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User owner;
 
     // OneToMany는 조회용으로 쓴다
     // ManyToOne이 주인(?)이다.
