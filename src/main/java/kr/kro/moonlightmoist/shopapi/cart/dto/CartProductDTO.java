@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 // 상품 등록, 수량 변경, 삭제할 때 필요
+// 요청 DTO
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

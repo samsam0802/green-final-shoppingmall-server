@@ -24,6 +24,7 @@ public class CartController {
         if(dto.getQuantity() < 1) {
             cartService.remove(dto.getId());
         }
+        return null;
     }
 
 }

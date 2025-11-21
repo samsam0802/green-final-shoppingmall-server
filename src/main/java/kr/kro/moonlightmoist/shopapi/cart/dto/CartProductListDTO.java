@@ -2,6 +2,8 @@ package kr.kro.moonlightmoist.shopapi.cart.dto;
 
 import lombok.*;
 
+//응답 DTO
+// 조회할 때 필요
 @Getter
 @Builder
 @NoArgsConstructor
