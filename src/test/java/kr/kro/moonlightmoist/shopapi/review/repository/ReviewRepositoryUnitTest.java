@@ -92,9 +92,27 @@ public class ReviewRepositoryUnitTest {
         assertThat(foundReview).isPresent();
         assertThat(foundReview.get().getId()).isNotNull();
         assertThat(foundReview.get().getContent()).isEqualTo("리뷰내용1");
+        assertThat(foundReview.get().getRating()).isEqualTo(5);
         assertThat(foundReview.get().getReviewImages().size()).isEqualTo(1);
         assertThat(foundReview.get().getReviewImages().get(0).getImageUrl()).isEqualTo("https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/550/10/0000/0020/A00000020064655ko.jpg?l=ko");
         assertThat(foundReview.get().getReviewImages().get(0).getImageOrder()).isEqualTo(0);
+        assertThat(foundReview.get().isVisible()).isTrue();
+        assertThat(foundReview.get().isDeleted()).isFalse();
+        assertThat(foundReview.get().getProduct()).isNotNull();
+        assertThat(foundReview.get().getProduct().getId()).isEqualTo(product.getId());
+
+        assertThat(reviewComment.getId()).isNotNull();
+        assertThat(reviewComment.getContent()).isEqualTo("리뷰댓글");
+        assertThat(reviewComment.isVisible()).isTrue();
+        assertThat(reviewComment.isDeleted()).isFalse();
+        assertThat(reviewComment.getReview()).isNotNull();
+        assertThat(reviewComment.getId()).isEqualTo(foundReview.get().getId());
+
+        assertThat(reviewLike.getId()).isNotNull();
+        assertThat(reviewLike.isDeleted()).isFalse();
+        assertThat(reviewLike.getReview()).isNotNull();
+        assertThat(reviewLike.getId()).isEqualTo(foundReview.get().getId());
+
 
     }
 
