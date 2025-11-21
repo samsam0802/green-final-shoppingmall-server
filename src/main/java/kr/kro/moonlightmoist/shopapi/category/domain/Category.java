@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"parent", "subCategories"})
 @Getter
 @Builder
 @Table(name = "categories")

@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 @Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*",
-        methods = {org.springframework.web.bind.annotation.RequestMethod.GET,
-                org.springframework.web.bind.annotation.RequestMethod.POST,
-                org.springframework.web.bind.annotation.RequestMethod.PUT,
-                org.springframework.web.bind.annotation.RequestMethod.DELETE,
-                org.springframework.web.bind.annotation.RequestMethod.OPTIONS})
+        methods = {RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
 
-    @PostMapping("/register")
-    public ResponseEntity<Map<String,Long>> productRegister(@RequestBody ProductRequest request) {
+    @PostMapping("")
+    public ResponseEntity<String> productRegister(@RequestBody ProductRequest request) {
 
         System.out.println("request = " + request);
 
@@ -33,7 +33,6 @@ public class ProductController {
 
         System.out.println("id = " + id);
 
-        return ResponseEntity.ok(Map.of("result", id));
+        return ResponseEntity.ok("ok");
     }
-
 }

@@ -1,9 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.product.service;
 
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductRequest;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface ProductService {
     // 상품 등록
     Long register(ProductRequest dto);
