@@ -4,9 +4,7 @@ import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.brand.repository.BrandRepository;
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
-import kr.kro.moonlightmoist.shopapi.product.domain.ExposureStatus;
-import kr.kro.moonlightmoist.shopapi.product.domain.Product;
-import kr.kro.moonlightmoist.shopapi.product.domain.SaleStatus;
+import kr.kro.moonlightmoist.shopapi.product.domain.*;
 import kr.kro.moonlightmoist.shopapi.util.EntityFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +30,13 @@ class ProductRepositoryUnitTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private Brand brand;
+    private Category category;
+
     @BeforeEach
     public void init() {
-        Brand brand = EntityFactory.createBrand("이니스프리");
-        brandRepository.save(brand);
-
-        Category category = EntityFactory.createCategory("헤어케어", 0, 0);
-        categoryRepository.save(category);
+        brand = brandRepository.save(EntityFactory.createBrand("이니스프리"));
+        category = categoryRepository.save(EntityFactory.createCategory("헤어케어", 0, 0));
 
         Product product = EntityFactory.createProduct(category, brand);
         productRepository.save(product);
@@ -47,8 +45,19 @@ class ProductRepositoryUnitTest {
     @Test
     @DisplayName("상품 등록 테스트")
     public void saveProduct_Success() {
-        Brand brand = brandRepository.findAll().get(0);
-        Category category = categoryRepository.findAll().get(0);
+
+        ProductMainImage mainImage1 = ProductMainImage.builder()
+                .imageUrl("mainimageUrl1")
+                .imageType(ImageType.THUMBNAIL)
+                .build();
+        ProductMainImage mainImage2 = ProductMainImage.builder()
+                .imageUrl("mainimageUrl2")
+                .imageType(ImageType.GALLERY)
+                .build();
+
+        ProductDetailImage detailImage = ProductDetailImage.builder()
+                .imageUrl("deailimageUrl")
+                .build();
 
         Product product = Product.builder()
                 .brand(brand)
@@ -62,6 +71,10 @@ class ProductRepositoryUnitTest {
                 .cancelable(true)
                 .deleted(false)
                 .build();
+
+        product.addMainImage(mainImage1);
+        product.addMainImage(mainImage2);
+        product.addDetailImage(detailImage);
 
         Product savedProduct = productRepository.save(product);
 
@@ -78,6 +91,9 @@ class ProductRepositoryUnitTest {
         assertThat(savedProduct.isDeleted()).isFalse();
         assertThat(savedProduct.getCreatedAt()).isNotNull();
         assertThat(savedProduct.getUpdatedAt()).isNotNull();
+        assertThat(savedProduct.getMainImages().size()).isEqualTo(2);
+        assertThat(savedProduct.getDetailImages().size()).isEqualTo(1);
+        assertThat(savedProduct.getDetailImages().get(0).getImageUrl()).isEqualTo("deailimageUrl");
     }
 
     // 동일한 상품이름 or 상품코드로 중복 저장 테스트

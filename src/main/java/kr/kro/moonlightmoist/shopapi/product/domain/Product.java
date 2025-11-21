@@ -60,6 +60,7 @@ public class Product extends BaseTimeEntity {
 
     @ElementCollection
     @CollectionTable(
+            name = "product_main_images",
             joinColumns = @JoinColumn(name = "product_id")
     )
     @Builder.Default
@@ -67,6 +68,7 @@ public class Product extends BaseTimeEntity {
 
     @ElementCollection
     @CollectionTable(
+            name = "product_detail_images",
             joinColumns = @JoinColumn(name = "product_id")
     )
     @Builder.Default
@@ -76,6 +78,15 @@ public class Product extends BaseTimeEntity {
     @Builder.Default
     private List<ProductOption> productOptions = new ArrayList<>();
 
+    public void addMainImage(ProductMainImage image) {
+        image.setDisplayOrder(this.mainImages.size());
+        mainImages.add(image);
+    }
+
+    public void addDetailImage(ProductDetailImage image) {
+        image.setDisplayOrder(detailImages.size());
+        detailImages.add(image);
+    }
 
     public void changeProductName(String productName) {
         this.productName = productName;

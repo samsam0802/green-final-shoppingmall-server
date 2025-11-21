@@ -12,14 +12,17 @@ import lombok.*;
 @Builder
 @ToString
 @Getter
-@Table(name = "product_detail_images")
-public class ProductDetailImage extends BaseTimeEntity {
+public class ProductDetailImage {
 
     @Column(nullable = false)
     private String imageUrl;
 
     @Column(nullable = false)
     private int displayOrder;
+
+    public void setDisplayOrder(int ord) {
+        this.displayOrder = ord;
+    }
 
 }
 

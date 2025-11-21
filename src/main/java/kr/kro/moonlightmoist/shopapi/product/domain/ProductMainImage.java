@@ -12,8 +12,7 @@ import lombok.*;
 @Builder
 @Getter
 @ToString
-@Table(name = "product_main_images")
-public class ProductMainImage extends BaseTimeEntity {
+public class ProductMainImage {
 
     @Column(nullable = false)
     private String imageUrl;
@@ -24,8 +23,9 @@ public class ProductMainImage extends BaseTimeEntity {
     @Column(nullable = false)
     private ImageType imageType;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean deleted;
+    public void setDisplayOrder(int ord) {
+        this.displayOrder = ord;
+    }
 
 }
 
