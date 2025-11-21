@@ -85,3 +85,47 @@ INSERT INTO products (brand_id, category_id, product_name, product_code, search_
 (5, 3, '라네즈 크림 스킨', 'LANEIGE_001', '라네즈 스킨 토너', 'EXPOSURE', 'ON_SALE', '수분 가득한 스킨으로 피부를 촉촉하게', true, false, NOW(), NOW()),
 (6, 4, '이니스프리 그린티 씨드 세럼', 'INNIS_001', '이니스프리 세럼 그린티', 'EXPOSURE', 'ON_SALE', '녹차씨드 함유로 피부 진정에 도움을 주는 세럼', true, false, NOW(), NOW()),
 (7, 5, '더페이스샵 립앤아이 리무버', 'TFS_001', '더페이스샵 아이리무버 립메이크업', 'EXPOSURE', 'ON_SALE', '순하게 메이크업을 지워주는 리무버', true, false, NOW(), NOW());
+
+
+-- 민석 users 테이블에 데이터 삽입 (임시)
+INSERT INTO users
+(id, login_id, password_hash, name, phone_number, email, birth_date,
+ postal_code, address, address_detail, email_agreement, sms_agreement,
+ is_deleted, deleted_at, user_role, user_grade, created_at, updated_at)
+VALUES
+(1,'user1','pw1','사용자1','01011111111','user1@test.com','1996-01-01','11111','서울시 강남구','101호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
+(2,'user2','pw2','사용자2','01022222222','user2@test.com','1996-02-02','22222','서울시 강북구','102호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
+(3,'user3','pw3','사용자3','01033333333','user3@test.com','1996-03-03','33333','서울시 송파구','103호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
+(4,'user4','pw4','사용자4','01044444444','user4@test.com','1996-04-04','44444','서울시 영등포구','104호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
+(5,'user5','pw5','사용자5','01055555555','user5@test.com','1996-05-05','55555','서울시 마포구','105호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW());
+
+-- 민석 carts 테이블 데이터(임시)
+INSERT INTO carts (id, user_id, created_at, updated_at)
+VALUES
+(1, 1, NOW(), NOW()),
+(2, 2, NOW(), NOW()),
+(3, 3, NOW(), NOW()),
+(4, 4, NOW(), NOW()),
+(5, 5, NOW(), NOW());
+
+-- 민석 product_options 테이블 데이터(임시)
+INSERT INTO product_options
+(id, product_id, option_name, purchase_price, selling_price, current_stock,
+ initial_stock, safety_stock, image_url, display_order, is_deleted,
+ created_at, updated_at)
+VALUES
+(1, 1, '150ml', 3000, 5000, 100, 100, 10, 'https://dummyimage.com/300x300/000/fff.png&text=Opt1', 0, false, NOW(), NOW()),
+(2, 2, '120ml', 3500, 6500, 80, 80, 10, 'https://dummyimage.com/300x300/000/fff.png&text=Opt2', 0, false, NOW(), NOW()),
+(3, 3, '200ml', 4000, 7000, 120, 120, 10, 'https://dummyimage.com/300x300/000/fff.png&text=Opt3', 0, false, NOW(), NOW()),
+(4, 4, '100ml', 2500, 4500, 90, 90, 10, 'https://dummyimage.com/300x300/000/fff.png&text=Opt4', 0, false, NOW(), NOW()),
+(5, 5, '180ml', 5000, 9000, 70, 70, 10, 'https://dummyimage.com/300x300/000/fff.png&text=Opt5', 0, false, NOW(), NOW());
+
+-- 민석 product_main_images 테이블 데이터(임시)
+INSERT INTO product_main_images
+(product_id, image_url, display_order, image_type)
+VALUES
+(1, 'https://dummyimage.com/300x300/000/fff.png&text=PRD1', 0, 0),
+(2, 'https://dummyimage.com/300x300/000/fff.png&text=PRD2', 0, 0),
+(3, 'https://dummyimage.com/300x300/000/fff.png&text=PRD3', 0, 0),
+(4, 'https://dummyimage.com/300x300/000/fff.png&text=PRD4', 0, 0),
+(5, 'https://dummyimage.com/300x300/000/fff.png&text=PRD5', 0, 0);
