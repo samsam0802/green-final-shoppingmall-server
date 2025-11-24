@@ -63,6 +63,18 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public List<ReviewDTO> getAll() { //임시 리뷰 목록
+        return reviewRepository.findAll().stream()
+                .map(review -> ReviewDTO.builder()
+                        .id(review.getId())
+                        .content(review.getContent())
+                        .rating(review.getRating())
+                        .build())
+                .toList();
+
+    }
+
+    @Override
     public Long register(ReviewDTO dto) {
 
         Product product = getProduct();
@@ -86,7 +98,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = foundReview.orElseThrow();
 
         review.changeContent(reviewDTO.getContent());
-        review.changeRating(review.getRating());
+        review.changeRating(reviewDTO.getRating());
 
         return ReviewDTO.builder()
                 .content(review.getContent())

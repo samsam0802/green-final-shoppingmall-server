@@ -16,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/review")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -26,7 +27,14 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PostMapping("")
+    @GetMapping("/all") //임시 리뷰 목록
+    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
+        List<ReviewDTO> reviews = reviewService.getAll();
+        log.info("getAll 리뷰 결과 => {}", reviews);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @PostMapping("/reviewAdd")
     public ResponseEntity<ReviewDTO> register(@RequestBody ReviewDTO dto){
         Long id = reviewService.register(dto);
 
