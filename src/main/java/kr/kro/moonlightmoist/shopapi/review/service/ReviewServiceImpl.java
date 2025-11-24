@@ -1,16 +1,11 @@
 package kr.kro.moonlightmoist.shopapi.review.service;
 
 import jakarta.transaction.Transactional;
-import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.brand.repository.BrandRepository;
-import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
-import kr.kro.moonlightmoist.shopapi.product.domain.ExposureStatus;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
-import kr.kro.moonlightmoist.shopapi.product.domain.SaleStatus;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductRepository;
 import kr.kro.moonlightmoist.shopapi.review.domain.Review;
-import kr.kro.moonlightmoist.shopapi.review.domain.ReviewImage;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewDTO;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;

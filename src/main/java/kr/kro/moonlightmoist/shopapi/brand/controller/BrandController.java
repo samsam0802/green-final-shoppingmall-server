@@ -13,11 +13,11 @@ import java.util.List;
 @RequestMapping("/api/brands")
 @Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*",
-        methods = {org.springframework.web.bind.annotation.RequestMethod.GET,
-                org.springframework.web.bind.annotation.RequestMethod.POST,
-                org.springframework.web.bind.annotation.RequestMethod.PUT,
-                org.springframework.web.bind.annotation.RequestMethod.DELETE,
-                org.springframework.web.bind.annotation.RequestMethod.OPTIONS})
+        methods = {RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class BrandController {
 

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,31 +32,19 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(unique = true, nullable = false)
-    private String productName;
+    @Embedded
+    private BasicInfo basicInfo;
 
-    @Column(unique = true, nullable = false)
-    private String productCode;
-
-    private String searchKeywords;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ExposureStatus exposureStatus;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SaleStatus saleStatus;
-
-    private String description;
-
-    @Column(name = "is_cancelable", nullable = false)
-    @Builder.Default
-    private boolean cancelable = true;
+    @Embedded
+    private SaleInfo saleInfo;
 
     @Column(name = "is_deleted", nullable = false)
     @Builder.Default
     private boolean deleted = false;
+
+    @ManyToOne
+    @JoinColumn(name = "delivery_policy_id")
+    private DeliveryPolicy deliveryPolicy;
 
     @ElementCollection
     @CollectionTable(
@@ -88,8 +76,8 @@ public class Product extends BaseTimeEntity {
         detailImages.add(image);
     }
 
-    public void changeProductName(String productName) {
-        this.productName = productName;
+    public void changeProductBasicInfo(BasicInfo basicInfo) {
+        this.basicInfo = basicInfo;
     }
 
     public void deleteProduct() {

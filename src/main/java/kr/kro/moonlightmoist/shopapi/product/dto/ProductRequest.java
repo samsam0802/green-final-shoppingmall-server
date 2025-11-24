@@ -2,11 +2,13 @@ package kr.kro.moonlightmoist.shopapi.product.dto;
 
 import kr.kro.moonlightmoist.shopapi.brand.dto.BrandDTO;
 import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRegisterReq;
+import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.dto.DeliveryPolicyDTO;
 import kr.kro.moonlightmoist.shopapi.product.domain.ExposureStatus;
 import kr.kro.moonlightmoist.shopapi.product.domain.SaleStatus;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,13 +18,10 @@ import java.time.LocalDateTime;
 public class ProductRequest {
     private CategoryRegisterReq category;
     private BrandDTO brand;
-    private String productName;
-    private String productCode;
-    private String searchKeywords;
-    private ExposureStatus exposureStatus;
-    private SaleStatus saleStatus;
-    private String description;
-    private boolean cancelable;
+    private BasicInfoDTO basicInfo;
+    private SaleInfoDTO saleInfo;
+    private DeliveryPolicyDTO deliveryPolicy;
+    private List<ProductOptionDTO> options;
     private boolean deleted;
 
 }
