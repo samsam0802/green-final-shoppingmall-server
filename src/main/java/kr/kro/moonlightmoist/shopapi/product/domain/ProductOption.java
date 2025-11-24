@@ -46,7 +46,7 @@ public class ProductOption extends BaseTimeEntity {
     @Column(nullable = true)
     private String imageUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int displayOrder;
 
     @Column(name = "is_deleted", nullable = false)

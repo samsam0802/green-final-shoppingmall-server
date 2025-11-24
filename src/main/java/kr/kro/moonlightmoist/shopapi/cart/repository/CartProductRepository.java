@@ -21,7 +21,7 @@ public interface CartProductRepository extends JpaRepository<CartProduct,Long> {
 
     @Query("""
             select new kr.kro.moonlightmoist.shopapi.cart.dto.CartProductListDTO(
-            c.id, po.id, pp.brand.name, pp.productName, po.optionName, po.sellingPrice, c.quantity,
+            c.id, po.id, pp.brand.name, pp.basicInfo.productName, po.optionName, po.sellingPrice, c.quantity,
             (select pi.imageUrl from Product p join p.mainImages pi where p.id = pp.id
             and pi.imageType = kr.kro.moonlightmoist.shopapi.product.domain.ImageType.THUMBNAIL 
             and pi.displayOrder = 0)
