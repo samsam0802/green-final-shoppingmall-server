@@ -2,6 +2,7 @@ package kr.kro.moonlightmoist.shopapi.product.dto;
 
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -16,7 +17,6 @@ public class ProductOptionDTO {
     private int currentStock;
     private int initialStock;
     private int safetyStock;
-    private String imageUrl;
 
     public ProductOption toDomain() {
         return ProductOption.builder()
@@ -26,7 +26,6 @@ public class ProductOptionDTO {
                 .currentStock(this.currentStock)
                 .initialStock(this.initialStock)
                 .safetyStock(this.safetyStock)
-                .imageUrl(this.imageUrl)
                 .build();
     }
 

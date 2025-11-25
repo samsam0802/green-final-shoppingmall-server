@@ -7,12 +7,15 @@ import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.repository.DeliveryPolicyRepository;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
+import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductImagesUrlDTO;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductOptionDTO;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductRequest;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -41,6 +44,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public Long register(ProductRequest dto) {
 
         Product product = toEntity(dto);
@@ -52,5 +56,26 @@ public class ProductServiceImpl implements ProductService{
         System.out.println("savedProduct = " + savedProduct);
 
         return savedProduct.getId();
+    }
+
+    @Override
+    @Transactional
+    public void addImageUrls(Long id, ProductImagesUrlDTO dto) {
+
+        Product product = productRepository.findById(id).get();
+
+        for(int i=0; i<dto.getOptionImageUrls().size(); i++) {
+            product.getProductOptions().get(i).setImageUrl(dto.getOptionImageUrls().get(i));
+        }
+        System.out.println("product.getMainImages() = " + product.getMainImages());
+        for(int i=0; i<dto.getMainImageUrls().size(); i++) {
+            System.out.println("mainImage url 저장");
+            product.getMainImages()
+                    .add(ProductMainImage.builder()
+                            .imageUrl(dto.getMainImageUrls().get(i))
+                            .build()
+                    );
+        }
+        System.out.println("product.getMainImages() = " + product.getMainImages());
     }
 }
