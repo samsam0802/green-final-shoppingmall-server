@@ -11,16 +11,17 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class ProductMainImage {
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String imageUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int displayOrder;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private ImageType imageType;
 
     public void setDisplayOrder(int ord) {
@@ -28,4 +29,3 @@ public class ProductMainImage {
     }
 
 }
-

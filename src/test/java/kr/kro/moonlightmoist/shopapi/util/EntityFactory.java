@@ -7,10 +7,8 @@ import kr.kro.moonlightmoist.shopapi.helpcenter.domain.Faq;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.InquiryType;
 import kr.kro.moonlightmoist.shopapi.order.domain.Order;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
-import kr.kro.moonlightmoist.shopapi.product.domain.ExposureStatus;
-import kr.kro.moonlightmoist.shopapi.product.domain.Product;
-import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
-import kr.kro.moonlightmoist.shopapi.product.domain.SaleStatus;
+import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicyType;
+import kr.kro.moonlightmoist.shopapi.product.domain.*;
 import kr.kro.moonlightmoist.shopapi.review.domain.Review;
 import kr.kro.moonlightmoist.shopapi.review.domain.ReviewComment;
 import kr.kro.moonlightmoist.shopapi.review.domain.ReviewLike;
@@ -40,15 +38,19 @@ public class EntityFactory {
 
     public static Product createProduct(Category category, Brand brand) {
         return Product.builder()
-                .productName("임시상품")
+                .basicInfo(BasicInfo.builder()
+                        .productName("임시상품")
+                        .productCode("임시상품코드")
+                        .searchKeywords("임시키워드")
+                        .description("임시상품설명")
+                        .build())
+                .saleInfo(SaleInfo.builder()
+                        .exposureStatus(ExposureStatus.EXPOSURE)
+                        .saleStatus(SaleStatus.ON_SALE)
+                        .cancelable(true)
+                        .build())
                 .brand(brand)
                 .category(category)
-                .productCode("임시상품코드")
-                .searchKeywords("임시키워드")
-                .exposureStatus(ExposureStatus.EXPOSURE)
-                .saleStatus(SaleStatus.ON_SALE)
-                .description("임시상품설명")
-                .cancelable(true)
                 .deleted(false)
                 .build();
     }
@@ -105,7 +107,7 @@ public class EntityFactory {
     public static DeliveryPolicy createDeliveryPolicy() {
         return DeliveryPolicy.builder()
                 .name("이름")
-                .policyType("CONDITIONAL_FREE")
+                .policyType(DeliveryPolicyType.CONDITIONAL_FREE)
                 .basicDeliveryFee(3000)
                 .freeConditionAmount(30000)
                 .defaultPolicy(true)
