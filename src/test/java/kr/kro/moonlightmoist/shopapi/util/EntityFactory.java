@@ -59,7 +59,7 @@ public class EntityFactory {
     public static User createUser () {
         return User.builder()
                 .loginId("user")
-                .passwordHash("123123")
+                .password("123123")
                 .name("유저")
                 .email("user@naver.com")
                 .phoneNumber("01012345678")

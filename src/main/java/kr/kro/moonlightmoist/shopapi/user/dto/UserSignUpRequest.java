@@ -1,10 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.user.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UserSignUpRequest {
 
     @NotBlank(message = "로그인 아이디는 필수 입니다.")

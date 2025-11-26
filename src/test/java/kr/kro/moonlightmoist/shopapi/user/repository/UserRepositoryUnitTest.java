@@ -5,7 +5,6 @@ import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.domain.UserGrade;
 import kr.kro.moonlightmoist.shopapi.user.domain.UserRole;
 import kr.kro.moonlightmoist.shopapi.util.EntityFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -33,7 +33,7 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
 
         User newUser = User.builder()
                 .loginId("user")
-                .passwordHash("123123")
+                .password("123123")
                 .name("유저")
                 .email("user@naver.com")
                 .phoneNumber("01012345678")
@@ -50,7 +50,7 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
         User savedUser = userRepository.save(newUser);
 
         assertThat(savedUser.getLoginId()).isEqualTo("user");
-        assertThat(savedUser.getPasswordHash()).isEqualTo("123123");
+        assertThat(savedUser.getPassword()).isEqualTo("123123");
         assertThat(savedUser.getName()).isEqualTo("유저");
         assertThat(savedUser.getEmail()).isEqualTo("user@naver.com");
         assertThat(savedUser.getPhoneNumber()).isEqualTo("01012345678");
@@ -99,14 +99,14 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
                 .addressDetail("")
                 .address("")
                 .phoneNumber("")
-                .passwordHash("")
+                .password("")
                 .postalCode("")
                 .deleted(true)
                 .deletedAt(LocalDate.of(2025,11,11))
                 .build();
 
 //        예외처리 로직
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+        assertThrows(DataIntegrityViolationException.class, () -> {
             userRepository.save(testUser);
         }, " 중복된 LoginId 발생 시, DataIntegrityViolationException이 발생하여 예외 처리함");
     }
@@ -173,5 +173,6 @@ class UserRepositoryUnitTest { // 생성, 삭제, 수정, 제약조건
 
 
     }
+
 
 }
