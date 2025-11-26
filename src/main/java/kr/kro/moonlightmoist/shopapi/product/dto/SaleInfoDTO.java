@@ -16,8 +16,8 @@ public class SaleInfoDTO {
     private ExposureStatus exposureStatus;
     private SaleStatus saleStatus;
     @JsonProperty("isCancelable")
-    private boolean cancelable = true;
-    private boolean useRestockNoti = false;
+    private boolean cancelable;
+    private boolean useRestockNoti;
 
     public SaleInfo toDomain() {
         return SaleInfo.builder()

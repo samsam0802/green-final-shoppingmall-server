@@ -11,12 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @ToString
 public class ProductOptionDTO {
+    private Long id;
     private String optionName;
     private int purchasePrice;
     private int sellingPrice;
     private int currentStock;
     private int initialStock;
     private int safetyStock;
+    private String imageUrl;
+    private int displayOrder;
 
     public ProductOption toDomain() {
         return ProductOption.builder()

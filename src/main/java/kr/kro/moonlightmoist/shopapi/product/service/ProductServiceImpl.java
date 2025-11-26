@@ -12,12 +12,18 @@ import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductImagesUrlDTO;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductOptionDTO;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductRequest;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductRes;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -78,4 +84,31 @@ public class ProductServiceImpl implements ProductService{
         }
         System.out.println("product.getMainImages() = " + product.getMainImages());
     }
+
+    @Override
+    public List<ProductRes> searchProductsByCategory(List<Long> depth3CategoryIds) {
+
+        Pageable pageable = PageRequest.of(
+                0,
+                24,
+                Sort.by("id").descending()
+        );
+
+        Page<Product> page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+
+        List<ProductRes> result = page.get().map(product -> ProductRes.builder()
+                .id(product.getId())
+                .brand(product.getBrand().toDTO())
+                .category(product.getCategory().toDTO())
+                .basicInfo(product.getBasicInfo().toDTO())
+                .saleInfo(product.getSaleInfo().toDTO())
+                .deliveryPolicy(product.getDeliveryPolicy().toDTO())
+                .options(product.getProductOptions().stream().map(option -> option.toDTO()).toList())
+                .mainImages(product.getMainImages().stream().map(image -> image.toDTO()).toList())
+                .build()).toList();
+
+        return result;
+    }
+
+
 }

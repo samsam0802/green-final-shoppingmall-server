@@ -2,6 +2,7 @@ package kr.kro.moonlightmoist.shopapi.product.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import kr.kro.moonlightmoist.shopapi.product.dto.BasicInfoDTO;
 import lombok.*;
 
 @Embeddable
@@ -21,4 +22,13 @@ public class BasicInfo {
     private String searchKeywords;
 
     private String description;
+
+    public BasicInfoDTO toDTO() {
+        return BasicInfoDTO.builder()
+                .productName(this.productName)
+                .productCode(this.productCode)
+                .searchKeywords(this.searchKeywords)
+                .description(this.description)
+                .build();
+    }
 }

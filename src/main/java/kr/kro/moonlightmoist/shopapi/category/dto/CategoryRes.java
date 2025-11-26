@@ -1,6 +1,5 @@
 package kr.kro.moonlightmoist.shopapi.category.dto;
 
-import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import lombok.*;
 
 import java.util.List;

@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.product.controller;
 import kr.kro.moonlightmoist.shopapi.aws.service.S3UploadService;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductImagesUrlDTO;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductRequest;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductRes;
 import kr.kro.moonlightmoist.shopapi.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +67,12 @@ public class ProductController {
 //        System.out.println("id = " + id);
 
         return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<ProductRes>> getProductsByCategory(
+            @RequestParam("categoryId") List<Long> depth3CategoryIds) {
+        List<ProductRes> productResList = productService.searchProductsByCategory(depth3CategoryIds);
+        return ResponseEntity.ok(productResList);
     }
 }

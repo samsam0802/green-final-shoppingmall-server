@@ -2,6 +2,7 @@ package kr.kro.moonlightmoist.shopapi.product.domain;
 
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductOptionDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -84,4 +85,17 @@ public class ProductOption extends BaseTimeEntity {
         return Objects.hash(this.getId());
     }
 
+    public ProductOptionDTO toDTO() {
+        return ProductOptionDTO.builder()
+                .id(this.id)
+                .optionName(this.optionName)
+                .purchasePrice(this.purchasePrice)
+                .sellingPrice(this.sellingPrice)
+                .currentStock(this.currentStock)
+                .initialStock(this.initialStock)
+                .safetyStock(this.safetyStock)
+                .imageUrl(this.imageUrl)
+                .displayOrder(this.displayOrder)
+                .build();
+    }
 }

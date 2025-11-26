@@ -142,7 +142,8 @@ INSERT INTO products (brand_id, category_id, delivery_policy_id, use_restock_not
 (2, 62, 2, TRUE, '[NO.1 미스트세럼] 달바 퍼스트 스프레이 세럼 100ml 2개 기획', 'WHOO_001', '달바 세럼', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW()),
 (3, 63, 2, FALSE, '에스트라 아토베리어365 크림 80ml 기획', 'LANEIGE_001', '에스트라 크림', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW()),
 (4, 64, 2, FALSE, '구달 청귤 비타C 잡티케어 아이크림 30ml 1+1 기획', 'INNIS_001', '구달 아이크림', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW()),
-(5, 71, 2, FALSE, '메디힐 에센셜 마스크팩 1매 고기능 7종 택1', 'TFS_001', '메디힐 마스크팩', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW());
+(5, 71, 2, FALSE, '메디힐 에센셜 마스크팩 1매 고기능 7종 택1', 'TFS_001', '메디힐 마스크팩', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW()),
+(2, 72, 2, FALSE, '[4세대발효콜라겐/4매입] 달바 비타 하이드로겔 마스크 4매입', 'TFS_001', '달바 겔마스크', 'EXPOSURE', 'ON_SALE', '설명 없음', true, false, NOW(), NOW());
 
 
 -- product_main_images 데이터
@@ -166,7 +167,10 @@ INSERT INTO product_main_images (product_id, image_type, display_order, image_ur
 (5, 'GALLERY', 4, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0021/A00000021762036ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5'),
 (5, 'GALLERY', 5, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0021/A00000021762041ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5'),
 (5, 'GALLERY', 6, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0021/A00000021762038ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5'),
-(5, 'GALLERY', 7, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0021/A00000021762037ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5');
+(5, 'GALLERY', 7, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0021/A00000021762037ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5'),
+(6, 'THUMBNAIL', 0, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022879929ko.png?l=ko&QT=100&SF=webp&sharpen=1x0.5'),
+(6, 'GALLERY', 1, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022879925ko.png?l=ko&QT=100&SF=webp&sharpen=1x0.5'),
+(6, 'GALLERY', 2, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022879903ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5');
 
 
 -- product_options 테이블 데이터
@@ -186,7 +190,8 @@ VALUES
 (5, '세라마이드 보습장벽 1매', 500, 1000, 90, 90, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/5177396663963625881.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 3, false, NOW(), NOW()),
 (5, '마데카소사이드 흔적리페어 1매', 800, 2000, 70, 70, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/1550813712772282449.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 4, false, NOW(), NOW()),
 (5, '로제 PDRN 모공결광 1매', 800, 2000, 90, 90, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/3/927811821371366876.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 5, false, NOW(), NOW()),
-(5, '히알루론산 고밀도 수분 1매', 800, 2000, 70, 70, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/2/7886183073217244310.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 6, false, NOW(), NOW());
+(5, '히알루론산 고밀도 수분 1매', 800, 2000, 70, 70, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/2/7886183073217244310.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 6, false, NOW(), NOW()),
+(6, '달바 비타 하이드로겔 마스크 4매입', 14000, 28000, 70, 70, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022879929ko.png?l=ko&QT=100&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW());
 
 
 -- 민석 users 테이블에 데이터 삽입 (임시)
