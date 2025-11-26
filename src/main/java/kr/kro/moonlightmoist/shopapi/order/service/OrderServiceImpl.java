@@ -93,6 +93,7 @@ public class OrderServiceImpl implements OrderService{
                     .productOptionName(op.getProductOption().getOptionName())
                     .purchasedPrice(op.getPurchasedPrice())
                     .quantity(op.getQuantity())
+//                    .imageUrl(op.getProductOption().getProduct().getMainImages().stream().filter(image->image.getImageType()==="THUMBNAIL"))
                     .build();
             orderResponseDTO.getOrderProducts().add(orderProductResponseDTO);
         }

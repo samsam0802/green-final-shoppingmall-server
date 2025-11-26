@@ -1,5 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.order.dto;
 
+import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import lombok.*;
 
 @Getter
@@ -19,4 +20,6 @@ public class OrderProductResponseDTO {
     private int purchasedPrice;
     // 상품 갯수
     private int quantity;
+    // 상품 썸네일 이미지 url
+    private ProductMainImage imageUrl;
 }

@@ -33,6 +33,7 @@ public class OrderController {
 
     @GetMapping("")
     public ResponseEntity<OrderResponseDTO> getOneOrder(@RequestParam Long orderId) {
+        log.info("getOneOrder 메서드 실행 orderId:{}", orderId);
         return ResponseEntity.ok(orderService.getOneOrder(orderId));
     }
 
