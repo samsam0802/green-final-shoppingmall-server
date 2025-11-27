@@ -9,10 +9,7 @@ import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.repository.DeliveryPo
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductImagesUrlDTO;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductOptionDTO;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductRequest;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductRes;
+import kr.kro.moonlightmoist.shopapi.product.dto.*;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -86,7 +82,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductRes> searchProductsByCategory(List<Long> depth3CategoryIds) {
+    public List<ProductResForList> searchProductsByCategory(List<Long> depth3CategoryIds) {
 
         Pageable pageable = PageRequest.of(
                 0,
@@ -95,14 +91,14 @@ public class ProductServiceImpl implements ProductService{
         );
 
         Page<Product> page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
-        List<ProductRes> result = page.get().map(product -> product.toDTO()).toList();
+        List<ProductResForList> result = page.get().map(product -> product.toDTOForList()).toList();
         return result;
     }
 
     @Override
-    public ProductRes searchProductById(Long id) {
+    public ProductResForDetail searchProductById(Long id) {
         Product product = productRepository.findById(id).get();
-        ProductRes dto = product.toDTO();
+        ProductResForDetail dto = product.toDTOForDetail();
         return dto;
     }
 

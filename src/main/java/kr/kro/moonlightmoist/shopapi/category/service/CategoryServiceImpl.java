@@ -2,7 +2,7 @@ package kr.kro.moonlightmoist.shopapi.category.service;
 
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRegisterReq;
-import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRes;
+import kr.kro.moonlightmoist.shopapi.category.dto.CategoryResForList;
 import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<CategoryRes> getCategoryList() {
-        List<CategoryRes> categoryResList = categoryRepository.findByDepthAndDeletedFalse(1)
-                .stream().map(category -> category.toDTO()).toList();
+    public List<CategoryResForList> getCategoryList() {
+        List<CategoryResForList> categoryResList = categoryRepository.findByDepthAndDeletedFalse(1)
+                .stream().map(category -> category.toCategoryResForList()).toList();
         return categoryResList;
     }
 

@@ -1,8 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.category.controller;
 
-import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRegisterReq;
-import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRes;
+import kr.kro.moonlightmoist.shopapi.category.dto.CategoryResForList;
 import kr.kro.moonlightmoist.shopapi.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +33,8 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<CategoryRes>> getCategoryList() {
-        List<CategoryRes> categories = categoryService.getCategoryList();
+    public ResponseEntity<List<CategoryResForList>> getCategoryList() {
+        List<CategoryResForList> categories = categoryService.getCategoryList();
 
         return ResponseEntity.ok(categories);
     }

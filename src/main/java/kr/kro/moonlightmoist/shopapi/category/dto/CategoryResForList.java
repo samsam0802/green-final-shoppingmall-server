@@ -10,11 +10,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CategoryRes {
+public class CategoryResForList {
     private Long id;
-    private List<CategoryRes> subCategories;
+    private List<CategoryResForList> subCategories;
     private String name;
     private int depth;
     private int displayOrder;
-
 }

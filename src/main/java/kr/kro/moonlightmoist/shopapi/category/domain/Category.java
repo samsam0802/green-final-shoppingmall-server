@@ -1,7 +1,8 @@
 package kr.kro.moonlightmoist.shopapi.category.domain;
 
 import jakarta.persistence.*;
-import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRes;
+import kr.kro.moonlightmoist.shopapi.category.dto.CategoryResForList;
+import kr.kro.moonlightmoist.shopapi.category.dto.CategoryResForProductDetail;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import lombok.*;
 
@@ -55,10 +56,28 @@ public class Category extends BaseTimeEntity {
     }
 
 //    toDTO 가 subScategories 도 DTO 로 바꿔줘야 함
-    public CategoryRes toDTO() {
-        return CategoryRes.builder()
+    public CategoryResForList toCategoryResForList() {
+        return CategoryResForList.builder()
                 .id(this.id)
-                .subCategories(this.subCategories.stream().map(category -> category.toDTO()).toList())
+                .subCategories(this.subCategories.stream().map(category -> category.toCategoryResForList()).toList())
+                .name(this.name)
+                .depth(this.depth)
+                .displayOrder(this.displayOrder)
+                .build();
+    }
+
+    public CategoryResForProductDetail toCategoryResForProductDetail() {
+
+        CategoryResForProductDetail parent;
+        if(this.parent == null) {
+            parent = new CategoryResForProductDetail();
+        } else {
+            parent = this.parent.toCategoryResForProductDetail();
+        }
+
+        return CategoryResForProductDetail.builder()
+                .id(this.id)
+                .parent(parent)
                 .name(this.name)
                 .depth(this.depth)
                 .displayOrder(this.displayOrder)

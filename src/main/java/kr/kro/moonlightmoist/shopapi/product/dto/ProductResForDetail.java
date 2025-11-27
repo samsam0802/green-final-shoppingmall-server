@@ -1,7 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.product.dto;
 
 import kr.kro.moonlightmoist.shopapi.brand.dto.BrandDTO;
-import kr.kro.moonlightmoist.shopapi.category.dto.CategoryRes;
+import kr.kro.moonlightmoist.shopapi.category.dto.CategoryResForProductDetail;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.dto.DeliveryPolicyDTO;
 import lombok.*;
 
@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ProductRes {
+public class ProductResForDetail {
     private Long id;
-    private CategoryRes category;
+    private CategoryResForProductDetail category;
     private BrandDTO brand;
     private BasicInfoDTO basicInfo;
     private SaleInfoDTO saleInfo;

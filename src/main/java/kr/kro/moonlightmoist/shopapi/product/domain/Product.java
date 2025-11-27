@@ -5,7 +5,8 @@ import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductRes;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductResForDetail;
+import kr.kro.moonlightmoist.shopapi.product.dto.ProductResForList;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -98,13 +99,26 @@ public class Product extends BaseTimeEntity {
         }
     }
 
-    public ProductRes toDTO() {
-        return ProductRes.builder()
+    public ProductResForList toDTOForList() {
+        return ProductResForList.builder()
                 .id(this.id)
                 .basicInfo(this.basicInfo.toDTO())
                 .saleInfo(this.saleInfo.toDTO())
                 .brand(this.brand.toDTO())
-                .category(this.category.toDTO())
+                .category(this.category.toCategoryResForList())
+                .deliveryPolicy(this.deliveryPolicy.toDTO())
+                .mainImages(this.mainImages.stream().map(image -> image.toDTO()).toList())
+                .options(this.getProductOptions().stream().map(option -> option.toDTO()).toList())
+                .build();
+    }
+
+    public ProductResForDetail toDTOForDetail() {
+        return ProductResForDetail.builder()
+                .id(this.id)
+                .basicInfo(this.basicInfo.toDTO())
+                .saleInfo(this.saleInfo.toDTO())
+                .brand(this.brand.toDTO())
+                .category(this.category.toCategoryResForProductDetail())
                 .deliveryPolicy(this.deliveryPolicy.toDTO())
                 .mainImages(this.mainImages.stream().map(image -> image.toDTO()).toList())
                 .options(this.getProductOptions().stream().map(option -> option.toDTO()).toList())
