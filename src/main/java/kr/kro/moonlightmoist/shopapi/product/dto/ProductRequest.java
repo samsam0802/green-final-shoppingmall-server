@@ -18,6 +18,7 @@ public class ProductRequest {
     private BasicInfoDTO basicInfo;
     private SaleInfoDTO saleInfo;
     private DeliveryPolicyDTO deliveryPolicy;
+    private DetailInfoDTO detailInfo;
     private List<ProductOptionDTO> options;
     private boolean deleted;
 

@@ -7,6 +7,7 @@ import kr.kro.moonlightmoist.shopapi.category.repository.CategoryRepository;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.repository.DeliveryPolicyRepository;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
+import kr.kro.moonlightmoist.shopapi.product.domain.ProductDetailImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import kr.kro.moonlightmoist.shopapi.product.dto.*;
@@ -42,6 +43,7 @@ public class ProductServiceImpl implements ProductService{
                 .basicInfo(dto.getBasicInfo().toDomain())
                 .saleInfo(dto.getSaleInfo().toDomain())
                 .deliveryPolicy(deliveryPolicy)
+                .detailInfo(dto.getDetailInfo().toEntity())
                 .build();
     }
 
@@ -79,6 +81,15 @@ public class ProductServiceImpl implements ProductService{
                     );
         }
         System.out.println("product.getMainImages() = " + product.getMainImages());
+        for(int i=0; i<dto.getDetailImageUrls().size(); i++) {
+            System.out.println("detailImage url 저장");
+            product.getDetailImages()
+                    .add(ProductDetailImage.builder()
+                            .imageUrl(dto.getDetailImageUrls().get(i))
+                            .build()
+                    );
+        }
+        System.out.println("product.getDetailImages() = " + product.getDetailImages());
     }
 
     @Override

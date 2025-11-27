@@ -34,7 +34,8 @@ public class ProductController {
     public ResponseEntity<String> productRegister(
             @RequestPart("product") ProductRequest product,
             @RequestPart("optionImages") List<MultipartFile> optionImages,
-            @RequestPart("mainImages") List<MultipartFile> mainImages
+            @RequestPart("mainImages") List<MultipartFile> mainImages,
+            @RequestPart("detailImages") List<MultipartFile> detailImages
             ) {
 
         System.out.println("product = " + product);
@@ -43,12 +44,14 @@ public class ProductController {
 
         System.out.println("optionImages = "+ optionImages);
         System.out.println("mainImages = " + mainImages);
+        System.out.println("detailImages = " + detailImages);
 
         System.out.println("id = " + id);
 
         ProductImagesUrlDTO urlDTO = ProductImagesUrlDTO.builder()
                 .mainImageUrls(new ArrayList<>())
                 .optionImageUrls(new ArrayList<>())
+                .detailImageUrls(new ArrayList<>())
                 .build();
 
         for(int i=0; i<optionImages.size(); i++) {
@@ -59,6 +62,11 @@ public class ProductController {
         for(int i=0; i<mainImages.size(); i++) {
             String url = s3UploadService.uploadOneFile(mainImages.get(i), "products/" + id + "/");
             urlDTO.getMainImageUrls().add(url);
+        }
+
+        for(int i=0; i<detailImages.size(); i++) {
+            String url = s3UploadService.uploadOneFile(detailImages.get(i), "products/" + id + "/");
+            urlDTO.getDetailImageUrls().add(url);
         }
 
         productService.addImageUrls(id, urlDTO);

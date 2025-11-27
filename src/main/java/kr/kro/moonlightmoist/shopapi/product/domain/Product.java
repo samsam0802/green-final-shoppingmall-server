@@ -48,6 +48,10 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "delivery_policy_id")
     private DeliveryPolicy deliveryPolicy;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_detail_info_id")
+    private DetailInfo detailInfo;
+
     @ElementCollection
     @CollectionTable(
             name = "product_main_images",
@@ -120,7 +124,9 @@ public class Product extends BaseTimeEntity {
                 .brand(this.brand.toDTO())
                 .category(this.category.toCategoryResForProductDetail())
                 .deliveryPolicy(this.deliveryPolicy.toDTO())
+                .detailInfo(this.detailInfo.toDTO())
                 .mainImages(this.mainImages.stream().map(image -> image.toDTO()).toList())
+                .detailImages(this.detailImages.stream().map(image -> image.toDTO()).toList())
                 .options(this.getProductOptions().stream().map(option -> option.toDTO()).toList())
                 .build();
     }

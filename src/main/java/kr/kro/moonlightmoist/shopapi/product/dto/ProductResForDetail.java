@@ -20,7 +20,9 @@ public class ProductResForDetail {
     private BasicInfoDTO basicInfo;
     private SaleInfoDTO saleInfo;
     private DeliveryPolicyDTO deliveryPolicy;
+    private DetailInfoDTO detailInfo;
     private List<ProductOptionDTO> options;
     private List<ProductMainImageRes> mainImages;
+    private List<ProductDetailImageRes> detailImages;
     private boolean deleted;
 }

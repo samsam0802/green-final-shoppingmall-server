@@ -12,5 +12,6 @@ import java.util.List;
 @ToString
 public class ProductImagesUrlDTO {
     private List<String> mainImageUrls;
+    private List<String> detailImageUrls;
     private List<String> optionImageUrls;
 }
