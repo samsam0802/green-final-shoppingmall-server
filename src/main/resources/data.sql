@@ -214,6 +214,12 @@ VALUES
 (4, 4, NOW(), NOW()),
 (5, 5, NOW(), NOW());
 
+-- 민석 cart_products 테이블 데이터
+INSERT INTO cart_products (id, cart_id, product_option_id, quantity, added_at, updated_at)
+VALUES
+(1, 1, 1, 5, NOW(), NOW()),
+(2, 1, 2, 5, NOW(), NOW()),
+(3, 1, 3, 5, NOW(), NOW());
 
 -- 민석 user_addresses 테이블 데이터
 INSERT INTO user_addresses

@@ -99,9 +99,9 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public String removeAll() {
-        cartProductRepository.deleteAll();
-        return "장바구니 비우기 성공";
+    public int removeAllCartItemsOfUser(Long userId) {
+        log.info("CartServiceImpl removeAllCartItemsOfUser 메서드 실행 => userId={}",userId);
+        return cartProductRepository.deleteAllByUserId(userId);
     }
 
 

@@ -43,9 +43,9 @@ public class CartController {
         return cartService.remove(cartProductId);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> removeCart() {
-        return ResponseEntity.ok(cartService.removeAll());
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<String> removeCart(@PathVariable Long userId) {
+        return ResponseEntity.ok("삭제된 장바구니 상품 갯수 : " + cartService.removeAllCartItemsOfUser(userId));
     }
 
 
