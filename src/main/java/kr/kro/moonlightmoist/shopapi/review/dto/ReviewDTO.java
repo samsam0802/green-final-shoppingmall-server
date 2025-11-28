@@ -23,4 +23,7 @@ public class ReviewDTO {
     private String loginId;
     private Long productId;
     private LocalDateTime createdAt;
+
+    private List<String> imageUrls = new ArrayList<>();
+    private List<String> deleteImgUrls = new ArrayList<>();
 }

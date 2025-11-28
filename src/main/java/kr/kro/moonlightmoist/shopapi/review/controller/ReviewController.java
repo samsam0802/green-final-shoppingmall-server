@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.review.controller;
 
 import kr.kro.moonlightmoist.shopapi.aws.service.S3UploadService;
+import kr.kro.moonlightmoist.shopapi.review.domain.ReviewImage;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewDTO;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewImageUrlDTO;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
@@ -45,33 +46,49 @@ public class ReviewController {
     @PostMapping("/add")
     public ResponseEntity<String> register(
             @RequestPart("review") ReviewDTO dto,
-            @RequestPart("reviewImage") List<MultipartFile> reviewImage
+            @RequestPart(value = "reviewImage", required = false) List<MultipartFile> reviewImage
     ){
         Long id = reviewService.register(dto);
 
-        ReviewImageUrlDTO reviewImageUrlDTO = ReviewImageUrlDTO.builder()
-                .imageUrls(new ArrayList<>())
-                .build();
+        if (reviewImage != null && !reviewImage.isEmpty()) {
+            ReviewImageUrlDTO reviewImageUrlDTO = ReviewImageUrlDTO.builder()
+                    .imageUrls(new ArrayList<>())
+                    .build();
 
-        for(int i=0; i<reviewImage.size(); i++){
-            String url = s3UploadService.uploadOneFile(reviewImage.get(i), "reviews/" + id + "/");
-            reviewImageUrlDTO.getImageUrls().add(url);
+            for(int i=0; i<reviewImage.size(); i++){
+                String url = s3UploadService.uploadOneFile(reviewImage.get(i), "reviews/" + id + "/");
+                reviewImageUrlDTO.getImageUrls().add(url);
+            }
+
+            reviewService.addImageUrls(id, reviewImageUrlDTO);
         }
-
-        reviewService.addImageUrls(id, reviewImageUrlDTO);
 
         return ResponseEntity.ok("성공");
     }
 
     @PutMapping("/modify/{reviewId}")
-    public ResponseEntity<ReviewDTO> modify(@PathVariable("reviewId") Long reviewId, @RequestBody ReviewDTO dto){
-        ReviewDTO reviewUpdated = ReviewDTO.builder()
-                .id(reviewId)
-                .content(dto.getContent())
-                .rating(dto.getRating())
-                .build();
-        ReviewDTO modifyReview = reviewService.modify(reviewUpdated);
-        return ResponseEntity.ok(modifyReview);
+    public ResponseEntity<String> modify(
+            @PathVariable("reviewId") Long reviewId,
+            @RequestPart("review") ReviewDTO dto,
+            @RequestPart(value = "reviewImage", required = false) List<MultipartFile> reviewImage
+    ){
+        dto.setId(reviewId);
+        reviewService.modify(dto);
+
+        if (reviewImage != null && !reviewImage.isEmpty()) {
+            ReviewImageUrlDTO reviewImageUrlDTO = ReviewImageUrlDTO.builder()
+                    .imageUrls(new ArrayList<>())
+                    .build();
+
+            for(int i=0; i<reviewImage.size(); i++){
+                String url = s3UploadService.uploadOneFile(reviewImage.get(i),  "reviews/" + reviewId + "/");
+                reviewImageUrlDTO.getImageUrls().add(url);
+            }
+
+            reviewService.addImageUrls(reviewId, reviewImageUrlDTO);
+        }
+
+        return ResponseEntity.ok("성공");
     }
 
     @DeleteMapping("/delete/{reviewId}")

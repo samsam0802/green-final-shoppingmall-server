@@ -62,6 +62,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         List<ReviewDTO> reviewDTO = reviews.stream().map(review -> {
+            List<String> imageUrls = review.getReviewImages().stream()
+                    .map(img -> img.getImageUrl()).toList();
+            System.out.println("이미지 URL 리스트: " + imageUrls);
+
             return ReviewDTO.builder()
                     .id(review.getId())
                     .productId(review.getProduct().getId())
@@ -69,6 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .loginId(review.getUser().getLoginId())
                     .content(review.getContent())
                     .rating(review.getRating())
+                    .imageUrls(imageUrls)
                     .createdAt(review.getCreatedAt())
                     .build();
         }).toList();
@@ -79,16 +84,21 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDTO> getListByUser(Long userId) {
         List<Review> list = reviewRepository.findByUserId(userId);
-        return list.stream()
-                .map(review -> ReviewDTO.builder()
-                        .id(review.getId())
-                        .content(review.getContent())
-                        .rating(review.getRating())
-                        .userId(review.getUser().getId())
-                        .productId(review.getProduct().getId())
-                        .createdAt(review.getCreatedAt())
-                        .build())
-                .toList();
+
+        return list.stream().map(review -> {
+            List<String> imageUrls = review.getReviewImages().stream()
+                    .map(url -> url.getImageUrl()).toList();
+
+            return ReviewDTO.builder()
+                    .id(review.getId())
+                    .content(review.getContent())
+                    .rating(review.getRating())
+                    .userId(review.getUser().getId())
+                    .productId(review.getProduct().getId())
+                    .createdAt(review.getCreatedAt())
+                    .imageUrls(imageUrls)
+                    .build();
+        }).toList();
     }
 
     @Override
@@ -117,9 +127,18 @@ public class ReviewServiceImpl implements ReviewService {
         review.changeContent(reviewDTO.getContent());
         review.changeRating(reviewDTO.getRating());
 
+        if (reviewDTO.getDeleteImgUrls() != null && !reviewDTO.getDeleteImgUrls().isEmpty()) {
+            review.removeImgUrls(reviewDTO.getDeleteImgUrls());
+        }
+
+        List<String> imageUrls = review.getReviewImages().stream()
+                .map(url -> url.getImageUrl())
+                .toList();
+
         return ReviewDTO.builder()
                 .content(review.getContent())
                 .rating(review.getRating())
+                .imageUrls(imageUrls)
                 .build();
     }
 

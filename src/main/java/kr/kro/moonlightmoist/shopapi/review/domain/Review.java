@@ -57,6 +57,10 @@ public class Review extends BaseTimeEntity {
         reviewImages.add(image);
     }
 
+    public void removeImgUrls(List<String> urls) {
+        this.reviewImages.removeIf(img -> urls.contains(img.getImageUrl()));
+    }
+
     public void changeContent(String content) { this.content=content; }
     public void changeRating(int rating) { this.rating=rating; }
 
