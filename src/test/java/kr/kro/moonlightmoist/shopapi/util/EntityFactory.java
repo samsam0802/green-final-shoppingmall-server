@@ -6,6 +6,7 @@ import kr.kro.moonlightmoist.shopapi.category.domain.Category;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.Faq;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.InquiryType;
 import kr.kro.moonlightmoist.shopapi.order.domain.Order;
+import kr.kro.moonlightmoist.shopapi.order.domain.OrderProduct;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicyType;
 import kr.kro.moonlightmoist.shopapi.product.domain.*;
@@ -17,6 +18,7 @@ import kr.kro.moonlightmoist.shopapi.user.domain.UserGrade;
 import kr.kro.moonlightmoist.shopapi.user.domain.UserRole;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class EntityFactory {
 
@@ -109,30 +111,30 @@ public class EntityFactory {
                 .name("이름")
                 .policyType(DeliveryPolicyType.CONDITIONAL_FREE)
                 .basicDeliveryFee(3000)
-                .freeConditionAmount(30000)
+                .freeConditionAmount(50000)
                 .defaultPolicy(true)
                 .deleted(false)
                 .build();
     }
 
-    public static Order createOrder(User user, DeliveryPolicy deliveryPolicy) {
+    public static Order createOrder(User user) {
         return Order.builder()
                 .user(user)
                 .orderNumber("주문번호")
                 .paymentMethod("CARD")
-                .deliveryPolicy(deliveryPolicy)
-                .deliveryFee(deliveryPolicy.getBasicDeliveryFee())
+                .deliveryFee(3000)
                 .expectedDeliveryDate(LocalDate.of(2025,01,01))
                 .totalProductAmount(30000)
                 .discountAmount(3000)
-                .usedpoints(3000)
+                .usedPoints(3000)
                 .finalAmount(30000)
-                .recipientName("이름")
-                .recipientPhone("01012345678")
+                .receiverName("이름")
+                .receiverPhone("01012345678")
                 .postalCode("123456")
                 .streetAddress("도로명주소")
                 .detailedAddress("상세주소")
                 .deliveryRequest("배송요청사항")
+                .deleted(false)
                 .build();
     }
 

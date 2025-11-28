@@ -40,7 +40,7 @@ class OrderRepositoryUnitTest {
     public void init() {
         user = userRepository.save(EntityFactory.createUser());
         deliveryPolicy = deliveryPolicyRepository.save(EntityFactory.createDeliveryPolicy());
-        order = orderRepository.save(EntityFactory.createOrder(user,deliveryPolicy));
+        order = orderRepository.save(EntityFactory.createOrder(user));
     }
 
 
@@ -51,15 +51,14 @@ class OrderRepositoryUnitTest {
         assertThat(order.getUser()).isNotNull();
         assertThat(order.getOrderNumber()).isEqualTo("주문번호");
         assertThat(order.getPaymentMethod()).isEqualTo("CARD");
-        assertThat(order.getDeliveryPolicy()).isNotNull();
-        assertThat(order.getDeliveryFee()).isEqualTo(order.getDeliveryPolicy().getBasicDeliveryFee());
+        assertThat(order.getDeliveryFee()).isEqualTo(3000);
         assertThat(order.getExpectedDeliveryDate()).isEqualTo(LocalDate.of(2025,01,01));
         assertThat(order.getTotalProductAmount()).isEqualTo(30000);
         assertThat(order.getDiscountAmount()).isEqualTo(3000);
-        assertThat(order.getUsedpoints()).isEqualTo(3000);
+        assertThat(order.getUsedPoints()).isEqualTo(3000);
         assertThat(order.getFinalAmount()).isEqualTo(30000);
-        assertThat(order.getRecipientName()).isEqualTo("이름");
-        assertThat(order.getRecipientPhone()).isEqualTo("01012345678");
+        assertThat(order.getReceiverName()).isEqualTo("이름");
+        assertThat(order.getReceiverPhone()).isEqualTo("01012345678");
         assertThat(order.getPostalCode()).isEqualTo("123456");
         assertThat(order.getStreetAddress()).isEqualTo("도로명주소");
         assertThat(order.getDetailedAddress()).isEqualTo("상세주소");
@@ -76,15 +75,14 @@ class OrderRepositoryUnitTest {
         assertThat(checked.getUser()).isNotNull();
         assertThat(checked.getOrderNumber()).isEqualTo("주문번호");
         assertThat(checked.getPaymentMethod()).isEqualTo("CARD");
-        assertThat(checked.getDeliveryPolicy()).isNotNull();
-        assertThat(checked.getDeliveryFee()).isEqualTo(checked.getDeliveryPolicy().getBasicDeliveryFee());
+        assertThat(checked.getDeliveryFee()).isEqualTo(3000);
         assertThat(checked.getExpectedDeliveryDate()).isEqualTo(LocalDate.of(2025,01,01));
         assertThat(checked.getTotalProductAmount()).isEqualTo(30000);
         assertThat(checked.getDiscountAmount()).isEqualTo(3000);
-        assertThat(checked.getUsedpoints()).isEqualTo(3000);
+        assertThat(checked.getUsedPoints()).isEqualTo(3000);
         assertThat(checked.getFinalAmount()).isEqualTo(30000);
-        assertThat(checked.getRecipientName()).isEqualTo("이름");
-        assertThat(checked.getRecipientPhone()).isEqualTo("01012345678");
+        assertThat(checked.getReceiverName()).isEqualTo("이름");
+        assertThat(checked.getReceiverPhone()).isEqualTo("01012345678");
         assertThat(checked.getPostalCode()).isEqualTo("123456");
         assertThat(checked.getStreetAddress()).isEqualTo("도로명주소");
         assertThat(checked.getDetailedAddress()).isEqualTo("상세주소");

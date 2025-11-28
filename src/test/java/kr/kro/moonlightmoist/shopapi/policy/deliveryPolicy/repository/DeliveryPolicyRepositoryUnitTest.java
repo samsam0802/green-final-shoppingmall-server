@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.repository;
 
 import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicy;
+import kr.kro.moonlightmoist.shopapi.policy.deliveryPolicy.domain.DeliveryPolicyType;
 import kr.kro.moonlightmoist.shopapi.util.EntityFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -29,9 +30,9 @@ class DeliveryPolicyRepositoryUnitTest {
 
         assertThat(savedDeliveryPolicy.getId()).isNotNull();
         assertThat(savedDeliveryPolicy.getName()).isEqualTo("이름");
-        assertThat(savedDeliveryPolicy.getPolicyType()).isEqualTo("CONDITIONAL_FREE");
+        assertThat(savedDeliveryPolicy.getPolicyType()).isEqualTo(DeliveryPolicyType.CONDITIONAL_FREE);
         assertThat(savedDeliveryPolicy.getBasicDeliveryFee()).isEqualTo(3000);
-        assertThat(savedDeliveryPolicy.getFreeConditionAmount()).isEqualTo(30000);
+        assertThat(savedDeliveryPolicy.getFreeConditionAmount()).isEqualTo(50000);
         assertThat(savedDeliveryPolicy.isDefaultPolicy()).isTrue();
         assertThat(savedDeliveryPolicy.isDeleted()).isFalse();
         assertThat(savedDeliveryPolicy.getCreatedAt()).isNotNull();
