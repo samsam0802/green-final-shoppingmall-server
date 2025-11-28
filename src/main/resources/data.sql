@@ -113,6 +113,60 @@ INSERT INTO categories (name, depth, display_order, created_at, updated_at, is_d
 ('코팩', 3, 0, NOW(), NOW(), FALSE, 20),
 ('패치', 3, 0, NOW(), NOW(), FALSE, 21);
 
+---- depth:3 클렌징 하위의 하위
+INSERT INTO categories (name, depth, display_order, created_at, updated_at, is_deleted, parent_id) VALUES
+('클렌징폼/젤', 3, 0, NOW(), NOW(), FALSE, 22),
+('팩클렌저', 3, 1, NOW(), NOW(), FALSE, 22),
+('클렌징 비누', 3, 2, NOW(), NOW(), FALSE, 22),
+('클렌징오일', 3, 0, NOW(), NOW(), FALSE, 23),
+('클렌징밤', 3, 1, NOW(), NOW(), FALSE, 23),
+('클렌징워터', 3, 2, NOW(), NOW(), FALSE, 24),
+('클렌징밀크/크림', 3, 3, NOW(), NOW(), FALSE, 24),
+('페이셜스크럽', 3, 0, NOW(), NOW(), FALSE, 25),
+('피지클리너', 3, 1, NOW(), NOW(), FALSE, 25),
+('파우더워시', 3, 2, NOW(), NOW(), FALSE, 25),
+('클렌징티슈/패드', 3, 0, NOW(), NOW(), FALSE, 26),
+('립&아이리무버', 3, 0, NOW(), NOW(), FALSE, 27),
+('클렌징 디바이스', 3, 0, NOW(), NOW(), FALSE, 28);
+
+---- depth:3 선케어 하위의 하위
+INSERT INTO categories (name, depth, display_order, created_at, updated_at, is_deleted, parent_id) VALUES
+('선크림', 3, 0, NOW(), NOW(), FALSE, 29),
+('선스틱', 3, 0, NOW(), NOW(), FALSE, 30),
+('선쿠션', 3, 0, NOW(), NOW(), FALSE, 31),
+('선파우더', 3, 1, NOW(), NOW(), FALSE, 31),
+('선스프레이', 3, 0, NOW(), NOW(), FALSE, 32),
+('선패치', 3, 1, NOW(), NOW(), FALSE, 32),
+('태닝', 3, 0, NOW(), NOW(), FALSE, 33),
+('애프터선', 3, 1, NOW(), NOW(), FALSE, 33);
+
+---- depth:3 메이크업 하위의 하위
+INSERT INTO categories (name, depth, display_order, created_at, updated_at, is_deleted, parent_id) VALUES
+('립틴트', 3, 0, NOW(), NOW(), FALSE, 34),
+('립스틱', 3, 1, NOW(), NOW(), FALSE, 34),
+('립라이너', 3, 2, NOW(), NOW(), FALSE, 34),
+('립케어', 3, 3, NOW(), NOW(), FALSE, 34),
+('컬러립밤', 3, 4, NOW(), NOW(), FALSE, 34),
+('립글로스', 3, 5, NOW(), NOW(), FALSE, 34),
+('쿠션', 3, 0, NOW(), NOW(), FALSE, 35),
+('파운데이션', 3, 1, NOW(), NOW(), FALSE, 35),
+('블러셔', 3, 2, NOW(), NOW(), FALSE, 35),
+('립케어', 3, 3, NOW(), NOW(), FALSE, 35),
+('파우더/팩트', 3, 4, NOW(), NOW(), FALSE, 35),
+('컨실러', 3, 5, NOW(), NOW(), FALSE, 35),
+('프라이머/베이스', 3, 6, NOW(), NOW(), FALSE, 35),
+('쉐이딩', 3, 7, NOW(), NOW(), FALSE, 35),
+('하이라이터', 3, 8, NOW(), NOW(), FALSE, 35),
+('메이크업 픽서', 3, 9, NOW(), NOW(), FALSE, 35),
+('BB/CC', 3, 10, NOW(), NOW(), FALSE, 35),
+('아이라이너', 3, 7, NOW(), NOW(), FALSE, 36),
+('마스카라', 3, 8, NOW(), NOW(), FALSE, 36),
+('아이브로우', 3, 9, NOW(), NOW(), FALSE, 36),
+('아이섀도우', 3, 10, NOW(), NOW(), FALSE, 36),
+('아이래쉬 케어', 3, 3, NOW(), NOW(), FALSE, 36),
+('아이 픽서', 3, 0, NOW(), NOW(), FALSE, 36);
+
+
 -- 2. brands 테이블에 데이터 삽입 (임시)
 INSERT INTO brands (name, is_deleted, created_at, updated_at) VALUES
 ('바이오더마', FALSE, NOW(), NOW()),
