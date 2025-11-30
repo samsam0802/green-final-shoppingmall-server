@@ -91,13 +91,13 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<String> searchProductsByCondition(
+    public ResponseEntity<List<ProductResForList>> searchProductsByCondition(
             @RequestBody ProductSearchCondition condition
             ) {
         System.out.println("condition = " + condition);
 
-        productService.searchProductsByCondition(condition);
+        List<ProductResForList> products = productService.searchProductsByCondition(condition);
 
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(products);
     }
 }

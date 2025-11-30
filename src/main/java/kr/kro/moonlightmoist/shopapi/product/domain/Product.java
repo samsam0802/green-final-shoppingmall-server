@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"productOptions", "mainImages", "detailImages"})
+@ToString(exclude = {"productOptions", "mainImages", "detailImages", "detailInfo"})
 @Getter
 @Builder
 @Setter
