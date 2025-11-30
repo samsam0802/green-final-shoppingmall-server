@@ -15,12 +15,12 @@ import java.util.List;
 @ToString
 public class ProductSearchCondition {
     private String productName;
-    private String keywords;
+    private String searchKeywords;
     private String brandName;
     private List<Long> categoryIds;
     private String dateType;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private List<SaleStatus> saleStatuses;
     private List<ExposureStatus> exposureStatuses;
 }

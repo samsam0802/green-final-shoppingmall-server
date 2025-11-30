@@ -115,7 +115,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductResForList> searchProductsByCondition(ProductSearchCondition condition) {
-        return productRepository.search(condition);
+        List<Product> productList = productRepository.search(condition);
+        List<ProductResForList> productsRes = productList.stream().map(p -> p.toDTOForList()).toList();
+
+        return productsRes;
     }
 
 }
