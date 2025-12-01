@@ -50,7 +50,7 @@ public class UserController {
     public ResponseEntity<LoginIdCheckResponse> checkLoginId (@RequestParam String loginId) {
         // @requestParam = QueryParameter 값을 추출해서 해당 인자 String loginId로 변환해서 받는다.
         // 프론트 요청에서 Params로 보냈기때문에 즉, 쿼리파라미터로 보냈기 때문에 해당 어노테이션 사용
-        boolean isDuplicate = userService.existsByLoginId(loginId); // service의 existsByLoginId 메서드 사용
+        boolean isDuplicate = userService.checkLoginId(loginId); // service의 existsByLoginId 메서드 사용
         String message = isDuplicate ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디 입니다.";
 
         LoginIdCheckResponse response = new LoginIdCheckResponse(isDuplicate, message);
