@@ -52,8 +52,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByLoginId(String loginId) { // 컨트롤러에서 loginId 받음
-        return userRepository.existsByLoginId(loginId); // 해당 loginId를 DB에서 찾아서 반환해줌
+    public boolean checkLoginId(String loginId) {
+        System.out.println("중복확인 Service");
+        System.out.println("조회한 loginId :" + loginId);
+        Optional<User> findUser = userRepository.findByLoginId(loginId);
+        if(findUser.isPresent()){
+            System.out.println("DB에 해당 유저정보가 있습니다." + findUser.get().getLoginId());
+            return true;
+        } else {
+            System.out.println("DB에 해당 유저정보가 없습니다");
+            return false;
+        }
     }
 
 

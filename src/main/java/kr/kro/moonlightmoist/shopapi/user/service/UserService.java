@@ -9,5 +9,5 @@ import kr.kro.moonlightmoist.shopapi.user.dto.UserSignUpRequest;
 public interface UserService {
     User registerUser(UserSignUpRequest userSignUpRequest);
     UserLoginResponse login(UserLoginRequest userLoginRequest);
-    boolean existsByLoginId(String loginId);
+    boolean checkLoginId(String loginId);
 }
