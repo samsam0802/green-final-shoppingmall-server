@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Check(constraints = "payment_method IN ('CARD', 'BANK_TRANSFER', 'MOBILE', 'KAKAO_PAY', 'NAVER_PAY', 'PAYCO')")
+@Check(constraints = "payment_method IN ('CARD', 'BANK', 'PHONE', 'KAKAO', 'NAVER', 'PAYCO')")
 @Table(name="orders")
 public class Order extends BaseTimeEntity {
     @Id
