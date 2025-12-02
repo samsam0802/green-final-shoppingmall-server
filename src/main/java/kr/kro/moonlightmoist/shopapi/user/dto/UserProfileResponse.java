@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserProfileResponse {
 
+    private Long id;
     private String loginId;
     private String name;
     private String phoneNumber;

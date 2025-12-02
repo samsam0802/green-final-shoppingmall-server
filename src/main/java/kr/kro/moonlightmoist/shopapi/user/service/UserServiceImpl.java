@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
         if (findUser.isPresent()) {
             User user = findUser.get();
             return UserProfileResponse.builder()
+                    .id(user.getId())
                     .loginId(user.getLoginId())
                     .name(user.getName())
                     .email(user.getEmail())
@@ -84,13 +85,14 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("사용자를 찾을 수 없습니다 :" + loginId);
         }
     }
-}
+
 
 //    @Override
 //    public UserModifyResponse modifyUserProfile(UserModifyRequest userModifyRequest) {
 //        Optional<User> findUser = userRepository.findByLoginId(userModifyRequest.getLoginId());
+//
 //        return null;
 //    }
 
 
-//}
+}
