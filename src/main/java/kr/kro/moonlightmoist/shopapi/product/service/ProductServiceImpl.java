@@ -19,7 +19,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -138,38 +141,31 @@ public class ProductServiceImpl implements ProductService{
 
         DetailInfo modifiedDetailInfo = detailInfo.changeDetailInfo(dto.getDetailInfo());
 
-        // 옵션 기존의 있는 것 찾기
-        List<ProductOptionDTO> existingOptions = dto.getOptions().stream()
-                .filter(option -> option.getId() != null).toList();
-        List<Long> existingIds = existingOptions.stream()
-                .map(option ->
-                    option.getId()).toList();
-
-        List<ProductOptionDTO> newOptions = dto.getOptions().stream()
-                .filter(option -> option.getId() == null).toList();
+        // 옵션 수정
+        Map<Long, ProductOptionDTO> existingOptionDtoMap = dto.getOptions().stream().collect(Collectors.toMap(
+                optionDto -> optionDto.getId(), optionDto -> optionDto
+        ));
 
         for (ProductOption option : product.getProductOptions()) {
-            if(existingIds.contains(option.getId())) {
-
-                ProductOptionDTO foundOptionDto = existingOptions.stream()
-                        .filter(optionDto -> optionDto.getId().equals(option.getId()))
-                        .toList().get(0);
-
-                if(foundOptionDto.getType().equals("deleted")) {
-                    option.setDeleted(foundOptionDto.isDeleted());
-                } else {
-                    option.setOptionName(foundOptionDto.getOptionName());
-                    option.setPurchasePrice(foundOptionDto.getPurchasePrice());
-                    option.setSellingPrice(foundOptionDto.getSellingPrice());
-                    option.setCurrentStock(foundOptionDto.getCurrentStock());
-                    option.setInitialStock(foundOptionDto.getInitialStock());
-                    option.setSafetyStock(foundOptionDto.getSafetyStock());
-                    option.setImageUrl(foundOptionDto.getImageUrl());
-                    option.setDisplayOrder(foundOptionDto.getDisplayOrder());
-                    option.setDeleted(foundOptionDto.isDeleted());
-                }
+            ProductOptionDTO optionDto = existingOptionDtoMap.get(option.getId());
+            if (optionDto.isDeleted()) {
+                option.setDeleted(true);
+            } else {
+                option.setOptionName(optionDto.getOptionName());
+                option.setPurchasePrice(optionDto.getPurchasePrice());
+                option.setSellingPrice(optionDto.getSellingPrice());
+                option.setCurrentStock(optionDto.getCurrentStock());
+                option.setInitialStock(optionDto.getInitialStock());
+                option.setSafetyStock(optionDto.getSafetyStock());
+                option.setImageUrl(optionDto.getImageUrl());
+                option.setDisplayOrder(optionDto.getDisplayOrder());
+                option.setDeleted(optionDto.isDeleted());
             }
         }
+
+        // 새로 추가된 옵션
+        List<ProductOptionDTO> newOptions = dto.getOptions().stream()
+                .filter(option -> option.getId() == null).toList();
 
         for (ProductOptionDTO newOptionDto : newOptions) {
             ProductOption entity = newOptionDto.toEntity();
@@ -185,9 +181,7 @@ public class ProductServiceImpl implements ProductService{
         product.setMainImages(dto.getMainImages().stream().map(img -> img.toDomain()).toList());
         product.setDetailImages(dto.getDetailImages().stream().map(img -> img.toDomain()).toList());
 
-        Product modifiedProduct = productRepository.findById(id).get();
-
-        return 0L;
+        return productRepository.findById(id).get().getId();
     }
 
 }

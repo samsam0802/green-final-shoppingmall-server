@@ -2,7 +2,6 @@ package kr.kro.moonlightmoist.shopapi.product.controller;
 
 import kr.kro.moonlightmoist.shopapi.aws.service.S3UploadService;
 import kr.kro.moonlightmoist.shopapi.product.dto.*;
-import kr.kro.moonlightmoist.shopapi.product.dto.modify.ImageOrderDataReq;
 import kr.kro.moonlightmoist.shopapi.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,8 +119,6 @@ public class ProductController {
         System.out.println("product = " + product);
 
         productService.modify(id, product);
-
-
 
         return ResponseEntity.ok("ok");
     }
