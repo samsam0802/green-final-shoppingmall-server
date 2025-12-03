@@ -1,7 +1,9 @@
-package kr.kro.moonlightmoist.shopapi.coupon.domain;
+package kr.kro.moonlightmoist.shopapi.usercoupon.domain;
 
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
+import kr.kro.moonlightmoist.shopapi.coupon.domain.CouponUsageStatus;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import lombok.*;
 
@@ -29,12 +31,15 @@ public class UserCoupon extends BaseTimeEntity {
     private User user;
 
     @Column(nullable = false)
-    private CouponUsageStatus usageStatus;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private CouponUsageStatus usageStatus = CouponUsageStatus.ACTIVE;
 
     @Column(nullable = true)
     private LocalDateTime usedAt;
 
     @Column(name = "is_deleted", nullable = false)
-    private Boolean deleted;
+    @Builder.Default
+    private Boolean deleted = false;
 
 }
