@@ -8,6 +8,7 @@ import kr.kro.moonlightmoist.shopapi.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,8 @@ import java.util.Optional;
         methods = {RequestMethod.GET,   // 허용할 메서드
                 RequestMethod.POST,
                 RequestMethod.PUT,
-                RequestMethod.DELETE})
+                RequestMethod.DELETE,
+                RequestMethod.PATCH})
 
 public class UserController {
     private final UserRepository userRepository;
@@ -68,16 +70,21 @@ public class UserController {
     @PutMapping("/profile-modify")
     public ResponseEntity<UserModifyResponse> modifyUserProfile (@RequestBody UserModifyRequest userModifyRequest) {
         UserModifyResponse response = userService.modifyUserProfile(userModifyRequest);
-        if(response.isSuccess()) {
-            return ResponseEntity.ok(response);
-        } else {
+        if(!response.isSuccess()) {
             return ResponseEntity.badRequest().body(response);
         }
-    }
+        return ResponseEntity.ok(response);
+        }
+
 
     @PatchMapping("/password-change")
     public ResponseEntity<PasswordChangeResponse> changeUserPassword (@RequestBody PasswordChangeRequest request) {
         PasswordChangeResponse response = userService.changeUserPassword(request);
+        if(!response.isSuccess()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(response);
+        }
         return ResponseEntity.ok(response);
     }
 
