@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
         if (findUser.isPresent()) {
             User user = findUser.get();
             return UserProfileResponse.builder()
-                    .id(user.getId())
                     .loginId(user.getLoginId())
                     .name(user.getName())
                     .email(user.getEmail())

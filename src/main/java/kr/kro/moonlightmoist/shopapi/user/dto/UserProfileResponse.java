@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserProfileResponse {
 
-    private Long id;
     private String loginId;
     private String name;
     private String phoneNumber;
@@ -26,7 +25,6 @@ public class UserProfileResponse {
 
     public static UserProfileResponse from (User user) {
         return UserProfileResponse.builder()
-                .id(user.getId())
                 .loginId(user.getLoginId())
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
