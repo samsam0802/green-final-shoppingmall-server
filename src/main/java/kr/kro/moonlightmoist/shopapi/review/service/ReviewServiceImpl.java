@@ -36,8 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
       return productRepository.findById(productId).get();
     }
 
-    public User getUser() {
-        return userRepository.findById(1L).get();
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).get();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Long register(ReviewDTO dto) {
 
         Product product = getProduct(dto.getProductId());
-        User user = getUser();
+        User user = getUser(dto.getUserId());
 
         Order order = orderRepository.findById(dto.getOrderId()).get();
 

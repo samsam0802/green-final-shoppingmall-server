@@ -30,9 +30,9 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     return reviewRepository.findById(reviewId).get();
   }
 
-  public User getUser() {
-    return userRepository.findById(3L).get();
-  }
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).get();
+    }
 
   @Override
   public List<ReviewCommentDTO> getList(Long reviewId) {
@@ -43,7 +43,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
           .id(reviewComment.getId())
           .reviewId(reviewComment.getReview().getId())
           .userId(reviewComment.getUser().getId())
-          .loginId(reviewComment.getReview().getUser().getLoginId())
+          .loginId(reviewComment.getUser().getLoginId())
           .content(reviewComment.getContent())
           .createAt(reviewComment.getCreatedAt())
           .build();
@@ -55,7 +55,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
   public Long register(@RequestBody ReviewCommentDTO dto) {
 
     Review review = getReview(dto.getReviewId());
-    User user = getUser();
+    User user = getUser(dto.getUserId());
 
     ReviewComment reviewComment = ReviewComment.builder()
         .content(dto.getContent())
