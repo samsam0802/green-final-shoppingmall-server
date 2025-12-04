@@ -5,10 +5,13 @@ import kr.kro.moonlightmoist.shopapi.coupon.repository.CouponRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import kr.kro.moonlightmoist.shopapi.usercoupon.domain.UserCoupon;
+import kr.kro.moonlightmoist.shopapi.usercoupon.dto.UserCouponRes;
 import kr.kro.moonlightmoist.shopapi.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -31,5 +34,14 @@ public class UserCouponServiceImpl implements UserCouponService{
 
         UserCoupon savedUserCoupon = userCouponRepository.save(userCoupon);
         return savedUserCoupon.getId();
+    }
+
+    @Override
+    public List<UserCouponRes> getUserCouponsByUserId(Long userId) {
+
+        List<UserCoupon> userCoupons = userCouponRepository.findByUser_Id(userId);
+        List<UserCouponRes> dtos = userCoupons.stream()
+                .map(i -> i.toDto()).toList();
+        return dtos;
     }
 }

@@ -5,6 +5,7 @@ import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.CouponUsageStatus;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
+import kr.kro.moonlightmoist.shopapi.usercoupon.dto.UserCouponRes;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -42,4 +43,14 @@ public class UserCoupon extends BaseTimeEntity {
     @Builder.Default
     private Boolean deleted = false;
 
+    public UserCouponRes toDto() {
+        return UserCouponRes.builder()
+                .id(this.id)
+                .coupon(this.coupon.toDto())
+                .usageStatus(this.usageStatus)
+                .usedAt(this.usedAt)
+                .deleted(this.deleted)
+                .createdAt(this.getCreatedAt())
+                .build();
+    }
 }

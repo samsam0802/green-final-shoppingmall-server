@@ -1,12 +1,16 @@
 package kr.kro.moonlightmoist.shopapi.usercoupon.controller;
 
 import kr.kro.moonlightmoist.shopapi.usercoupon.dto.CouponIssueReq;
+import kr.kro.moonlightmoist.shopapi.usercoupon.dto.UserCouponRes;
 import kr.kro.moonlightmoist.shopapi.usercoupon.repository.UserCouponRepository;
 import kr.kro.moonlightmoist.shopapi.usercoupon.service.UserCouponService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usercoupon")
@@ -30,4 +34,10 @@ public class UserCouponController {
         return ResponseEntity.ok("ok");
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<UserCouponRes>> getUserCoupons(@PathVariable Long userId) {
+        List<UserCouponRes> userCoupons = userCouponService.getUserCouponsByUserId(userId);
+        System.out.println("userCoupons = " + userCoupons);
+        return ResponseEntity.ok(userCoupons);
+    }
 }

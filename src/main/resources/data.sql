@@ -352,6 +352,15 @@ VALUES
 (4,'user4','pw4','사용자4','01044444444','user4@test.com','1996-04-04','44444','서울시 영등포구','104호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
 (5,'user5','pw5','사용자5','01055555555','user5@test.com','1996-05-05','55555','서울시 마포구','105호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW());
 
+-- 발급받은 유저 쿠폰
+INSERT INTO user_coupons (user_id, coupon_id, usage_status, used_at, is_deleted, created_at, updated_at)
+VALUES
+(1, 1, 'ACTIVE', NULL, FALSE, NOW(), NOW()),
+(2, 1, 'ACTIVE', NULL, FALSE, NOW(), NOW()),
+(3, 1, 'ACTIVE', NULL, FALSE, NOW(), NOW()),
+(4, 1, 'ACTIVE', NULL, FALSE, NOW(), NOW()),
+(5, 1, 'ACTIVE', NULL, FALSE, NOW(), NOW());
+
 -- 민석 carts 테이블 데이터(임시)
 INSERT INTO carts (id, user_id, created_at, updated_at)
 VALUES
