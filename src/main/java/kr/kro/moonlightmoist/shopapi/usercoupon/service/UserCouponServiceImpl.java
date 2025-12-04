@@ -26,6 +26,7 @@ public class UserCouponServiceImpl implements UserCouponService{
     public Long issue(Long userId, Long couponId) {
         User user = userRepository.findById(userId).get();
         Coupon coupon = couponRepository.findById(couponId).get();
+        coupon.addIssueCount();
 
         UserCoupon userCoupon = UserCoupon.builder()
                 .user(user)

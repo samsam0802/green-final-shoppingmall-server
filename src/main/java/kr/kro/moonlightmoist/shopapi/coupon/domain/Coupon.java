@@ -83,9 +83,17 @@ public class Coupon extends BaseTimeEntity {
     @Column(nullable = true)
     private Integer maxDiscountAmount;
 
+    @Column(nullable = true)
+    @Builder.Default
+    private Integer issueCount = 0;
+
     @Column(name = "is_deleted", nullable = false)
     @Builder.Default
     private Boolean deleted = false;
+
+    public void addIssueCount() {
+        this.issueCount +=1;
+    }
 
     public CouponDto toDto() {
         return CouponDto.builder()
@@ -109,6 +117,7 @@ public class Coupon extends BaseTimeEntity {
                 .discountPercentage(this.discountPercentage)
                 .limitMaxDiscountAmount(this.limitMaxDiscountAmount)
                 .maxDiscountAmount(this.maxDiscountAmount)
+                .issueCount(this.issueCount)
                 .build();
     }
 }

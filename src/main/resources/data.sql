@@ -336,13 +336,13 @@ VALUES
 (6, '달바 비타 하이드로겔 마스크 4매입', 14000, 28000, 70, 70, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022879929ko.png?l=ko&QT=100&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW());
 
 ---- coupons 테이블 데이터 삽임
-INSERT INTO coupons (name, issue_type, auto_issue_type, auto_issue_trigger, coupon_code, total_quantity, issuable_start_date, issuable_end_date, availability, has_limit_usage_period, valid_from, valid_to, has_limit_min_order_amount, min_order_amount, discount_type, fixed_discount_amount, discount_percentage, has_limit_max_discount_amount, max_discount_amount, is_deleted, created_at, updated_at)
+INSERT INTO coupons (name, issue_type, auto_issue_type, auto_issue_trigger, coupon_code, total_quantity, issuable_start_date, issuable_end_date, availability, has_limit_usage_period, valid_from, valid_to, has_limit_min_order_amount, min_order_amount, discount_type, fixed_discount_amount, discount_percentage, has_limit_max_discount_amount, max_discount_amount, issue_count, is_deleted, created_at, updated_at)
 VALUES
-('신규회원 환영 쿠폰', 'AUTO', 'NEWUSER', 'ALL_USER', NULL, 9999999999, NULL, NULL, 'USABLE', FALSE, NULL, NULL, TRUE, 20000, 'FIXED', 3000, NULL, NULL, NULL, FALSE, NOW(), NOW()),
-('겨울맞이 10% 할인 쿠폰', 'AUTO', 'EVENT', 'LOGIN', NULL, 9999999999, '2025-11-01 00:00:00', '2026-01-31 23:59:59', 'USABLE', TRUE, '2025-11-01 00:00:00', '2026-02-28 23:59:59', TRUE, 20000, 'PERCENTAGE', NULL, 10, TRUE, 30000, FALSE, '2025-11-01 00:00:00', '2025-11-01 00:00:00'),
-('운영자가 주는 20% 할인 쿠폰', 'MANUAL', NULL, NULL, NULL, 9999999999, NULL, NULL, 'USABLE', FALSE, NULL, NULL, FALSE, NULL, 'PERCENTAGE', NULL, 20, FALSE, NULL, FALSE, '2025-11-01 00:00:00', '2025-11-01 00:00:00'),
-('카카오톡 친구 환영 10000원 할인 쿠폰', 'CODE', NULL, NULL, 'WELCOME_FRIEND', 9999999999, '2025-12-04 00:00:00', '2026-12-04 00:00:00', 'USABLE', FALSE, NULL, NULL, TRUE, 30000, 'FIXED', 10000, NULL, FALSE, NULL, FALSE, '2025-12-04 00:00:00', '2025-12-04 00:00:00'),
-('오직 크리스마스! 10000원 할인 쿠폰', 'AUTO', 'EVENT', 'LOGIN', NULL, 9999999999, '2025-12-24 00:00:00', '2025-12-25 23:59:59', 'USABLE', TRUE, '2025-12-24 00:00:00', '2025-12-25 23:59:59', TRUE, 20000, 'FIXED', 10000, NULL, FALSE, NULL, FALSE, '2025-12-04 14:42:00', '2025-12-04 14:42:00');
+('신규회원 환영 쿠폰', 'AUTO', 'NEWUSER', 'ALL_USER', NULL, 9999999999, NULL, NULL, 'USABLE', FALSE, NULL, NULL, TRUE, 20000, 'FIXED', 3000, NULL, NULL, NULL, 5, FALSE, NOW(), NOW()),
+('겨울맞이 10% 할인 쿠폰', 'AUTO', 'EVENT', 'LOGIN', NULL, 9999999999, '2025-11-01 00:00:00', '2026-01-31 23:59:59', 'USABLE', TRUE, '2025-11-01 00:00:00', '2026-02-28 23:59:59', TRUE, 20000, 'PERCENTAGE', NULL, 10, TRUE, 30000, 0, FALSE, '2025-11-01 00:00:00', '2025-11-01 00:00:00'),
+('운영자가 주는 20% 할인 쿠폰', 'MANUAL', NULL, NULL, NULL, 9999999999, NULL, NULL, 'USABLE', FALSE, NULL, NULL, FALSE, NULL, 'PERCENTAGE', NULL, 20, FALSE, NULL, 0, FALSE, '2025-11-01 00:00:00', '2025-11-01 00:00:00'),
+('카카오톡 친구 환영 10000원 할인 쿠폰', 'CODE', NULL, NULL, 'WELCOME_FRIEND', 9999999999, '2025-12-04 00:00:00', '2026-12-04 00:00:00', 'USABLE', FALSE, NULL, NULL, TRUE, 30000, 'FIXED', 10000, NULL, FALSE, NULL, 0, FALSE, '2025-12-04 00:00:00', '2025-12-04 00:00:00'),
+('오직 크리스마스! 10000원 할인 쿠폰', 'AUTO', 'EVENT', 'LOGIN', NULL, 9999999999, '2025-12-24 00:00:00', '2025-12-25 23:59:59', 'USABLE', TRUE, '2025-12-24 00:00:00', '2025-12-25 23:59:59', TRUE, 20000, 'FIXED', 10000, NULL, FALSE, NULL, 0, FALSE, '2025-12-04 14:42:00', '2025-12-04 14:42:00');
 
 -- 민석 users 테이블에 데이터 삽입 (임시)
 INSERT INTO users
