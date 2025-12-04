@@ -39,6 +39,7 @@ public class CouponDto {
     @JsonProperty("hasLimitMaxDiscount")
     private Boolean limitMaxDiscountAmount;
     private Integer maxDiscountAmount;
+    private Integer issueCount;
     private Boolean deleted;
 
     public Coupon toEntity() {
