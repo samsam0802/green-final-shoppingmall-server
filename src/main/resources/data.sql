@@ -456,3 +456,127 @@ VALUES
 (3, 2, 3, 3, '리뷰3', 3, true, false, '2025-06-23 09:15:00', '2025-06-23 09:15:00'),
 (4, 2, 4, 4, '리뷰4', 5, true, false, '2024-12-17 14:45:00', '2024-12-17 14:45:00'),
 (5, 3, 5, 5, '리뷰5', 5, true, false, '2024-05-05 18:00:00', '2025-05-05 18:00:00');
+
+-- 민석 데이터 크롤링
+-- ========================================
+-- 토리든 다이브인 저분자 히알루론산 토너
+-- ========================================
+
+-- 1. 상품 상세정보 INSERT문
+INSERT INTO product_detail_info (
+    capacity,
+    skin_type,
+    usage_period,
+    usage_method,
+    manufacturer,
+    made_in_country,
+    ingredients,
+    functional_certification,
+    caution,
+    quality_guarantee,
+    customer_service_number
+) VALUES
+(
+    '[본품] 다이브인 토너 300ml [증정] 다이브인 토너 100ml',
+    '모든 피부 타입',
+    '제조일로부터 3년 / 개봉 후 12개월',
+    '세안 후 화장솜 혹은 손에 적당량을 덜어 피부결을 따라 부드럽게 흡수시켜 줍니다.',
+    '리봄화장품(주) / (주)토리든',
+    '대한민국',
+    '정제수, 부틸렌글라이콜, 다이프로필렌글라이콜, 1,2-헥산다이올, 글리세린, 베타인, 알란토인, 판테놀, 쇠비름추출물, 트레할로오스, 소듐하이알루로네이트, 하이드롤라이즈드하이알루로닉애씨드(100ppm), 소듐하이알루로네이트크로스폴리머, 하이드롤라이즈드소듐하이알루로네이트, 소듐아세틸레이티드하이알루로네이트, 2,3-부탄다이올, 펜틸렌글라이콜, 말라카이트추출물, 다이소듐이디티에이, 에틸헥실글리세린',
+    '해당사항 없음',
+    '1) 화장품 사용 시 또는 사용 후 직사광선에 의하여 사용부위가 붉은 반점, 부어오름 또는 가려움증 등의 이상 증상이나 부작용이 있는 경우에는 전문의 등과 상담할 것 2) 상처가 있는 부위 등에는 사용을 자제할 것 3) 보관 및 취급 시 주의사항 가) 어린이의 손이 닿지 않는 곳에 보관할 것 나) 직사광선을 피해서 보관할 것',
+    '본 제품은 공정거래위원회고시 소비자분쟁해결 기준에 의거 교환 또는 보상 받을 수 있습니다.',
+    '1600-3584'
+);
+
+-- 2. 상품 정보 INSERT문
+INSERT INTO products (
+    product_detail_info_id,
+    brand_id,
+    category_id,
+    delivery_policy_id,
+    use_restock_noti,
+    product_name,
+    product_code,
+    search_keywords,
+    exposure_status,
+    sale_status,
+    description,
+    is_cancelable,
+    is_deleted,
+    created_at,
+    updated_at
+) VALUES
+(7, 6, 60, 2, FALSE, '[증량기획] 토리든 다이브인 저분자 히알루론산 토너 300ml 기획(+100ml 추가 증정)', 'TRD_001', '토리든 다이브인 히알루론산 토너 저분자', 'EXPOSURE', 'ON_SALE', '설명 없음', TRUE, FALSE, NOW(), NOW());
+
+-- 3. 상품 상세 이미지 INSERT문 (47개)
+INSERT INTO product_detail_images (product_id, display_order, image_url) VALUES
+(7, 0, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/ifh.cc/g/LsFMgn.jpg?created=202511051200'),
+(7, 1, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/01.jpg?created=202511051200'),
+(7, 2, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/01.jpg?created=202511051200'),
+(7, 3, 'http://torriden.jpg1.kr/torriden/product/DI/toner/02.gif'),
+(7, 4, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/03-1.jpg?created=202511051200'),
+(7, 5, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/03-1.jpg?created=202511051200'),
+(7, 6, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/03-2.jpg?created=202511051200'),
+(7, 7, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/03-2.jpg?created=202511051200'),
+(7, 8, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/04.jpg?created=202511051200'),
+(7, 9, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/05.jpg?created=202511051200'),
+(7, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/05.jpg?created=202511051200'),
+(7, 11, 'http://torriden.jpg1.kr/torriden/product/DI/toner/06.gif'),
+(7, 12, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/07.jpg?created=202511051200'),
+(7, 13, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/08-1.jpg?created=202511051200'),
+(7, 14, 'http://torriden.jpg1.kr/torriden/product/DI/toner/08-2.gif'),
+(7, 15, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/08-3.jpg?created=202511051200'),
+(7, 16, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/09.jpg?created=202511051200'),
+(7, 17, 'http://torriden.jpg1.kr/torriden/product/DI/toner/10-1.gif'),
+(7, 18, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/10-2.jpg?created=202511051200'),
+(7, 19, 'http://torriden.jpg1.kr/torriden/product/DI/toner/11-1.gif'),
+(7, 20, 'http://torriden.jpg1.kr/torriden/product/DI/toner/11-2.gif'),
+(7, 21, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/12.jpg?created=202511051200'),
+(7, 22, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/13.jpg?created=202511051200'),
+(7, 23, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/13.jpg?created=202511051200'),
+(7, 24, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/14.jpg?created=202511051200'),
+(7, 25, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/14.jpg?created=202511051200'),
+(7, 26, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/15-1.jpg?created=202511051200'),
+(7, 27, 'http://torriden.jpg1.kr/torriden/product/DI/toner/15-2.gif'),
+(7, 28, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/15-3.jpg?created=202511051200'),
+(7, 29, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/16.jpg?created=202511051200'),
+(7, 30, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/17.jpg?created=202511051200'),
+(7, 31, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/18.jpg?created=202511051200'),
+(7, 32, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/18.jpg?created=202511051200'),
+(7, 33, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/19.jpg?created=202511051200'),
+(7, 34, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/19.jpg?created=202511051200'),
+(7, 35, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/20.jpg?created=202511051200'),
+(7, 36, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/20.jpg?created=202511051200'),
+(7, 37, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/21.jpg?created=202511051200'),
+(7, 38, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/21.jpg?created=202511051200'),
+(7, 39, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/22.jpg?created=202511051200'),
+(7, 40, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/22.jpg?created=202511051200'),
+(7, 41, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop2/torriden.jpg1.kr/torriden/product/DI/toner/22.jpg?created=202511051200'),
+(7, 42, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop0/torriden.jpg1.kr/torriden/product/DI/toner/99.jpg?created=202511051200'),
+(7, 43, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop1/torriden.jpg1.kr/torriden/product/DI/toner/99.jpg?created=202511051200'),
+(7, 44, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000170266/202511051159/crop2/torriden.jpg1.kr/torriden/product/DI/toner/99.jpg?created=202511051200');
+
+-- 4. 제품 메인 이미지 INSERT문 (3개)
+INSERT INTO product_main_images (product_id, image_type, display_order, image_url) VALUES
+(7, 'THUMBNAIL', 0, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0017/A00000017026613ko.jpg?l=ko'),
+(7, 'GALLERY', 1, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0017/A00000017026609ko.jpg?l=ko'),
+(7, 'GALLERY', 2, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0017/A00000017026611ko.jpg?l=ko');
+
+-- 5. 상품 옵션 INSERT문 (옵션 이미지 없음)
+INSERT INTO product_options (
+    product_id,
+    option_name,
+    purchase_price,
+    selling_price,
+    current_stock,
+    initial_stock,
+    safety_stock,
+    image_url,
+    display_order,
+    is_deleted,
+    created_at,
+    updated_at
+) VALUES
+(7, '[증량기획] 토리든 다이브인 저분자 히알루론산 토너 300ml 기획(+100ml 추가 증정)', 12000, 15700, 150, 200, 20, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0017/A00000017026613ko.jpg?l=ko', 0, FALSE, NOW(), NOW());
