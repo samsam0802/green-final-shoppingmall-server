@@ -43,6 +43,10 @@ public class UserCoupon extends BaseTimeEntity {
     @Builder.Default
     private Boolean deleted = false;
 
+    public void useCoupon() {
+        this.usageStatus = CouponUsageStatus.USED;
+    }
+
     public UserCouponRes toDto() {
         return UserCouponRes.builder()
                 .id(this.id)

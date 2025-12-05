@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.usercoupon.service;
 
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
+import kr.kro.moonlightmoist.shopapi.coupon.domain.CouponUsageStatus;
 import kr.kro.moonlightmoist.shopapi.coupon.repository.CouponRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import kr.kro.moonlightmoist.shopapi.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,7 +44,16 @@ public class UserCouponServiceImpl implements UserCouponService{
 
         List<UserCoupon> userCoupons = userCouponRepository.findByUser_Id(userId);
         List<UserCouponRes> dtos = userCoupons.stream()
+                .filter(coupon -> coupon.getUsageStatus().equals(CouponUsageStatus.ACTIVE))
                 .map(i -> i.toDto()).toList();
         return dtos;
+    }
+
+    // 민석님이 사용할 결제시 쿠폰 used 로 반드는 메서드
+    @Override
+    @Transactional
+    public void useCoupon(Long userId, Long couponId) {
+        UserCoupon userCoupon = userCouponRepository.findByUser_IdAndCoupon_Id(userId, couponId).get();
+        userCoupon.useCoupon();
     }
 }
