@@ -1,6 +1,8 @@
 package kr.kro.moonlightmoist.shopapi.order.service;
 
 import com.siot.IamportRestClient.response.Payment;
+import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
+import kr.kro.moonlightmoist.shopapi.coupon.domain.DiscountType;
 import kr.kro.moonlightmoist.shopapi.order.domain.Order;
 import kr.kro.moonlightmoist.shopapi.order.domain.OrderProduct;
 import kr.kro.moonlightmoist.shopapi.order.domain.OrderProductStatus;
@@ -15,6 +17,9 @@ import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductOptionRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
+import kr.kro.moonlightmoist.shopapi.usercoupon.domain.UserCoupon;
+import kr.kro.moonlightmoist.shopapi.usercoupon.dto.UserCouponRes;
+import kr.kro.moonlightmoist.shopapi.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +40,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductOptionRepository productOptionRepository;
-
+    private final UserCouponRepository userCouponRepository;
 
     public String createOrderNumber() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -57,11 +62,30 @@ public class OrderServiceImpl implements OrderService{
         return totalProductAmount;
     }
 
-    public int calcCouponDiscountAmount(int totalProductAmount, Long couponId) {
-        if(couponId == null){
+    public int calcCouponDiscountAmount(int totalProductAmount, Long userCouponId) {
+        UserCoupon userCoupon = userCouponRepository.findById(userCouponId).get();
+        Coupon coupon = userCoupon.getCoupon();
+        if(!coupon.getLimitMinOrderAmount() || (coupon.getLimitMinOrderAmount() && (totalProductAmount >= coupon.getMinOrderAmount()))){
+            if(coupon.getDiscountType() == DiscountType.FIXED) {
+                userCoupon.useCoupon();
+                userCouponRepository.save(userCoupon);
+                return coupon.getFixedDiscountAmount();
+            }
+            else {// 할인 타입이 PERCENTAGE일 경우
+                int discountAmount = totalProductAmount * coupon.getDiscountPercentage() / 100;
+                if(discountAmount > coupon.getMaxDiscountAmount()) {
+                    userCoupon.useCoupon();
+                    userCouponRepository.save(userCoupon);
+                    return coupon.getMaxDiscountAmount();
+                }
+                userCoupon.useCoupon();
+                userCouponRepository.save(userCoupon);
+                return discountAmount;
+            }
+        }
+        else { // 최소 주문 금액이 안 될 경우
             return 0;
         }
-        else return 3000;
     }
 
     public int calcDeliveryFee(int totalProductAmount, List<OrderProductRequestDTO> orderProducts) {
@@ -122,9 +146,11 @@ public class OrderServiceImpl implements OrderService{
         // 4) 배송비 계산
         int deliveryFee = calcDeliveryFee(totalProductAmount, dto.getOrderProducts());
         // 5) 쿠폰 할인 가격 계산
-        int discountAmount = calcCouponDiscountAmount(totalProductAmount,dto.getCouponId());
+        int discountAmount = calcCouponDiscountAmount(totalProductAmount, dto.getUserCouponId());
         // 6) 최종 결제 금액 계산
         int finalAmount = totalProductAmount- discountAmount - dto.getUsedPoints();
+
+
 
         // 주문 생성
         Order order = Order.builder()
@@ -207,6 +233,8 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void deleteOneOrder(Long orderId) {
         log.info("deleteOneOrder 메서드 실행 orderId:{}",orderId);
+        Order order = orderRepository.findById(orderId).get();
+        order.getOrderCoupon().getUserCoupon().recoverCoupon();
         orderRepository.deleteById(orderId);
     }
 
