@@ -34,9 +34,12 @@ public class ReviewCommentController {
     @PutMapping("/modify/{commentId}")
     public ResponseEntity<String> modify(
         @PathVariable("commentId") Long commentId,
-        @RequestBody ReviewCommentDTO dto) {
+        @RequestBody ReviewCommentDTO dto,
+        @RequestParam Long userId
+    ) {
 
       dto.setId(commentId);
+      dto.setUserId(userId);
       reviewCommentService.modify(dto);
 
       return ResponseEntity.ok("성공");
