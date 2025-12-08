@@ -357,6 +357,15 @@ VALUES
 (6,'user','a','유저','01012345677','user@naver.com','2025-12-08','12345','성남시 미금역','그린아카데미',false,true,false,NULL,'USER','BRONZE',NOW(),NOW()),
 (7,'admin','a','관리자','01012345678','admin@naver.com','2025-12-08','12345','성남시 미금역','그린아카데미',false,true,false,NULL,'ADMIN','VIP',NOW(),NOW());
 
+
+-- 포인트 히스토리
+INSERT INTO point_histories
+(user_id, point_status, point_value, remaining_point, expired_at, is_deleted, created_at, updated_at) VALUES
+(1, 'EARNED', 100, 100, '2026-12-01 00:00:00', FALSE, '2025-12-01 00:00:00', '2025-12-01 00:00:00'),
+(1, 'EARNED', 100, 100, '2026-12-01 00:05:00', FALSE, '2025-12-01 00:05:00', '2025-12-01 00:05:00'),
+(1, 'EXPIRED', 100, 100, '2024-12-01 00:05:00', FALSE, '2023-12-01 00:05:00', '2024-12-01 00:05:00');
+
+
 -- 발급받은 유저 쿠폰
 INSERT INTO user_coupons (user_id, coupon_id, usage_status, used_at, is_deleted, created_at, updated_at)
 VALUES
