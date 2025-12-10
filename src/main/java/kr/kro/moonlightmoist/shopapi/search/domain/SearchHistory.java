@@ -2,28 +2,31 @@ package kr.kro.moonlightmoist.shopapi.search.domain;
 
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@Getter
-@Builder
 @Entity
-@Table(name="search_histories")
-@AttributeOverride(name = "createdAt", column = @Column(name = "searched_at",updatable = false,nullable = false))
+@Table(name = "search_histories")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class SearchHistory extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="user_id", nullable = false)
-//    // todo: User 클래스 만들어야함
-//    private User user;
-    @Column(nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(nullable = true)
+    private String guestId;
+
+    @Column(nullable = false, length = 150)
     private String keyword;
 
 }
