@@ -323,7 +323,7 @@ VALUES
 (2, '달바 퍼스트 스프레이 세럼 100ml 2개 기획', 20000, 59800, 80, 100, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0023/A00000023272408ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW()),
 (3, '에스트라 아토베리어365 크림 80ml 기획', 15000, 33000, 120, 120, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022283315ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW()),
 (4, '구달 청귤 비타C 잡티케어 아이크림 30ml', 15000, 24000, 90, 90, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0022/A00000022977610ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW()),
-(5, '티트리 진정수분 1매', 500, 1000, 80, 100, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/2095773322051515522.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW()),
+(5, '티트리 진정수분 1매', 500, 1000, 0, 100, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/2095773322051515522.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 0, false, NOW(), NOW()),
 (5, '콜라겐 코어탄력 1매', 500, 1000, 80, 100, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/4292023589387008731.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 1, false, NOW(), NOW()),
 (5, '비타민씨 잡티토닝 1매', 500, 1000, 120, 120, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/6333511698168958736.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 2, false, NOW(), NOW()),
 (5, '세라마이드 보습장벽 1매', 500, 1000, 90, 90, 10, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/1/5177396663963625881.jpg?RS=108x0&QT=85&SF=webp&sharpen=1x0.5', 3, false, NOW(), NOW()),
@@ -356,6 +356,10 @@ VALUES
 (5,'user5','$2a$10$spuiucMhP0dXXkoczVqjEOP.K77uvjIq6Uq6JXZGQW8q47JuSB.3O','사용자5','01055555555','user5@test.com','1996-05-05','55555','서울시 마포구','105호',true,true,false,NULL,'USER','BRONZE',NOW(),NOW()), -- pw5
 (6,'user','$2a$10$jmrm8qUUoTnz/r2XW6hWeOZOtvO9SAUI2rnsFUcCkbNZTDqs6mSYG','유저','01012345677','user@naver.com','2025-12-08','12345','성남시 미금역','그린아카데미',false,true,false,NULL,'USER','BRONZE',NOW(),NOW()), -- a
 (7,'admin','$2a$10$zzjjAVRFjyLxdWpR4HPmbOCLmS2C8LeEAURv5lQtLgMPpVBe5sfZi','관리자','01012345678','admin@naver.com','2025-12-08','12345','성남시 미금역','그린아카데미',false,true,false,NULL,'ADMIN','VIP',NOW(),NOW()); -- a
+
+
+INSERT INTO restock_notifications (id, user_id, product_option_id, notification_type, notification_status, notified_at, is_deleted, created_at, updated_at) VALUES
+(1, 4, 5, 'SMS' ,'WAITING', NULL, FALSE, NOW(), NOW());
 
 
 -- 포인트 히스토리
