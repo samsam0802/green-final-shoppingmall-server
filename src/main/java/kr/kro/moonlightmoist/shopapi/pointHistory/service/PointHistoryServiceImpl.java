@@ -75,7 +75,7 @@ public class PointHistoryServiceImpl implements PointHistoryService{
         // 사용 history 를 남겨야함
         PointHistory usageHistory = PointHistory.builder()
                 .user(user)
-                .pointStatus(PointStatus.EARNED)
+                .pointStatus(PointStatus.USED)
                 .pointValue(-amountToUse)
                 .remainingPoint(0)
                 .build();

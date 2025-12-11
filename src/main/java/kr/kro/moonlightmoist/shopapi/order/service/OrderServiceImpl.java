@@ -10,6 +10,7 @@ import kr.kro.moonlightmoist.shopapi.order.domain.OrderProductStatus;
 import kr.kro.moonlightmoist.shopapi.order.dto.*;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderCouponRepository;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderRepository;
+import kr.kro.moonlightmoist.shopapi.pointHistory.service.PointHistoryService;
 import kr.kro.moonlightmoist.shopapi.product.domain.ImageType;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderCouponRepository orderCouponRepository;
 
     private final OrderCouponService orderCouponService;
+
 
     public String createOrderNumber() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -134,7 +136,7 @@ public class OrderServiceImpl implements OrderService{
         int deliveryFee = calcDeliveryFee(totalProductAmount, dto.getOrderProducts());
         // 5) 쿠폰 할인 가격 계산
         int discountAmount = orderCouponService.calcAndUseCoupon(totalProductAmount, dto.getUserCouponId());
-        // 6) 포인트 계산
+        // 6) 포인트 계산(사용 포인트)
         int usedPoints = dto.getUsedPoints();
         // 7) 최종 결제 금액 계산
         int finalAmount = totalProductAmount + deliveryFee - discountAmount - usedPoints;
@@ -148,7 +150,8 @@ public class OrderServiceImpl implements OrderService{
                 .expectedDeliveryDate(expectedDeliveryDate)
                 .totalProductAmount(totalProductAmount)
                 .discountAmount(discountAmount)
-                .usedPoints(dto.getUsedPoints())
+                .usedPoints(usedPoints)
+                .earnedPoints(dto.getEarnedPoints())
                 .finalAmount(finalAmount)
                 .receiverName(dto.getReceiverName())
                 .receiverPhone(dto.getReceiverPhone())
@@ -176,13 +179,13 @@ public class OrderServiceImpl implements OrderService{
 
         orderRepository.save(order);
 
+        // 주문에 사용된 쿠폰 정보를 db에 저장
         if(dto.getUserCouponId() != null && discountAmount > 0) {
             Long orderCouponId = orderCouponService.saveCoupon(order.getId(), dto.getUserCouponId(), discountAmount);
             OrderCoupon orderCoupon = orderCouponRepository.findById(orderCouponId).get();
 
             // 주문 엔티티에 주문에 사용된 쿠폰 저장
             order.applyOrderCoupon(orderCoupon);
-
         }
 
         return order.getId();
