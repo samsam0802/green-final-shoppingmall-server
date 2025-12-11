@@ -24,6 +24,7 @@ public class OrderCouponServiceImpl implements OrderCouponService{
 
     @Override
     public int calcAndUseCoupon(int totalProductAmount, Long userCouponId) {
+        log.info("OrderCouponServiceImpl -> userCouponId:{}",userCouponId);
         if(userCouponId != null) {
             UserCoupon userCoupon = userCouponRepository.findById(userCouponId).get();
             Coupon coupon = userCoupon.getCoupon();
@@ -43,7 +44,7 @@ public class OrderCouponServiceImpl implements OrderCouponService{
             } else { // 최소 주문 금액이 안 될 경우
                 return 0;
             }
-        } else { //
+        } else { // userCouponId가 null일 경우(쿠폰을 선택하지 않았을 경우)
             return 0;
         }
     }

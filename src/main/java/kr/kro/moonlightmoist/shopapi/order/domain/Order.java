@@ -50,6 +50,9 @@ public class Order extends BaseTimeEntity {
     //사용된 포인트
     @Column(nullable = false)
     private int usedPoints;
+    //적립 포인트
+    @Column(nullable = false)
+    private int earnedPoints;
     //최종 결제 금액
     @Column(nullable = false)
     private int finalAmount;

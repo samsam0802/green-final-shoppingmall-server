@@ -6,6 +6,7 @@ import kr.kro.moonlightmoist.shopapi.order.dto.OrderResponseDTO;
 import kr.kro.moonlightmoist.shopapi.order.dto.OrderSearchCondition;
 import kr.kro.moonlightmoist.shopapi.order.service.OrderCouponService;
 import kr.kro.moonlightmoist.shopapi.order.service.OrderService;
+import kr.kro.moonlightmoist.shopapi.pointHistory.service.PointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,14 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final OrderCouponService orderCouponService;
+    private final PointHistoryService pointHistoryService;
 
     @PostMapping("")
     public ResponseEntity<Long> registerOrder(@RequestBody OrderRequestDTO orderRequestDTO, @RequestParam Long userId) {
         log.info("registerOrder 메서드 실행 dto :{}", orderRequestDTO);
+        // 사용한 포인트 차감
+        pointHistoryService.usePoint(userId, orderRequestDTO.getUsedPoints());
+
         return ResponseEntity.ok(orderService.createOrder(orderRequestDTO, userId));
     }
 
