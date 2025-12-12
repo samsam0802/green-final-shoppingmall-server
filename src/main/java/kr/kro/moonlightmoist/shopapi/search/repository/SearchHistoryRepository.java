@@ -22,7 +22,7 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Lo
 
     //비회원 식별자를 기준으로 최근 검색한 키워드 10개
     @Query(value = "SELECT * FROM search_histories " +
-            "WHERE guestId = :guest " +
+            "WHERE guestId = :guestId " +
             "ORDER BY created_at DESC " +
             "LIMIT 20", nativeQuery = true)
     List<SearchHistory> findByGuestId10Searched(@Param("guestId") String guestId);
