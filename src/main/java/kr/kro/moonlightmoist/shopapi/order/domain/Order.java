@@ -85,6 +85,10 @@ public class Order extends BaseTimeEntity {
         this.orderCoupon=orderCoupon;
     }
 
+    public void deleteOrder() {
+        this.deleted=true;
+    }
+
     public OrderResBySearch toDtoForOrderResBySearch() {
         OrderResBySearch orderRes = OrderResBySearch.builder()
                 .id(this.getId())

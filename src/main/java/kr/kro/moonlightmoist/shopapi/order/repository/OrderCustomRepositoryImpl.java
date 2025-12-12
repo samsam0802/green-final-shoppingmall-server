@@ -37,6 +37,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
                 .join(orderProduct.productOption, productOption)
                 .join(productOption.product, product)
                 .where(
+                        order.deleted.isFalse(),
                         orderNumberFilter(condition.getOrderNumber()),
                         ordererNameFilter(condition.getOrdererName()),
                         productNameFilter(condition.getProductName(), product),
@@ -48,6 +49,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository{
                         //deliveryFilter(condition.getSelectedDelivery()),
                         paymentFilter(condition.getSelectedPayment())
                 )
+                .orderBy(order.createdAt.desc())
                 .fetch();
 
         System.out.println("result= " + orderList);

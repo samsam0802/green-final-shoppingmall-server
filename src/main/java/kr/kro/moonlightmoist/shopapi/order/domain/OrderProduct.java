@@ -36,8 +36,15 @@ public class OrderProduct extends BaseTimeEntity {
     @Column(nullable = false)
     private OrderProductStatus orderProductStatus;
 
+    @Column(nullable = false, name = "is_deleted")
+    private boolean deleted;
+
     public void updateStatus(OrderProductStatus orderProductStatus) {
         this.orderProductStatus=orderProductStatus;
+    }
+
+    public void deleteOrderProduct() {
+        this.deleted=true;
     }
 
     public OrderProductResBySearch toDtoForOrderProductResBySearch() {

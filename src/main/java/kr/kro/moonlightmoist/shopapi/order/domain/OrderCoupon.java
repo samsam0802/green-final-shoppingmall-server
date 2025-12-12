@@ -40,6 +40,12 @@ public class OrderCoupon extends BaseTimeEntity {
     @Column(nullable = false)
     private DiscountType discountType;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean deleted;
+
+    public void deleteOrderCoupon() {
+        this.deleted=true;
+    }
 
     public OrderCouponResponseDTO toDto() {
         OrderCouponResponseDTO orderCouponResponseDTO = OrderCouponResponseDTO.builder()

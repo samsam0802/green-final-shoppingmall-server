@@ -241,8 +241,10 @@ public class OrderServiceImpl implements OrderService{
             orderCoupon.getUserCoupon().recoverCoupon();
             orderCouponService.deleteOrderCoupon(orderCoupon.getId());
         }
-        orderRepository.deleteById(orderId);
-
+        for(OrderProduct orderProduct : order.getOrderProducts()) {
+            orderProduct.deleteOrderProduct();
+        }
+        order.deleteOrder();
     }
 
     @Override

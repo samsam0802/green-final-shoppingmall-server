@@ -66,6 +66,7 @@ public class OrderCouponServiceImpl implements OrderCouponService{
 
     @Override
     public void deleteOrderCoupon(Long orderCouponId) {
-        orderCouponRepository.deleteById(orderCouponId);
+        OrderCoupon orderCoupon = orderCouponRepository.findById(orderCouponId).get();
+        orderCoupon.deleteOrderCoupon();
     }
 }
