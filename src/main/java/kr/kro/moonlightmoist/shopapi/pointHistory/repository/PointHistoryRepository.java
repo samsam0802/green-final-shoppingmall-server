@@ -46,4 +46,7 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             "AND p.expiredAt < :now " +
             "AND p.deleted = false")
     int updatePointStatusToExpired(@Param("now") LocalDateTime now);
+
+    // 주문 id 로 히스토리 찾기
+    List<PointHistory> findByOrderId(Long orderId);
 }

@@ -32,14 +32,14 @@ public class PointHistoryController {
 
     @PostMapping("/earn")
     public ResponseEntity<String> earnPoint(@RequestBody PointEarnReq dto) {
-        pointHistoryService.earnPoint(dto.getUserId(), dto.getPointValue());
+//        pointHistoryService.earnPoint(dto.getUserId(), dto.getPointValue());
 
         return ResponseEntity.ok("ok");
     }
 
     @PostMapping("/use")
     public ResponseEntity<String> usePoint(@RequestBody PointUseReq dto) {
-        pointHistoryService.usePoint(dto.getUserId(), dto.getAmountToUse());
+//        pointHistoryService.usePoint(dto.getUserId(), dto.getAmountToUse());
 
         return ResponseEntity.ok("ok");
     }

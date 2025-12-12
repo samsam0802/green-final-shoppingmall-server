@@ -2,6 +2,7 @@ package kr.kro.moonlightmoist.shopapi.pointHistory.domain;
 
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
+import kr.kro.moonlightmoist.shopapi.order.domain.Order;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import lombok.*;
 
@@ -25,6 +26,10 @@ public class PointHistory extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Enumerated(EnumType.STRING)
     private PointStatus pointStatus;
 
@@ -36,4 +41,7 @@ public class PointHistory extends BaseTimeEntity {
     @Builder.Default
     private boolean deleted = false;
 
+    public void plusRemainingPoint(int value) {
+        this.remainingPoint += value;
+    }
 }

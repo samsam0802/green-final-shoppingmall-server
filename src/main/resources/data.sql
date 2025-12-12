@@ -362,13 +362,6 @@ INSERT INTO restock_notifications (id, user_id, product_option_id, notification_
 (1, 4, 5, 'SMS' ,'WAITING', NULL, FALSE, NOW(), NOW());
 
 
--- 포인트 히스토리
-INSERT INTO point_histories
-(user_id, point_status, point_value, remaining_point, expired_at, is_deleted, created_at, updated_at) VALUES
-(1, 'EARNED', 100, 100, '2026-12-01 00:00:00', FALSE, '2025-12-01 00:00:00', '2025-12-01 00:00:00'),
-(1, 'EARNED', 100, 100, '2026-12-01 00:05:00', FALSE, '2025-12-01 00:05:00', '2025-12-01 00:05:00'),
-(1, 'EARNED', 1000,1000, '2025-12-10 09:30:00', FALSE, NOW(), NOW()),
-(1, 'EXPIRED', 100, 100, '2024-12-01 00:05:00', FALSE, '2023-12-01 00:05:00', '2024-12-01 00:05:00');
 
 
 -- 발급받은 유저 쿠폰
@@ -433,7 +426,7 @@ discount_amount, used_points, earned_points, final_amount, receiver_name, receiv
 detailed_address, delivery_request, is_deleted, created_at, updated_at)
 VALUES
 -- 1. 1개월 내 주문 (2025-11-05 생성)
-(1, 1, '20251105-A1B2C3', 'KAKAO', '2025-11-07', 55000, 3000, 5000, 0, 0, 53000, '홍길동',
+(1, 1, '20251105-A1B2C3', 'KAKAO', '2025-11-07', 55000, 3000, 5000, 100, 0, 53000, '홍길동',
 '010-1234-5678', '01234', '서울특별시 강남구 테헤란로 123', '삼성타워빌딩 10층', '문 앞에 놓아주세요',
 false, '2025-11-05 10:30:00', '2025-11-05 10:30:00'),
 -- 2. 3개월 내 주문 (2025-09-15 생성)
@@ -892,6 +885,23 @@ VALUES
 (18, 6, 5, 5, '리뷰18', 1, true, false, '2024-12-25 18:00:00', '2025-12-25 18:00:00'),
 (19, 6, 2, 5, '리뷰19', 5, true, false, '2024-09-05 18:00:00', '2025-09-05 18:00:00'),
 (20, 6, 3, 5, '리뷰20', 4, true, false, '2024-09-05 18:00:00', '2025-09-05 18:00:00');
+
+
+-- 포인트 히스토리
+INSERT INTO point_histories
+(user_id, order_id, point_status, point_value, remaining_point, expired_at, is_deleted, created_at, updated_at) VALUES
+(1, NULL, 'EARNED', 200, 200, '2026-12-01 00:00:00', FALSE, '2025-12-01 00:00:00', '2025-12-01 00:00:00'),
+(1, NULL, 'EARNED', 100, 100, '2026-12-01 00:05:00', FALSE, '2025-12-01 00:05:00', '2025-12-01 00:05:00'),
+(4, 1, 'USED', 100, NULL, NULL, FALSE, '2025-12-01 00:05:00', '2025-12-01 00:05:00'),
+(1, NULL, 'EARNED', 1000,1000, '2025-12-10 09:30:00', FALSE, NOW(), NOW()),
+(1, NULL, 'EXPIRED', 100, 100, '2024-12-01 00:05:00', FALSE, '2023-12-01 00:05:00', '2024-12-01 00:05:00');
+
+-- 포인트 사용 내역
+INSERT INTO point_usage_details
+(used_point_history_id, earned_point_history_id, used_amount, created_at, updated_at) VALUES
+(3, 1, 100, '2025-12-01 00:05:00', '2025-12-01 00:05:00');
+
+
 
 -- 민석 데이터 크롤링
 -- ========================================
