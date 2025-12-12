@@ -15,7 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "restock_notifications")
+@Table(name = "restock_notifications",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    name = "uk_user_product_option",
+                    columnNames = {"user_id", "product_option_id"}
+            )
+        }
+)
 public class RestockNotification extends BaseTimeEntity {
 
     @Id

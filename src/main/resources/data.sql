@@ -359,7 +359,7 @@ VALUES
 
 
 INSERT INTO restock_notifications (id, user_id, product_option_id, notification_type, notification_status, notified_at, is_deleted, created_at, updated_at) VALUES
-(1, 4, 5, 'SMS' ,'WAITING', NULL, FALSE, NOW(), NOW());
+(1, 4, 5, 'SMS' ,'WAITING', NULL, FALSE, '2025-11-01 00:00:00', '2025-11-01 00:00:00');
 
 
 
