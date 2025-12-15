@@ -8,7 +8,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class PageRequestDTO {
     private Integer page;
     private Integer size;
+    private String sort;
 }

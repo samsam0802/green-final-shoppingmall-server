@@ -103,13 +103,40 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PageResponseDTO<ProductResForList> searchProductsByCategory(List<Long> depth3CategoryIds, PageRequestDTO pageRequest) {
 
-        Pageable pageable = PageRequest.of(
-                pageRequest.getPage()-1,
-                pageRequest.getSize(),
-                Sort.by("id").descending()
-        );
+        Pageable pageable = null;
+        Page<Product> page = null;
 
-        Page<Product> page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+        if (pageRequest.getSort() == null || pageRequest.getSort().equals("latest")) {
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("id").descending()
+            );
+            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+        } else if (pageRequest.getSort().equals("price_asc")) {
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize()
+            );
+            page = productRepository.findByCategoryIdOrderByMinPrice(depth3CategoryIds, pageable);
+
+        } else if (pageRequest.getSort().equals("price_desc")) {
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize()
+            );
+            page = productRepository.findByCategoryIdOrderByMaxPrice(depth3CategoryIds, pageable);
+        } else {
+            // 판매순 (아직 구현 x, 아래는 임시 코드 )
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("id").descending()
+            );
+            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+
+        }
+
         List<ProductResForList> dtoList = page.get().map(product -> product.toDTOForList()).toList();
 
         PageResponseDTO<ProductResForList> response = PageResponseDTO.<ProductResForList>withAll()

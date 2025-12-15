@@ -18,4 +18,33 @@ public interface ProductRepository extends JpaRepository<Product, Long>
 
     // 3차 카테고리 id 리스트로 조회
     Page<Product> findByCategoryIdIn(List<Long> categoryIds, Pageable pageable);
+
+    // 가격정렬 : 최소가격부터
+    @Query(value = """
+            SELECT p.*
+            FROM products p
+            LEFT JOIN product_options o ON p.id = o.product_id
+            WHERE p.category_id IN :categoryIds
+            GROUP BY p.id
+            ORDER BY MIN(o.selling_price) ASC
+            """,
+            countQuery = "SELECT COUNT(DISTINCT p.id) FROM products p WHERE p.category_id IN :categoryIds",
+            nativeQuery = true
+    )
+    Page<Product> findByCategoryIdOrderByMinPrice(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
+
+    // 가격정렬 : 최고가격부터
+    @Query(value = """
+            SELECT p.*
+            FROM products p
+            LEFT JOIN product_options o ON p.id = o.product_id
+            WHERE p.category_id IN :categoryIds
+            GROUP BY p.id
+            ORDER BY MIN(o.selling_price) DESC
+            """,
+            countQuery = "SELECT COUNT(DISTINCT p.id) FROM products p WHERE p.category_id IN :categoryIds",
+            nativeQuery = true
+    )
+    Page<Product> findByCategoryIdOrderByMaxPrice(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
+
 }
