@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import kr.kro.moonlightmoist.shopapi.notification.service.NotificationService;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductOptionRepository;
-import kr.kro.moonlightmoist.shopapi.restockNoti.domain.NotificationType;
+import kr.kro.moonlightmoist.shopapi.restockNoti.domain.NotificationStatus;
 import kr.kro.moonlightmoist.shopapi.restockNoti.domain.RestockNotification;
 import kr.kro.moonlightmoist.shopapi.restockNoti.repository.RestockNotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,8 @@ public class RestockEventListener {
         CompletableFuture.runAsync(() -> {
            try {
                notificationService.sendSmsMessage(noti.getUser().getPhoneNumber(), message);
-
+               // 성공
+               noti.changeStatus(NotificationStatus.SENT);
                // 성공 로그 저장
 
            } catch (Exception e) {

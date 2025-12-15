@@ -10,5 +10,6 @@ import lombok.*;
 @ToString
 public class PointEarnReq {
     private Long userId;
+    private Long orderId;
     private Integer pointValue;
 }

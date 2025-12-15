@@ -1,7 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.restockNoti.controller;
 
 import kr.kro.moonlightmoist.shopapi.restockNoti.dto.RestockNotiReq;
-import kr.kro.moonlightmoist.shopapi.restockNoti.repository.RestockNotificationRepository;
 import kr.kro.moonlightmoist.shopapi.restockNoti.service.RestockNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

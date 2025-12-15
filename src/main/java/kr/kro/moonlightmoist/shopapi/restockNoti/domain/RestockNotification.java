@@ -49,5 +49,8 @@ public class RestockNotification extends BaseTimeEntity {
     @Column(name = "is_deleted")
     private boolean deleted;
 
+    public void changeStatus (NotificationStatus status) {
+        this.notificationStatus = status;
+    }
 
 }

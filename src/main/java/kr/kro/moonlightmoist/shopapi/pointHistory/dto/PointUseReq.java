@@ -10,5 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 public class PointUseReq {
     private Long userId;
+    private Long orderId;
     private Integer amountToUse;
 }
