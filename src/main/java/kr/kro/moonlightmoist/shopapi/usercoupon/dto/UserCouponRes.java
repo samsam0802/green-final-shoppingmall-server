@@ -1,10 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.usercoupon.dto;
 
-import jakarta.persistence.*;
-import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
-import kr.kro.moonlightmoist.shopapi.coupon.domain.CouponUsageStatus;
+import kr.kro.moonlightmoist.shopapi.usercoupon.domain.CouponUsageStatus;
 import kr.kro.moonlightmoist.shopapi.coupon.dto.CouponDto;
-import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;

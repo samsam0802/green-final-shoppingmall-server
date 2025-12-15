@@ -1,4 +1,4 @@
-package kr.kro.moonlightmoist.shopapi.coupon.domain;
+package kr.kro.moonlightmoist.shopapi.usercoupon.domain;
 
 public enum CouponUsageStatus {
     ACTIVE, USED, EXPIRED

@@ -3,7 +3,6 @@ package kr.kro.moonlightmoist.shopapi.usercoupon.domain;
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
-import kr.kro.moonlightmoist.shopapi.coupon.domain.CouponUsageStatus;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.usercoupon.dto.UserCouponRes;
 import lombok.*;
