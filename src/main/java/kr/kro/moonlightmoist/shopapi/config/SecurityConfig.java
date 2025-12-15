@@ -4,6 +4,7 @@ import kr.kro.moonlightmoist.shopapi.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,11 +48,16 @@ public class SecurityConfig {
 
                 // 어떤 요청을 허용하고, 막을지를 설정하는 메서드
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers("/api/user/signup").permitAll()
                         .requestMatchers("/api/user/check-loginId").permitAll()
                         .requestMatchers("/api/categories", "/api/products/**").permitAll()
 
+                        .requestMatchers("/api/review/**").authenticated()
+                        .requestMatchers("/api/like/**").authenticated()
+                        .requestMatchers("/api/comment/**").authenticated()
+                        .requestMatchers("/api/mypage/**").authenticated()
                         .requestMatchers("/api/user/**").authenticated()
                         .anyRequest().authenticated());
 //            anyRequest() 모든요청을 의미, premitAll() 모든요청 허용

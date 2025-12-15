@@ -1,7 +1,8 @@
 package kr.kro.moonlightmoist.shopapi.user.controller;
 
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
 import kr.kro.moonlightmoist.shopapi.security.JwtTokenProvider;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
@@ -49,7 +50,8 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> Login (@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<Map<String, Object>> Login (@RequestBody UserLoginRequest userLoginRequest,
+                                                      HttpServletResponse httpServletResponse) {
         log.info("로그인 요청 : {}", userLoginRequest.getLoginId());
 
 //        Authentication은 스프링 시큐리티에서 **'인증(Authentication)에 대한 모든 정보'**를 담는 최상위 개념의 인터페이스
@@ -81,17 +83,24 @@ public class UserController {
 //            session.setAttribute("SPRING_SECURITY_CONTEXT",SecurityContextHolder.getContext());
 //            log.info("로그인 성공 LoginId : {}, SessionId : {}", userDetails.getUsername(), session.getId());
 
+            Cookie cookie = new Cookie("accessToken", jwtToken);
+            cookie.setHttpOnly(true); // JavaScript 접근 불가
+            cookie.setSecure(false); // HTTPS 로만
+            cookie.setPath("/"); // 모든경로
+            cookie.setMaxAge(60 * 60 * 24); // 1일 설정 만료일 설정
+            httpServletResponse.addCookie(cookie);
+
 //         응답 로직
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("massage", "로그인 성공");
-            response.put("token", jwtToken);
-            response.put("user", UserLoginResponse.builder()
+            Map<String, Object> LoginResponse = new HashMap<>();
+            LoginResponse.put("success", true);
+            LoginResponse.put("massage", "로그인 성공");
+//            response.put("token", jwtToken);
+            LoginResponse.put("user", UserLoginResponse.builder()
                     .id(userDetails.getUser().getId())
                     .loginId(userDetails.getUsername())
                     .name(userDetails.getUser().getName())
                     .build());
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(LoginResponse);
 
         } catch (AuthenticationException e) {
             log.info("로그인 실패 여기는 catch LoginId : {}, Error 사유: {}", userLoginRequest.getLoginId(), e.getMessage());
@@ -105,15 +114,48 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout () {
-        // JWT 방식에서는 서버가 할 일이 없다.
-        // 클라이언트가 토큰을 삭제하면 끝. (로컬스토리지)
+    public ResponseEntity<?> logout (HttpServletResponse httpServletResponse) {
 
-        log.info("로그아웃 요청");
+        log.info("로그아웃 요청 호출");
+
+        Cookie cookie =  new Cookie("accessToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // HTTPS에서만 사용가능,
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "로그아웃 되었습니다.");
+        log.info("로그아웃 완료 및 쿠키 삭제 완료");
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<Map<String, Object>> currentUser () {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if( authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        System.out.println("여기는 currentUser 컨트롤러");
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        log.info("여기는 로그인된 사용자정보 불러오기 : {}", userDetails);
+        log.info("여기는 로그인된 사용자정보 불러오기 : {}", userDetails.getUsername());
+        log.info("여기는 로그인된 사용자정보 불러오기 : {}", userDetails.getUser().getId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("user", UserLoginResponse.builder()
+                        .id(userDetails.getUser().getId())
+                        .loginId(userDetails.getUser().getLoginId())
+                        .name(userDetails.getUser().getName())
+                        .build());
+        log.info("여기는 로그인된 사용자정보 반환: {}",response);
 
         return ResponseEntity.ok(response);
     }
