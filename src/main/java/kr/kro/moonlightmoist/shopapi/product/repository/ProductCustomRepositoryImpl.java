@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.product.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.kro.moonlightmoist.shopapi.brand.domain.QBrand;
@@ -8,6 +9,9 @@ import kr.kro.moonlightmoist.shopapi.category.domain.QCategory;
 import kr.kro.moonlightmoist.shopapi.product.domain.*;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductResForList;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductSearchCondition;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,7 +27,6 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
 
     @Override
     public List<Product> search(ProductSearchCondition condition) {
-
         QProduct product = QProduct.product;
         QCategory category = QCategory.category;
 
@@ -42,10 +45,61 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
                         )
                 )
                 .fetch();
-        System.out.println("result = " + productList);
-        System.out.println("result.size() = " + productList.size());
 
         return productList;
+    }
+
+    @Override
+    public Page<Product> searchByConditionWithPaging(ProductSearchCondition condition, Pageable pageable) {
+
+        QProduct product = QProduct.product;
+        QCategory category = QCategory.category;
+
+        JPAQuery<Product> contentQuery = queryFactory
+                .selectFrom(product)
+                .join(product.category, category)
+                .where(
+                        productNameFilter(condition.getProductName()),
+                        searchKeywordFilter(condition.getSearchKeywords()),
+                        categoryFilter(condition.getCategoryIds()),
+                        saleStatusFilter(condition.getSaleStatuses()),
+                        exposureStatusFilter(condition.getExposureStatuses()),
+                        dateFilter(
+                                condition.getStartDate() != null ? condition.getStartDate().atStartOfDay() : null,
+                                condition.getEndDate() != null ? condition.getEndDate().atTime(LocalTime.MAX) : null
+                        )
+                );
+
+        // 페이징 처리
+        contentQuery
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        // 정렬 처리 안넣음
+
+        // 쿼리 실행 결과
+        List<Product> content = contentQuery.fetch();
+
+        // Count 조회 쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(product.count())
+                .from(product)
+                .join(product.category, category)
+                .where(
+                        productNameFilter(condition.getProductName()),
+                        searchKeywordFilter(condition.getSearchKeywords()),
+                        categoryFilter(condition.getCategoryIds()),
+                        saleStatusFilter(condition.getSaleStatuses()),
+                        exposureStatusFilter(condition.getExposureStatuses()),
+                        dateFilter(
+                                condition.getStartDate() != null ? condition.getStartDate().atStartOfDay() : null,
+                                condition.getEndDate() != null ? condition.getEndDate().atTime(LocalTime.MAX) : null
+                        )
+                );
+
+        // Page 객체로 변환
+        Page<Product> page = PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+        return page;
     }
 
     private BooleanExpression productNameFilter(String productName) {
