@@ -591,6 +591,11 @@ INSERT INTO products (id, product_detail_info_id, brand_id, category_id, deliver
 (135, 135, 82, 60, 2, FALSE, '[대용량] 에스테덤 하이드라 로션 맥스 400ml', 'NONE', '[대용량] 에스테덤 하이드라 로션 맥스 400ml', 'EXPOSURE', 'ON_SALE', '설명없음', true, false, '2024-05-01 02:26:24', '2024-05-01 02:26:24'),
 (136, 136, 83, 60, 2, FALSE, '[단독기획]에뛰드 순정 약산성 5.5 진정 토너 700ml 대용량 기획(350ml+리필350ml)', 'NONE', '[단독기획]에뛰드 순정 약산성 5.5 진정 토너 700ml 대용량 기획(350ml+리필350ml)', 'EXPOSURE', 'ON_SALE', '설명없음', true, false, '2025-07-29 01:21:47', '2025-07-29 01:21:47');
 
+UPDATE products SET total_sales_count = 5
+WHERE id IN (101, 82, 73, 29, 33, 24);
+
+UPDATE products SET total_sales_count = 10
+WHERE id IN (16, 13, 9, 8);
 
 INSERT INTO product_main_images (product_id, image_type, display_order, image_url) VALUES
 (1, 'THUMBNAIL', 0, 'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/10/0000/0018/A00000018491610ko.jpg?l=ko&QT=85&SF=webp&sharpen=1x0.5'),

@@ -28,6 +28,15 @@ public class SaleInfo {
     @Column(name = "use_restock_noti", nullable = false)
     private boolean useRestockNoti;
 
+    @Builder.Default
+    @Column(columnDefinition = "integer default 0")
+    private int totalSalesCount = 0;
+
+
+    public void increaseSalesCount(int quantity) {
+        totalSalesCount += quantity;
+    }
+
     public SaleInfoDTO toDTO() {
         return SaleInfoDTO.builder()
                 .exposureStatus(this.exposureStatus)

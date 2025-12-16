@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.product.domain;
 import jakarta.persistence.*;
 import kr.kro.moonlightmoist.shopapi.common.domain.BaseTimeEntity;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductOptionDTO;
+import kr.kro.moonlightmoist.shopapi.product.exception.InSufficientStockException;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -54,6 +55,17 @@ public class ProductOption extends BaseTimeEntity {
     @Column(name = "is_deleted", nullable = false)
     @Builder.Default
     private boolean deleted = false;
+
+    public void decreaseStock(int quantity) {
+        if (quantity > this.currentStock) {
+            throw new InSufficientStockException(quantity, currentStock);
+        }
+        this.currentStock -= quantity;
+    }
+
+    public void increaseStock(int quantity) {
+        this.currentStock += quantity;
+    }
 
     public void changeOptionName(String name) {
         this.optionName = name;

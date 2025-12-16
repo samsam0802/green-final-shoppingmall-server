@@ -126,15 +126,22 @@ public class ProductServiceImpl implements ProductService{
                     pageRequest.getSize()
             );
             page = productRepository.findByCategoryIdOrderByMaxPrice(depth3CategoryIds, pageable);
-        } else {
-            // 판매순 (아직 구현 x, 아래는 임시 코드 )
+        } else if (pageRequest.getSort().equals("sales")) {
+            // 판매순
             pageable = PageRequest.of(
                     pageRequest.getPage()-1,
                     pageRequest.getSize(),
-                    Sort.by("id").descending()
+                    Sort.by("saleInfo.totalSalesCount").descending()
             );
             page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
-
+        }else {
+            // 인기순 (아직 구현 x, 아래는 임시 코드 )
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("saleInfo.totalSalesCount").descending()
+            );
+            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
         }
 
         List<ProductResForList> dtoList = page.get().map(product -> product.toDTOForList()).toList();

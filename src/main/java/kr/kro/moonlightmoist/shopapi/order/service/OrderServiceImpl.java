@@ -12,6 +12,7 @@ import kr.kro.moonlightmoist.shopapi.order.repository.OrderCouponRepository;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderRepository;
 import kr.kro.moonlightmoist.shopapi.pointHistory.service.PointHistoryService;
 import kr.kro.moonlightmoist.shopapi.product.domain.ImageType;
+import kr.kro.moonlightmoist.shopapi.product.domain.Product;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductMainImage;
 import kr.kro.moonlightmoist.shopapi.product.domain.ProductOption;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductOptionRepository;
@@ -125,6 +126,10 @@ public class OrderServiceImpl implements OrderService{
 
         for(OrderProductRequestDTO item : dto.getOrderProducts()) {
             ProductOption productOption = productOptionRepository.findById(item.getProductOptionId()).get();
+
+            // 상품 옵션 재고 차감
+            productOption.decreaseStock(item.getQuantity());
+
             // 주문 상품 생성
             OrderProduct orderProduct = OrderProduct.builder()
                     .order(order)
@@ -224,6 +229,10 @@ public class OrderServiceImpl implements OrderService{
             orderCouponService.deleteOrderCoupon(orderCoupon.getId());
         }
         for(OrderProduct orderProduct : order.getOrderProducts()) {
+            // 재고수량 다시 증가
+            ProductOption productOption = orderProduct.getProductOption();
+            productOption.increaseStock(orderProduct.getQuantity());
+
             orderProduct.deleteOrderProduct();
         }
         order.deleteOrder();
@@ -266,6 +275,10 @@ public class OrderServiceImpl implements OrderService{
     public void comfirmOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).get();
         for(OrderProduct orderProduct : order.getOrderProducts()){
+            // 판매량 증가
+            Product product = orderProduct.getProductOption().getProduct();
+            product.getSaleInfo().increaseSalesCount(orderProduct.getQuantity());
+            // 구매 확정 처리
             orderProduct.updateStatus(OrderProductStatus.CONFIRMED);
         }
     }
