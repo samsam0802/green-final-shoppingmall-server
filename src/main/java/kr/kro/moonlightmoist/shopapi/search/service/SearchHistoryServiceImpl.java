@@ -184,21 +184,8 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
 
         int page = pageRequestDTO.getPage() - 1;
         int size = pageRequestDTO.getSize() == null ? 24 : pageRequestDTO.getSize();
-        String sort = pageRequestDTO.getSort() == null ? "latest" : pageRequestDTO.getSort();
 
-        Sort sortBy = Sort.by("createdAt").descending();
-
-        if ("latest".equals(sort)) {
-            sortBy = Sort.by("createdAt").descending();
-        } else if ("priceAsc".equals(sort)) {
-            sortBy = Sort.by("id").ascending(); //임시
-        } else if ("priceDesc".equals(sort)) {
-            sortBy = Sort.by("id").descending(); //임시
-        } else if ("popular".equals(sort)) {
-            sortBy = Sort.by("createdAt").descending(); //임시
-        }
-
-        Pageable pageable = PageRequest.of(page, size, sortBy);
+        Pageable pageable = PageRequest.of(page, size);
 
         List<Product> productPage = productRepository.search(condition);
 
