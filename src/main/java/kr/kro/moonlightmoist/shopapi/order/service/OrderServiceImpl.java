@@ -172,6 +172,9 @@ public class OrderServiceImpl implements OrderService{
         if ("latest".equals(sort)) {
             sortBy = Sort.by("createdAt").descending();
         }
+        else if("earliest".equals(sort)) {
+            sortBy = Sort.by("createdAt").ascending();
+        }
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page, size, sortBy);
@@ -228,11 +231,20 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public PageResponseDTO<OrderResBySearch> searchOrdersByCondition(OrderSearchCondition condition, String sort, PageRequestDTO pageRequestDTO) {
+        log.info("sort:{}",sort);
         // 1. Pageable 객체 생성
         int page = pageRequestDTO.getPage() - 1;
         int size = pageRequestDTO.getSize() == null ? 10 : pageRequestDTO.getSize();
         // sort 설정 (Pageable에 맞게 컬럼명 정확히 지정)
-        Sort sortBy = "latest".equals(sort) ? Sort.by("createdAt").descending() : Sort.by("createdAt").descending();
+//        Sort sortBy = "latest".equals(sort) ? Sort.by("createdAt").descending() : Sort.by("createdAt").ascending();
+        Sort sortBy = Sort.by("createdAt").descending();
+        if("latest".equals(sort)) {
+            sortBy = Sort.by("createdAt").descending();
+        } else if("earliest".equals(sort)) {
+            sortBy = Sort.by("createdAt").ascending();
+        }
+
+        log.info("sortBy:{}",sortBy);
 
         //Pageable 객체 생성
         Pageable pageable = PageRequest.of(page, size, sortBy);
