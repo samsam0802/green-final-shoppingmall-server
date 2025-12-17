@@ -48,17 +48,24 @@ public class SecurityConfig {
 
                 // 어떤 요청을 허용하고, 막을지를 설정하는 메서드
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN") // 관리자페이지는 관리자만
+                        .requestMatchers("/api/user/**").hasAnyRole("USER")
+                        .requestMatchers("/api/review/**", "/api/like/**","/api/comment/**").authenticated()
+                        .requestMatchers("/api/inquiry/**").authenticated()
+                        .requestMatchers("/api/mypage/**").authenticated()
+
+
+                        .requestMatchers("/api/search/**").permitAll()
                         .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers("/api/user/signup").permitAll()
                         .requestMatchers("/api/user/check-loginId").permitAll()
-                        .requestMatchers("/api/categories", "/api/products/**").permitAll()
-
-                        .requestMatchers("/api/review/**").authenticated()
-                        .requestMatchers("/api/like/**").authenticated()
-                        .requestMatchers("/api/comment/**").authenticated()
-                        .requestMatchers("/api/mypage/**").authenticated()
-                        .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers(
+                                "/api/categories/**",
+                                "/api/brands/**",
+                                "/api/products/**",
+                                "/api/deliveryPolicies/**",
+                                "/api/cart/**").permitAll()
                         .anyRequest().authenticated());
 //            anyRequest() 모든요청을 의미, premitAll() 모든요청 허용
         return http.build(); // 해당 http를 만들어서 반환
