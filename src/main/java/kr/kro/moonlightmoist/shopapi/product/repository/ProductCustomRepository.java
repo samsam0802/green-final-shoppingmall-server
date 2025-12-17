@@ -11,4 +11,7 @@ import java.util.List;
 public interface ProductCustomRepository {
     List<Product> search(ProductSearchCondition condition);
     Page<Product> searchByConditionWithPaging(ProductSearchCondition condition, Pageable pageable);
+
+    // 상품 카테고리별 조회 커스텀 메서드
+    Page<Product> findByCategoriesAndBrand(List<Long> categoryIds, Long brandId, Pageable pageable);
 }

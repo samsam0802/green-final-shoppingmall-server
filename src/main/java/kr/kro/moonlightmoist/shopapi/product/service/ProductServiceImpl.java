@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public PageResponseDTO<ProductResForList> searchProductsByCategory(List<Long> depth3CategoryIds, PageRequestDTO pageRequest) {
+    public PageResponseDTO<ProductResForList> searchProductsByCategory(List<Long> depth3CategoryIds,Long brandId, PageRequestDTO pageRequest) {
 
         Pageable pageable = null;
         Page<Product> page = null;
@@ -114,7 +114,8 @@ public class ProductServiceImpl implements ProductService{
                     pageRequest.getSize(),
                     Sort.by("id").descending()
             );
-            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+//            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+            page = productRepository.findByCategoriesAndBrand(depth3CategoryIds, brandId, pageable);
         } else if (pageRequest.getSort().equals("price_asc")) {
             pageable = PageRequest.of(
                     pageRequest.getPage()-1,
@@ -240,6 +241,11 @@ public class ProductServiceImpl implements ProductService{
         product.setDetailImages(dto.getDetailImages().stream().map(img -> img.toDomain()).toList());
 
         return productRepository.findById(id).get().getId();
+    }
+
+    @Override
+    public List<Brand> getBrandsByCategory(List<Long> depth3CategoryIds) {
+        return productRepository.findBrandListByCategoryIds(depth3CategoryIds);
     }
 
 }

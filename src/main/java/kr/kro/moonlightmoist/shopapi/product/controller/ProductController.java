@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.product.controller;
 
 import kr.kro.moonlightmoist.shopapi.aws.service.S3UploadService;
+import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.product.dto.*;
 import kr.kro.moonlightmoist.shopapi.product.service.ProductService;
 import kr.kro.moonlightmoist.shopapi.review.dto.PageRequestDTO;
@@ -128,10 +129,22 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<PageResponseDTO<ProductResForList>> getProductsByCategory(
             @RequestParam("categoryId") List<Long> depth3CategoryIds,
+            @RequestParam("brandId") Long brandId,
             @ModelAttribute PageRequestDTO pageRequest
             ) {
-        PageResponseDTO<ProductResForList> pageResponse = productService.searchProductsByCategory(depth3CategoryIds, pageRequest);
+
+        System.out.println("brandId = " + brandId);
+
+        PageResponseDTO<ProductResForList> pageResponse = productService.searchProductsByCategory(depth3CategoryIds, brandId, pageRequest);
         return ResponseEntity.ok(pageResponse);
+    }
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<Brand>> getBrandsByCategory(
+            @RequestParam("categoryId") List<Long> depth3CategoryIds
+    ) {
+        List<Brand> brands = productService.getBrandsByCategory(depth3CategoryIds);
+        return ResponseEntity.ok(brands);
     }
 
     @GetMapping("/{id}")

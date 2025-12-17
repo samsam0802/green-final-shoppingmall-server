@@ -1,5 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.product.repository;
 
+import kr.kro.moonlightmoist.shopapi.brand.domain.Brand;
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>
 
     // 3차 카테고리 id 리스트로 조회
     Page<Product> findByCategoryIdIn(List<Long> categoryIds, Pageable pageable);
+
+    // 3차 카테고리 id 리스트 와 brandId와 Pageable 로 조회
+    Page<Product> findByCategoryIdInAndBrandId(List<Long> categoryIds, Long brandId, Pageable pageable);
 
     // 가격정렬 : 최소가격부터
     @Query(value = """
@@ -47,4 +51,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>
     )
     Page<Product> findByCategoryIdOrderByMaxPrice(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
 
+    // 카테고리별 브랜드 목록 조회
+    @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.category.id IN :categoryIds")
+    List<Brand> findBrandListByCategoryIds(@Param("categoryIds") List<Long> categoryIds);
 }

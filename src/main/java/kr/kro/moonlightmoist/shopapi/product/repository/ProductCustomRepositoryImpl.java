@@ -11,6 +11,7 @@ import kr.kro.moonlightmoist.shopapi.product.dto.ProductResForList;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDateTime;
@@ -101,6 +102,70 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
         Page<Product> page = PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
         return page;
     }
+
+    @Override
+    public Page<Product> findByCategoriesAndBrand(List<Long> categoryIds, Long brandId, Pageable pageable) {
+
+        QProduct product = QProduct.product;
+        QCategory category = QCategory.category;
+        QBrand brand = QBrand.brand;
+
+        JPAQuery<Product> query = queryFactory
+                .selectFrom(product)
+                .where(
+                        product.category.id.in(categoryIds),
+                        brandId == 0 ? null : product.brand.id.eq(brandId),
+                        product.deleted.isFalse()
+                );
+
+        query.offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<Product> content = query.fetch();
+
+        // 카운트쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(product.count())
+                .from(product)
+                .join(product.category, category)
+                .join(product.brand, brand)
+                .where(
+                        category.id.in(categoryIds),
+                        brandId == 0 ? null : brand.id.eq(brandId)
+                );
+
+        // Page 객체로 변환
+        Page<Product> page = PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+        return page;
+    }
+
+    private void applyingSorting(JPAQuery<Product> query, Sort sort) {
+        QProduct product = QProduct.product;
+
+        if (sort.isEmpty()) {
+            // 기본 정렬
+            query.orderBy(product.id.desc());
+            return;
+        }
+
+        for (Sort.Order order : sort) {
+            String property = order.getProperty();
+            boolean isAsc = order.isAscending();
+
+            // 1. 최신순
+            if (property.equals("id")) {
+                query.orderBy(isAsc ? product.id.asc() : product.id.desc());
+            }
+            else if (property.equals("totalSalesCount")) {
+                query.orderBy(isAsc ? product.saleInfo.totalSalesCount.asc() : product.saleInfo.totalSalesCount.desc());
+            }
+            // 그 외 기본
+            else {
+                query.orderBy(product.id.desc());
+            }
+        }
+    }
+
 
     private BooleanExpression productNameFilter(String productName) {
         if (productName == null || productName.trim().isEmpty()) {
