@@ -158,13 +158,16 @@ public class ProductController {
     @PostMapping("/search")
     public ResponseEntity<PageResponseDTO<ProductResForList>> searchProductsByCondition(
             @RequestBody ProductSearchCondition condition,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
             ) {
 
         PageRequestDTO pageRequest = PageRequestDTO.builder().page(page).size(size).build();
         System.out.println("condition = " + condition);
         System.out.println("pageRequest = " + pageRequest);
+        System.out.println("page = " + page);
+        System.out.println("size = " + size);
+
 
         PageResponseDTO<ProductResForList> result = productService.searchProductsByConditionWithPaging(condition, pageRequest);
 

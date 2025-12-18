@@ -1,5 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.coupon.service;
 
+import jakarta.persistence.EntityExistsException;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
 import kr.kro.moonlightmoist.shopapi.coupon.dto.CouponDto;
 import kr.kro.moonlightmoist.shopapi.coupon.dto.CouponSearchCondition;
@@ -44,5 +45,12 @@ public class CouponServiceImpl implements CouponService{
         Coupon coupon = couponRepository.findById(dto.getId()).get();
         coupon.changeCoupon(dto);
         return dto.getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteCoupon(Long id) {
+        Coupon coupon = couponRepository.findById(id).orElseThrow(EntityExistsException::new);
+        coupon.deleteCoupon();
     }
 }

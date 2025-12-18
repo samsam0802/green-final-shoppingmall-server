@@ -30,7 +30,9 @@ public class CouponCustomRepositoryImpl implements CouponCustomRepository{
                         availabilityFilter(condition.getAvailability()),
                         dateFilter(
                                 condition.getCreatedAtFrom() == null ? null : condition.getCreatedAtFrom().atStartOfDay(),
-                                condition.getCreatedAtTo() == null ? null : condition.getCreatedAtTo().atTime(LocalTime.MAX))
+                                condition.getCreatedAtTo() == null ? null : condition.getCreatedAtTo().atTime(LocalTime.MAX)
+                        ),
+                        coupon.deleted.isFalse()
                 )
                 .fetch();
         return coupons;

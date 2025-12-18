@@ -56,4 +56,10 @@ public class CouponController {
         return ResponseEntity.ok(id);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCoupon(@PathVariable("id") Long id) {
+        couponService.deleteCoupon(id);
+        return ResponseEntity.ok("ok");
+    }
+
 }

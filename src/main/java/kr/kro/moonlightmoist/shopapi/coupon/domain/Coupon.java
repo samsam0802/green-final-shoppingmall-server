@@ -95,6 +95,8 @@ public class Coupon extends BaseTimeEntity {
         this.issueCount +=1;
     }
 
+    public void deleteCoupon() { this.deleted = true; }
+
     public CouponDto toDto() {
         return CouponDto.builder()
                 .id(this.id)

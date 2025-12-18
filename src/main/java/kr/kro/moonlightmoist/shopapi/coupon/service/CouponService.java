@@ -10,4 +10,5 @@ public interface CouponService {
     List<CouponDto> searchCouponsByCondition(CouponSearchCondition condition);
     CouponDto findCoupon(Long id);
     Long modifyCoupon(CouponDto dto);
+    void deleteCoupon(Long id);
 }
