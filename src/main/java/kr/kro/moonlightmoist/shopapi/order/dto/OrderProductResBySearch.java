@@ -22,4 +22,7 @@ public class OrderProductResBySearch {
     private int totalAmount;
     // 상품 주문 상태(주문 접수, 결제 완료, 배송준비중, 배송중, 배송완료, 구매확정)
     private OrderProductStatus orderProductStatus;
+
+    // 상품 id
+    private Long productId;
 }

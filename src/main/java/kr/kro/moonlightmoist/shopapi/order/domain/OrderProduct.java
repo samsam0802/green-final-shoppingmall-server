@@ -57,6 +57,7 @@ public class OrderProduct extends BaseTimeEntity {
                 .imageUrl(this.getProductOption().getProduct().getMainImages().stream().filter(i->i.getImageType()== ImageType.THUMBNAIL).findFirst().get().getImageUrl())
                 .totalAmount(this.getPurchasedPrice()*this.getQuantity())
                 .orderProductStatus(this.getOrderProductStatus())
+                .productId(this.getProductOption().getProduct().getId())
                 .build();
         return orderProductRes;
     }
