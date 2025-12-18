@@ -107,8 +107,6 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
     public Page<Product> findByCategoriesAndBrand(List<Long> categoryIds, Long brandId, Pageable pageable) {
 
         QProduct product = QProduct.product;
-        QCategory category = QCategory.category;
-        QBrand brand = QBrand.brand;
 
         JPAQuery<Product> query = queryFactory
                 .selectFrom(product)
@@ -121,17 +119,18 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
         query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
+        applyingSorting(query, pageable.getSort());
+
         List<Product> content = query.fetch();
 
         // 카운트쿼리
         JPAQuery<Long> countQuery = queryFactory
                 .select(product.count())
                 .from(product)
-                .join(product.category, category)
-                .join(product.brand, brand)
                 .where(
-                        category.id.in(categoryIds),
-                        brandId == 0 ? null : brand.id.eq(brandId)
+                        product.category.id.in(categoryIds),
+                        brandId == 0 ? null : product.brand.id.eq(brandId),
+                        product.deleted.isFalse()
                 );
 
         // Page 객체로 변환
@@ -139,8 +138,44 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
         return page;
     }
 
+    @Override
+    public Page<Product> findByCategoriesAndBrandOrderByPrice(List<Long> categoryIds, Long brandId, Pageable pageable) {
+
+        QProduct product = QProduct.product;
+        QProductOption option = QProductOption.productOption;
+
+        JPAQuery<Product> query = queryFactory
+                .selectFrom(product)
+                .leftJoin(product.productOptions, option)
+                .where(
+                        product.category.id.in(categoryIds),
+                        brandId == 0 ? null : product.brand.id.eq(brandId),
+                        product.deleted.isFalse()
+                )
+                .groupBy(product.id)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        applyingSorting(query, pageable.getSort());
+
+        List<Product> content = query.fetch();
+
+        // 카운트 쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(product.countDistinct())
+                .from(product)
+                .where(
+                        product.category.id.in(categoryIds),
+                        brandId == 0 ? null : product.brand.id.eq(brandId),
+                        product.deleted.isFalse()
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
     private void applyingSorting(JPAQuery<Product> query, Sort sort) {
         QProduct product = QProduct.product;
+        QProductOption option = QProductOption.productOption;
 
         if (sort.isEmpty()) {
             // 기본 정렬
@@ -152,14 +187,15 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository{
             String property = order.getProperty();
             boolean isAsc = order.isAscending();
 
-            // 1. 최신순
             if (property.equals("id")) {
                 query.orderBy(isAsc ? product.id.asc() : product.id.desc());
             }
-            else if (property.equals("totalSalesCount")) {
+            else if (property.equals("saleInfo.totalSalesCount")) {
                 query.orderBy(isAsc ? product.saleInfo.totalSalesCount.asc() : product.saleInfo.totalSalesCount.desc());
             }
-            // 그 외 기본
+            else if (property.equals("price")) {
+                query.orderBy(isAsc ? option.sellingPrice.min().asc() :  option.sellingPrice.min().desc());
+            }
             else {
                 query.orderBy(product.id.desc());
             }

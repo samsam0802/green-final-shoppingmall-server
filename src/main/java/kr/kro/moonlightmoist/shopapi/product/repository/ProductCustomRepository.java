@@ -12,6 +12,8 @@ public interface ProductCustomRepository {
     List<Product> search(ProductSearchCondition condition);
     Page<Product> searchByConditionWithPaging(ProductSearchCondition condition, Pageable pageable);
 
-    // 상품 카테고리별 조회 커스텀 메서드
+    // 상품 카테고리별 조회 커스텀 메서드 (최신순, 판매순)
     Page<Product> findByCategoriesAndBrand(List<Long> categoryIds, Long brandId, Pageable pageable);
+    // 상품 카테고리별 조회 커스텀 메서드 (최저가격순, 최고가격순)
+    Page<Product> findByCategoriesAndBrandOrderByPrice(List<Long> categoryIds, Long brandId, Pageable pageable);
 }

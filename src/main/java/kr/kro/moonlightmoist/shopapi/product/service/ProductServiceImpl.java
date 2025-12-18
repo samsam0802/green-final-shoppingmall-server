@@ -108,7 +108,32 @@ public class ProductServiceImpl implements ProductService{
         Pageable pageable = null;
         Page<Product> page = null;
 
-        if (pageRequest.getSort() == null || pageRequest.getSort().equals("latest")) {
+        if (pageRequest.getSort() == null || pageRequest.getSort().equals("sales")) {
+            // 판매순
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("saleInfo.totalSalesCount").descending()
+            );
+//            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+            page = productRepository.findByCategoriesAndBrand(depth3CategoryIds, brandId, pageable);
+        } else if (pageRequest.getSort().equals("price_asc")) {
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("price").ascending()
+            );
+//            page = productRepository.findByCategoryIdOrderByMinPrice(depth3CategoryIds, pageable);
+            page = productRepository.findByCategoriesAndBrandOrderByPrice(depth3CategoryIds, brandId, pageable);
+        } else if (pageRequest.getSort().equals("price_desc")) {
+            pageable = PageRequest.of(
+                    pageRequest.getPage()-1,
+                    pageRequest.getSize(),
+                    Sort.by("price").descending()
+            );
+//            page = productRepository.findByCategoryIdOrderByMaxPrice(depth3CategoryIds, pageable);
+            page = productRepository.findByCategoriesAndBrandOrderByPrice(depth3CategoryIds, brandId, pageable);
+        } else if (pageRequest.getSort().equals("latest")) {
             pageable = PageRequest.of(
                     pageRequest.getPage()-1,
                     pageRequest.getSize(),
@@ -116,35 +141,15 @@ public class ProductServiceImpl implements ProductService{
             );
 //            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
             page = productRepository.findByCategoriesAndBrand(depth3CategoryIds, brandId, pageable);
-        } else if (pageRequest.getSort().equals("price_asc")) {
-            pageable = PageRequest.of(
-                    pageRequest.getPage()-1,
-                    pageRequest.getSize()
-            );
-            page = productRepository.findByCategoryIdOrderByMinPrice(depth3CategoryIds, pageable);
-
-        } else if (pageRequest.getSort().equals("price_desc")) {
-            pageable = PageRequest.of(
-                    pageRequest.getPage()-1,
-                    pageRequest.getSize()
-            );
-            page = productRepository.findByCategoryIdOrderByMaxPrice(depth3CategoryIds, pageable);
-        } else if (pageRequest.getSort().equals("sales")) {
-            // 판매순
-            pageable = PageRequest.of(
-                    pageRequest.getPage()-1,
-                    pageRequest.getSize(),
-                    Sort.by("saleInfo.totalSalesCount").descending()
-            );
-            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
-        }else {
+        } else {
             // 인기순 (아직 구현 x, 아래는 임시 코드 )
             pageable = PageRequest.of(
                     pageRequest.getPage()-1,
                     pageRequest.getSize(),
                     Sort.by("saleInfo.totalSalesCount").descending()
             );
-            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+//            page = productRepository.findByCategoryIdIn(depth3CategoryIds, pageable);
+            page = productRepository.findByCategoriesAndBrand(depth3CategoryIds, brandId, pageable);
         }
 
         List<ProductResForList> dtoList = page.get().map(product -> product.toDTOForList()).toList();
