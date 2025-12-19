@@ -13,12 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/coupon")
 @Slf4j
-//@CrossOrigin(origins = "*", allowedHeaders = "*",
-//        methods = {RequestMethod.GET,
-//                RequestMethod.POST,
-//                RequestMethod.PUT,
-//                RequestMethod.DELETE,
-//                RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class CouponController {
 

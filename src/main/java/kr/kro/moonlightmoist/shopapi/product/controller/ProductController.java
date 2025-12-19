@@ -20,12 +20,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/products")
 @Slf4j
-//@CrossOrigin(origins = "*", allowedHeaders = "*",
-//        methods = {RequestMethod.GET,
-//                RequestMethod.POST,
-//                RequestMethod.PUT,
-//                RequestMethod.DELETE,
-//                RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class ProductController {
 

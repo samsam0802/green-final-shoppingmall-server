@@ -13,13 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product_options")
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*",
-        methods = {RequestMethod.GET,
-                RequestMethod.POST,
-                RequestMethod.PUT,
-                RequestMethod.PATCH,
-                RequestMethod.DELETE,
-                RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class ProductOptionController {
 
