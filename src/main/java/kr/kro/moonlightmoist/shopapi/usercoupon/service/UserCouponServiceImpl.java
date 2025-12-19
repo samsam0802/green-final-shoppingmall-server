@@ -77,6 +77,7 @@ public class UserCouponServiceImpl implements UserCouponService{
             }
         }
 
+        coupon.addIssueCount();
 
         UserCoupon userCoupon = UserCoupon.builder()
                 .user(user)
