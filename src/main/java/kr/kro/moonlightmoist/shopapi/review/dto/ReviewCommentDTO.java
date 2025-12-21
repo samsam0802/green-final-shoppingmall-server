@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ReviewCommentDTO {
-  private Long id;
-  private String content;
-  private Long reviewId;
-  private Long userId;
-  private String loginId;
-  private LocalDateTime createAt;
+    private Long id;
+    private String content;
+    private Long reviewId;
+    private Long userId;
+    private String loginId;
+    private LocalDateTime createAt;
+    private boolean deleted; //삭제 상태 표시용
+    private boolean visible; //관리자 삭제 상태 표시용
 }

@@ -1,11 +1,9 @@
 package kr.kro.moonlightmoist.shopapi.search.service;
 
 import kr.kro.moonlightmoist.shopapi.product.domain.Product;
-import kr.kro.moonlightmoist.shopapi.product.dto.ProductResForList;
 import kr.kro.moonlightmoist.shopapi.product.dto.ProductSearchCondition;
 import kr.kro.moonlightmoist.shopapi.product.repository.ProductRepository;
 import kr.kro.moonlightmoist.shopapi.review.dto.PageRequestDTO;
-import kr.kro.moonlightmoist.shopapi.review.dto.PageResponseDTO;
 import kr.kro.moonlightmoist.shopapi.search.domain.PopularKeyword;
 import kr.kro.moonlightmoist.shopapi.search.domain.RecentKeyword;
 import kr.kro.moonlightmoist.shopapi.search.dto.SearchPopularKeywordResponseDTO;
@@ -15,16 +13,13 @@ import kr.kro.moonlightmoist.shopapi.search.repository.RecentKeywordRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -190,14 +185,5 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
         List<Product> productPage = productRepository.search(condition);
 
         return productPage;
-//        List<ProductResForList> dtoList = productPage.getContent().stream()
-//                .map(product -> product.toDTOForList())
-//                .toList();
-//
-//        return PageResponseDTO.<ProductResForList>withAll()
-//                .dtoList(dtoList)
-//                .pageRequestDTO(pageRequestDTO)
-//                .totalDataCount(productPage.getTotalElements())
-//                .build();
     }
 }

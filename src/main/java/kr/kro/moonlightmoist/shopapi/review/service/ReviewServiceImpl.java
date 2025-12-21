@@ -15,6 +15,7 @@ import kr.kro.moonlightmoist.shopapi.review.dto.ReviewImageUrlDTO;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
+import kr.kro.moonlightmoist.shopapi.user.domain.UserRole;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +41,13 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
+    //상품 조회 메서드
     public Product getProduct(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
     }
 
+    //로그인 사용자 조회 메서드
     private User getLoginUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!(principal instanceof CustomUserDetails)) {
@@ -220,12 +223,26 @@ public class ReviewServiceImpl implements ReviewService {
 
         User loginUser  = getLoginUser();
 
-        //본인 리뷰인지 검증
-        if (!review.getUser().getId().equals(loginUser.getId())) {
-            throw new RuntimeException("본인의 리뷰만 삭제할 수 있습니다.");
+        // 본인 리뷰이거나 관리자인 경우 삭제 가능
+        boolean isOwner = review.getUser().getId().equals(loginUser.getId());
+        boolean isAdmin = loginUser.getUserRole() == UserRole.ADMIN;
+
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("본인의 리뷰이거나 관리자만 삭제할 수 있습니다.");
         }
 
-        reviewRepository.deleteById(reviewId);
+        // 이미 삭제된 리뷰인지 확인
+        if (review.isDeleted()) {
+            throw new RuntimeException("이미 삭제된 리뷰입니다.");
+        }
+
+        if (isAdmin && !isOwner) {
+            // 관리자 삭제
+            review.changeVisible(false);
+        } else {
+            // 사용자 삭제
+            review.changeDeleted(true);
+        }
     }
 
     @Override

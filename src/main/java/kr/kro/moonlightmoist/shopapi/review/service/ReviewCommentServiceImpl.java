@@ -8,6 +8,7 @@ import kr.kro.moonlightmoist.shopapi.review.repository.ReviewCommentRepository;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
+import kr.kro.moonlightmoist.shopapi.user.domain.UserRole;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,22 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserRepository userRepository;
 
-    public Review getReview(Long reviewId) {
-    return reviewRepository.findById(reviewId).get();
-  }
+    //리뷰 조회 메서드
+    private Review getReview(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+    }
+
+    //로그인 사용자 조회 메서드
+    private User getLoginUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof CustomUserDetails)) {
+            throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
+        }
+        String loginId = ((CustomUserDetails) principal).getUsername();
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
+    }
 
     @Override
     public List<ReviewCommentDTO> getList(Long reviewId) {
@@ -42,6 +56,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
                     .loginId(reviewComment.getUser().getLoginId())
                     .content(reviewComment.getContent())
                     .createAt(reviewComment.getCreatedAt())
+                    .deleted(reviewComment.isDeleted())
                     .build();
         }).toList();
         return reviewCommentDTO;
@@ -49,18 +64,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     @Override
     public Long register(ReviewCommentDTO dto) {
-
-        //SecurityContext에서 로그인 사용자 가져오기
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof CustomUserDetails)) {
-            throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
-        }
-        String loginId = ((CustomUserDetails) principal).getUsername();
-
-        //loginId로 User 엔티티 조회
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
-
+        User user = getLoginUser();
         Review review = getReview(dto.getReviewId());
 
         ReviewComment reviewComment = ReviewComment.builder()
@@ -70,7 +74,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
                 .build();
 
         ReviewComment saveReviewComment = reviewCommentRepository.save(reviewComment);
-
         return saveReviewComment.getId();
   }
 
@@ -79,16 +82,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         ReviewComment reviewComment = reviewCommentRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
 
-        //SecurityContext에서 로그인 사용자 가져오기
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof CustomUserDetails)) {
-            throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
-        }
-        String loginId = ((CustomUserDetails) principal).getUsername();
-
-        //loginId로 User 엔티티 조회
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
+        User user = getLoginUser();
 
         //본인 댓글만 수정
         if (!reviewComment.getUser().getId().equals(user.getId())) {
@@ -98,7 +92,13 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         reviewComment.changeContent(dto.getContent());
 
         return ReviewCommentDTO.builder()
-                .content(dto.getContent())
+                .id(reviewComment.getId())
+                .content(reviewComment.getContent())
+                .reviewId(reviewComment.getReview().getId())
+                .userId(reviewComment.getUser().getId())
+                .loginId(reviewComment.getUser().getLoginId())
+                .createAt(reviewComment.getCreatedAt())
+                .deleted(reviewComment.isDeleted())
                 .build();
   }
 
@@ -107,22 +107,27 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         ReviewComment reviewComment = reviewCommentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
 
-        //SecurityContext에서 로그인 사용자 가져오기
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof CustomUserDetails)) {
-            throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
-        }
-        String loginId = ((CustomUserDetails) principal).getUsername();
+        User user = getLoginUser();
 
-        //loginId로 User 엔티티 조회
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
+        // 본인 댓글이거나 관리자인 경우 삭제 가능
+        boolean isOwner = reviewComment.getUser().getId().equals(user.getId());
+        boolean isAdmin = user.getUserRole() ==  UserRole.ADMIN;
 
-        //본인 댓글만 삭제
-        if (!reviewComment.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("본인의 댓글만 삭제할 수 있습니다.");
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("본인의 댓글이거나 관리자만 삭제할 수 있습니다.");
         }
 
-        reviewCommentRepository.deleteById(id);
+        // 이미 삭제된 댓글인지 확인
+        if (reviewComment.isDeleted()) {
+            throw new RuntimeException("이미 삭제된 댓글입니다.");
+        }
+
+        if (isAdmin && !isOwner) {
+            // 관리자 삭제
+            reviewComment.changeVisible(false);
+        } else {
+            // 사용자 삭제
+            reviewComment.changeDeleted(true);
+        }
     }
 }

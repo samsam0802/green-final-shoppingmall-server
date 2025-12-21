@@ -38,5 +38,7 @@ public class ReviewComment extends BaseTimeEntity {
     private User user;
 
     public void changeContent(String content) { this.content = content; }
+    public void changeDeleted(boolean deleted) { this.deleted = deleted; }
+    public void changeVisible(boolean visible) { this.visible = visible; }
 
 }

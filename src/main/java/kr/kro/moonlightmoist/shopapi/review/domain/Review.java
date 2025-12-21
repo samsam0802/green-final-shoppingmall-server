@@ -67,5 +67,7 @@ public class Review extends BaseTimeEntity {
 
     public void changeContent(String content) { this.content=content; }
     public void changeRating(int rating) { this.rating=rating; }
+    public void changeDeleted(boolean deleted) { this.deleted = deleted; }
+    public void changeVisible(boolean visible) { this.visible = visible; }
 
 }

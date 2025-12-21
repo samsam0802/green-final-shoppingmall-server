@@ -24,21 +24,21 @@ public class ReviewCommentController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> register(@RequestBody ReviewCommentDTO dto) {
-      reviewCommentService.register(dto);
-      return ResponseEntity.ok("성공");
+    public ResponseEntity<Long> register(@RequestBody ReviewCommentDTO dto) {
+        Long commentId = reviewCommentService.register(dto);
+      return ResponseEntity.ok(commentId);
     }
 
     @PutMapping("/modify/{commentId}")
     public ResponseEntity<String> modify(@PathVariable("commentId") Long commentId, @RequestBody ReviewCommentDTO dto) {
       dto.setId(commentId);
       reviewCommentService.modify(dto);
-      return ResponseEntity.ok("성공");
+      return ResponseEntity.ok("댓글 수정 성공");
     }
 
     @DeleteMapping("/delete/{commentId}")
     public ResponseEntity<String> remove(@PathVariable("commentId") Long commentId) {
       reviewCommentService.remove(commentId);
-      return ResponseEntity.ok("성공");
+      return ResponseEntity.ok("댓글 삭제 성공");
     }
 }

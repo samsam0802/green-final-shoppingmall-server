@@ -25,6 +25,8 @@ public class ReviewDTO {
     private String brandName;
     private LocalDateTime createdAt;
     private LocalDateTime purchaseDate;
+    private boolean deleted; //삭제 상태 표시용
+    private boolean visible; //관리자 삭제 상태 표시용
     @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
     @Builder.Default
