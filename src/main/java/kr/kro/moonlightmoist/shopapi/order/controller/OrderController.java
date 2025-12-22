@@ -1,6 +1,5 @@
 package kr.kro.moonlightmoist.shopapi.order.controller;
 
-import kr.kro.moonlightmoist.shopapi.order.domain.OrderProductStatus;
 import kr.kro.moonlightmoist.shopapi.order.dto.*;
 import kr.kro.moonlightmoist.shopapi.order.service.OrderCouponService;
 import kr.kro.moonlightmoist.shopapi.order.service.OrderService;
@@ -9,12 +8,11 @@ import kr.kro.moonlightmoist.shopapi.review.dto.PageRequestDTO;
 import kr.kro.moonlightmoist.shopapi.review.dto.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -89,5 +87,14 @@ public class OrderController {
     public ResponseEntity<String> changeOrderProductStatus(@PathVariable Long orderId, @RequestBody OrderStatusRequest request) {
         orderService.changeOrderProductStatus(orderId, request.getStatus());
         return ResponseEntity.ok("주문 상태 변경 완료");
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Long>> getOrderStatusSummary(
+            @RequestParam Long userId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate
+            ) {
+        return ResponseEntity.ok(orderService.getOrderStatusSummary(userId, startDate, endDate));
     }
 }

@@ -6,6 +6,8 @@ import kr.kro.moonlightmoist.shopapi.review.dto.PageRequestDTO;
 import kr.kro.moonlightmoist.shopapi.review.dto.PageResponseDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Map;
 
 public interface OrderService {
     Long createOrder(OrderRequestDTO dto, Long userId);
@@ -20,5 +22,5 @@ public interface OrderService {
     void comfirmOrder(Long orderId);
     void changeOrderProductStatus(Long orderId, OrderProductStatus status);
     void checkRefundable(String merchantUid, Long currentUserId);
-//    void completeRefund(String merchantUid);
+    Map<String, Long> getOrderStatusSummary(Long userId, LocalDate startDate, LocalDate endDate);
 }

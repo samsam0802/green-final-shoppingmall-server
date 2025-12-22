@@ -10,6 +10,7 @@ import kr.kro.moonlightmoist.shopapi.order.domain.OrderProduct;
 import kr.kro.moonlightmoist.shopapi.order.domain.OrderProductStatus;
 import kr.kro.moonlightmoist.shopapi.order.dto.*;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderCouponRepository;
+import kr.kro.moonlightmoist.shopapi.order.repository.OrderProductRepository;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderRepository;
 import kr.kro.moonlightmoist.shopapi.pointHistory.service.PointHistoryService;
 import kr.kro.moonlightmoist.shopapi.product.domain.ImageType;
@@ -37,10 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -51,11 +51,11 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductOptionRepository productOptionRepository;
-    private final UserCouponRepository userCouponRepository;
     private final OrderCouponRepository orderCouponRepository;
+    private final OrderProductRepository orderProductRepository;
 
     private final OrderCouponService orderCouponService;
-    private final PointHistoryService pointHistoryService;
+
 
 
     public String createOrderNumber() {
@@ -327,6 +327,22 @@ public class OrderServiceImpl implements OrderService{
             if(order.getPaidAt().isBefore(LocalDateTime.now().minusDays(7))) {
                 throw new IllegalStateException("환불 가능 기간(7일)이 지났습니다.");
             }
+    }
+
+    @Override
+    public Map<String, Long> getOrderStatusSummary(Long userId, LocalDate startDate, LocalDate endDate) {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atTime(LocalTime.MAX);
+
+        List<Object[]> results = orderProductRepository.countStatusByUserIdAndPeriod(userId, start, end);
+
+        Map<String, Long> orderSummary = new HashMap<>();
+
+        for(Object[] result : results) {
+            orderSummary.put(result[0].toString(),(Long) result[1]);
+        }
+
+        return orderSummary;
     }
 
 //    @Override
