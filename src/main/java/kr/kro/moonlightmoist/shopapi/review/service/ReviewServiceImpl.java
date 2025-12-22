@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.review.service;
 
 import jakarta.transaction.Transactional;
+import kr.kro.moonlightmoist.shopapi.common.exception.BusinessException;
 import kr.kro.moonlightmoist.shopapi.order.domain.Order;
 import kr.kro.moonlightmoist.shopapi.order.repository.OrderRepository;
 import kr.kro.moonlightmoist.shopapi.review.dto.PageRequestDTO;
@@ -12,6 +13,9 @@ import kr.kro.moonlightmoist.shopapi.review.domain.Review;
 import kr.kro.moonlightmoist.shopapi.review.domain.ReviewImage;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewDTO;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewImageUrlDTO;
+import kr.kro.moonlightmoist.shopapi.review.exception.review.ReviewDeletionException;
+import kr.kro.moonlightmoist.shopapi.review.exception.review.ReviewEditException;
+import kr.kro.moonlightmoist.shopapi.review.exception.review.ReviewRegistrationException;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
@@ -40,12 +44,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
-
-    //상품 조회 메서드
-    public Product getProduct(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
-    }
 
     //로그인 사용자 조회 메서드
     private User getLoginUser() {
@@ -169,86 +167,91 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Long register(ReviewDTO dto) {
-        User user = getLoginUser();
-        Product product = getProduct(dto.getProductId());
-        Order order = orderRepository.findById(dto.getOrderId())
-                .orElseThrow(() -> new RuntimeException("주문 정보를 찾을 수 없습니다."));
-
-        Review review = Review.builder()
-                .user(user)
-                .content(dto.getContent())
-                .rating(dto.getRating())
-                .product(product)
-                .order(order)
-                .build();
-
-        Review reviewSave = reviewRepository.save(review);
-        return reviewSave.getId();
-
+        try {
+            User user = getLoginUser();
+            Product product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() ->
+                            new ReviewRegistrationException("상품이 없습니다."));
+            Order order = orderRepository.findById(dto.getOrderId())
+                    .orElseThrow(() ->
+                            new ReviewRegistrationException("주문 정보가 없습니다."));
+            Review review = Review.builder()
+                    .user(user)
+                    .content(dto.getContent())
+                    .rating(dto.getRating())
+                    .product(product)
+                    .order(order)
+                    .build();
+            return reviewRepository.save(review).getId();
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ReviewRegistrationException();
+        }
     }
 
     @Override
     public ReviewDTO modify(ReviewDTO reviewDTO) {
-        Review review = reviewRepository.findById(reviewDTO.getId())
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+            Review review = reviewRepository.findById(reviewDTO.getId())
+                    .orElseThrow(() -> new ReviewEditException("리뷰를 찾을 수 없습니다."));
 
-        User loginUser = getLoginUser();
+            User loginUser = getLoginUser();
 
-        //본인 리뷰만 수정 가능
-        if (!review.getUser().getId().equals(loginUser.getId())) {
-            throw new RuntimeException("본인의 리뷰만 수정할 수 있습니다.");
-        }
+            //본인 리뷰만 수정 가능
+            if (!review.getUser().getId().equals(loginUser.getId())) {
+                throw new ReviewEditException("본인의 리뷰만 수정할 수 있습니다.");
+            }
 
-        review.changeContent(reviewDTO.getContent());
-        review.changeRating(reviewDTO.getRating());
+            review.changeContent(reviewDTO.getContent());
+            review.changeRating(reviewDTO.getRating());
 
-        if (reviewDTO.getDeleteImgUrls() != null && !reviewDTO.getDeleteImgUrls().isEmpty()) {
-          review.removeImgUrls(reviewDTO.getDeleteImgUrls());
-        }
+            if (reviewDTO.getDeleteImgUrls() != null && !reviewDTO.getDeleteImgUrls().isEmpty()) {
+                review.removeImgUrls(reviewDTO.getDeleteImgUrls());
+            }
 
-        List<String> imageUrls = review.getReviewImages().stream()
-                .map(url -> url.getImageUrl()).toList();
+            List<String> imageUrls = review.getReviewImages().stream()
+                    .map(url -> url.getImageUrl()).toList();
 
-        return ReviewDTO.builder()
-                .content(review.getContent())
-                .rating(review.getRating())
-                .imageUrls(imageUrls)
-                .build();
+            return ReviewDTO.builder()
+                    .content(review.getContent())
+                    .rating(review.getRating())
+                    .imageUrls(imageUrls)
+                    .build();
     }
 
     @Override
     public void remove(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+            Review review = reviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new ReviewDeletionException("리뷰를 찾을 수 없습니다."));
 
-        User loginUser  = getLoginUser();
+            User loginUser  = getLoginUser();
 
-        // 본인 리뷰이거나 관리자인 경우 삭제 가능
-        boolean isOwner = review.getUser().getId().equals(loginUser.getId());
-        boolean isAdmin = loginUser.getUserRole() == UserRole.ADMIN;
+            // 본인 리뷰이거나 관리자인 경우 삭제 가능
+            boolean isOwner = review.getUser().getId().equals(loginUser.getId());
+            boolean isAdmin = loginUser.getUserRole() == UserRole.ADMIN;
 
-        if (!isOwner && !isAdmin) {
-            throw new RuntimeException("본인의 리뷰이거나 관리자만 삭제할 수 있습니다.");
-        }
+            if (!isOwner && !isAdmin) {
+                throw new ReviewDeletionException("본인의 리뷰이거나 관리자만 삭제할 수 있습니다.");
+            }
 
-        // 이미 삭제된 리뷰인지 확인
-        if (review.isDeleted()) {
-            throw new RuntimeException("이미 삭제된 리뷰입니다.");
-        }
+            // 이미 삭제된 리뷰인지 확인
+            if (review.isDeleted()) {
+                throw new ReviewDeletionException("이미 삭제된 리뷰입니다.");
+            }
 
-        if (isAdmin && !isOwner) {
-            // 관리자 삭제
-            review.changeVisible(false);
-        } else {
-            // 사용자 삭제
-            review.changeDeleted(true);
-        }
+            if (isAdmin && !isOwner) {
+                // 관리자 삭제
+                review.changeVisible(false);
+            } else {
+                // 사용자 삭제
+                review.changeDeleted(true);
+            }
     }
 
     @Override
     public void addImageUrls(Long id, ReviewImageUrlDTO dto) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ReviewRegistrationException("리뷰를 찾을 수 없습니다."));
 
         for(String imageUrl : dto.getImageUrls()) {
             ReviewImage reviewImage = ReviewImage.builder()

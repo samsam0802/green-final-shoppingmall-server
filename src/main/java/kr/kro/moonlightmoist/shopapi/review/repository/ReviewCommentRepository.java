@@ -9,10 +9,6 @@ import java.util.List;
 
 public interface ReviewCommentRepository extends JpaRepository<ReviewComment,Long> {
     // 삭제되지 않은 댓글만 조회
-    @Query("SELECT rc FROM ReviewComment rc WHERE rc.review.id = :reviewId AND rc.deleted = false ORDER BY rc.createdAt ASC")
+    @Query("SELECT rc FROM ReviewComment rc WHERE rc.review.id = :reviewId AND rc.deleted = false AND rc.visible = true ORDER BY rc.createdAt ASC")
     List<ReviewComment> findByReviewId(@Param("reviewId") Long reviewId);
-
-    // 삭제되지 않은 댓글 개수
-    @Query("SELECT COUNT(rc) FROM ReviewComment rc WHERE rc.review.id = :reviewId AND rc.deleted = false")
-    int countByReviewIdAndDeletedFalse(@Param("reviewId") Long reviewId);
 }

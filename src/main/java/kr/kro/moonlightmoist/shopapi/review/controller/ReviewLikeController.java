@@ -15,6 +15,7 @@ public class ReviewLikeController {
 
     @PostMapping("/{reviewId}")
     public boolean toggleLike(@PathVariable("reviewId") Long reviewId) {
+        log.info("toggleLike reviewId : {}", reviewId);
         return reviewLikeService.toggleReviewLike(reviewId);
     }
 

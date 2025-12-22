@@ -1,9 +1,13 @@
 package kr.kro.moonlightmoist.shopapi.review.service;
 
 import jakarta.transaction.Transactional;
+import kr.kro.moonlightmoist.shopapi.common.exception.BusinessException;
 import kr.kro.moonlightmoist.shopapi.review.domain.Review;
 import kr.kro.moonlightmoist.shopapi.review.domain.ReviewComment;
 import kr.kro.moonlightmoist.shopapi.review.dto.ReviewCommentDTO;
+import kr.kro.moonlightmoist.shopapi.review.exception.reviewcomment.ReviewCommentDeletionException;
+import kr.kro.moonlightmoist.shopapi.review.exception.reviewcomment.ReviewCommentEditException;
+import kr.kro.moonlightmoist.shopapi.review.exception.reviewcomment.ReviewCommentRegistrationException;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewCommentRepository;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
@@ -26,12 +30,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewRepository reviewRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserRepository userRepository;
-
-    //리뷰 조회 메서드
-    private Review getReview(Long reviewId) {
-        return reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
-    }
 
     //로그인 사용자 조회 메서드
     private User getLoginUser() {
@@ -64,62 +62,66 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     @Override
     public Long register(ReviewCommentDTO dto) {
-        User user = getLoginUser();
-        Review review = getReview(dto.getReviewId());
+        try {
+            User user = getLoginUser();
+            Review review = reviewRepository.findById(dto.getReviewId())
+                    .orElseThrow(() ->
+                            new ReviewCommentRegistrationException("리뷰가 없습니다."));
 
-        ReviewComment reviewComment = ReviewComment.builder()
-                .content(dto.getContent())
-                .review(review)
-                .user(user)
-                .build();
-
-        ReviewComment saveReviewComment = reviewCommentRepository.save(reviewComment);
-        return saveReviewComment.getId();
+            ReviewComment reviewComment = ReviewComment.builder()
+                    .content(dto.getContent())
+                    .review(review)
+                    .user(user)
+                    .build();
+            return reviewCommentRepository.save(reviewComment).getId();
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ReviewCommentRegistrationException();
+        }
   }
 
     @Override
     public ReviewCommentDTO modify(ReviewCommentDTO dto) {
-        ReviewComment reviewComment = reviewCommentRepository.findById(dto.getId())
-                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+            User user = getLoginUser();
+            ReviewComment reviewComment = reviewCommentRepository.findById(dto.getId())
+                    .orElseThrow(() -> new ReviewCommentEditException("댓글을 찾을 수 없습니다."));
 
-        User user = getLoginUser();
+            //본인 댓글만 수정
+            if (!reviewComment.getUser().getId().equals(user.getId())) {
+                throw new ReviewCommentEditException("본인의 댓글만 수정할 수 있습니다.");
+            }
 
-        //본인 댓글만 수정
-        if (!reviewComment.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("본인의 댓글만 수정할 수 있습니다.");
-        }
+            reviewComment.changeContent(dto.getContent());
 
-        reviewComment.changeContent(dto.getContent());
-
-        return ReviewCommentDTO.builder()
-                .id(reviewComment.getId())
-                .content(reviewComment.getContent())
-                .reviewId(reviewComment.getReview().getId())
-                .userId(reviewComment.getUser().getId())
-                .loginId(reviewComment.getUser().getLoginId())
-                .createAt(reviewComment.getCreatedAt())
-                .deleted(reviewComment.isDeleted())
-                .build();
-  }
+            return ReviewCommentDTO.builder()
+                    .id(reviewComment.getId())
+                    .content(reviewComment.getContent())
+                    .reviewId(reviewComment.getReview().getId())
+                    .userId(reviewComment.getUser().getId())
+                    .loginId(reviewComment.getUser().getLoginId())
+                    .createAt(reviewComment.getCreatedAt())
+                    .deleted(reviewComment.isDeleted())
+                    .build();
+    }
 
     @Override
     public void remove(Long id) {
-        ReviewComment reviewComment = reviewCommentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
-
         User user = getLoginUser();
+        ReviewComment reviewComment = reviewCommentRepository.findById(id)
+                .orElseThrow(() -> new ReviewCommentDeletionException("댓글을 찾을 수 없습니다."));
 
         // 본인 댓글이거나 관리자인 경우 삭제 가능
         boolean isOwner = reviewComment.getUser().getId().equals(user.getId());
-        boolean isAdmin = user.getUserRole() ==  UserRole.ADMIN;
+        boolean isAdmin = user.getUserRole() == UserRole.ADMIN;
 
         if (!isOwner && !isAdmin) {
-            throw new RuntimeException("본인의 댓글이거나 관리자만 삭제할 수 있습니다.");
+            throw new ReviewCommentDeletionException("본인의 댓글이거나 관리자만 삭제할 수 있습니다.");
         }
 
         // 이미 삭제된 댓글인지 확인
         if (reviewComment.isDeleted()) {
-            throw new RuntimeException("이미 삭제된 댓글입니다.");
+            throw new ReviewCommentDeletionException("이미 삭제된 댓글입니다.");
         }
 
         if (isAdmin && !isOwner) {

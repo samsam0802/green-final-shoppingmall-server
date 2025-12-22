@@ -9,8 +9,6 @@ import kr.kro.moonlightmoist.shopapi.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +31,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
             ) {
+        log.info("리뷰 목록 page : {}, size : {}, 정렬 기준 : {}", page, size, sort);
 
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
             .page(page)
@@ -40,15 +39,18 @@ public class ReviewController {
             .build();
 
         PageResponseDTO<ReviewDTO> reviews = reviewService.getList(productId, sort, pageRequestDTO);
+
+        log.info("리뷰 목록 : {}", reviews);
+
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/user")
     public ResponseEntity<PageResponseDTO<ReviewDTO>> getMyReviews(
-            @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
           ) {
+        log.info("나의 리뷰 목록 page : {}, size : {}", page, size);
 
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
             .page(page)
@@ -56,6 +58,8 @@ public class ReviewController {
             .build();
 
         PageResponseDTO<ReviewDTO> reviews = reviewService.getListByUser(pageRequestDTO);
+
+        log.info("나의 리뷰 목록 : {}", reviews);
         return ResponseEntity.ok(reviews);
     }
 
@@ -64,8 +68,11 @@ public class ReviewController {
             @RequestPart("review") ReviewDTO dto,
             @RequestPart(value = "reviewImage", required = false) List<MultipartFile> reviewImage
     ){
+        log.info("리뷰 등록 dto : {}", dto);
+        log.info("register 리뷰 이미지 : {}", reviewImage);
 
         Long id = reviewService.register(dto);
+        log.info("reviewService.register : {}", id);
 
         if (reviewImage != null && !reviewImage.isEmpty()) {
             ReviewImageUrlDTO reviewImageUrlDTO = ReviewImageUrlDTO.builder()
@@ -89,6 +96,10 @@ public class ReviewController {
             @RequestPart("review") ReviewDTO dto,
             @RequestPart(value = "reviewImage", required = false) List<MultipartFile> reviewImage
     ){
+        log.info("수정하려는 reviewId : {}", reviewId);
+        log.info("modify 리뷰 dto : {}", dto);
+        log.info("modify 리뷰 이미지 : {}", reviewImage);
+
         dto.setId(reviewId);
         reviewService.modify(dto);
 
@@ -110,19 +121,30 @@ public class ReviewController {
 
     @DeleteMapping("/delete/{reviewId}")
     public ResponseEntity<String> remove(@PathVariable("reviewId") Long reviewId) {
+        log.info("삭제 reviewId : {}", reviewId);
+
         reviewService.remove(reviewId);
+
         return ResponseEntity.ok("리뷰 삭제 성공");
     }
 
     @GetMapping("/product/{productId}/avg")
     public ResponseEntity<Double> getAvgRating(@PathVariable Long productId){
+        log.info("product review avgRating productId : {}", productId);
+
         double avgRating = reviewService.getAvgRating(productId);
+
+        log.info("avgRating : {}", avgRating);
         return ResponseEntity.ok(avgRating);
     }
 
     @GetMapping("/product/{productId}/count")
     public ResponseEntity<Integer> getReviewCount(@PathVariable Long productId){
+        log.info("reviewCount productId : {}", productId);
+
         int reviewCount = reviewService.getReviewTotalCount(productId);
+
+        log.info("reviewCount : {}", reviewCount);
         return ResponseEntity.ok(reviewCount);
     }
 
@@ -131,13 +153,21 @@ public class ReviewController {
             @PathVariable Long productId,
             @PathVariable Integer rating
     ){
-        int ratingBycount = reviewService.getRatingByCount(productId, rating);
-        return ResponseEntity.ok(ratingBycount);
+        log.info("productId : {}, 상품의 별점(5,4,3,2,1) : {}", productId, rating);
+
+        int ratingBYCount = reviewService.getRatingByCount(productId, rating);
+
+        log.info("ratingByCount : {}", ratingBYCount);
+        return ResponseEntity.ok(ratingBYCount);
     }
 
     @GetMapping("/product/{productId}/positive")
     public ResponseEntity<Integer> getPositiveReview(@PathVariable Long productId){
+        log.info("positiveReview productId : {}", productId);
+
         int positiveReview = reviewService.getPositiveReview(productId);
+
+        log.info("positiveReview : {}", positiveReview);
         return ResponseEntity.ok(positiveReview);
     }
 

@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.review.service;
 import jakarta.transaction.Transactional;
 import kr.kro.moonlightmoist.shopapi.review.domain.Review;
 import kr.kro.moonlightmoist.shopapi.review.domain.ReviewLike;
+import kr.kro.moonlightmoist.shopapi.review.exception.reviewlike.ReviewLikeException;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewLikeRepository;
 import kr.kro.moonlightmoist.shopapi.review.repository.ReviewRepository;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
@@ -25,21 +26,22 @@ public class ReviewLikeServiceImpl implements ReviewLikeService{
     private final ReviewLikeRepository reviewLikeRepository;
     private final UserRepository userRepository;
 
-    @Override
-    public boolean toggleReviewLike(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
-
-        //SecurityContext에서 로그인 사용자 가져오기
+    //로그인 사용자 조회 메서드
+    private User getLoginUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!(principal instanceof CustomUserDetails)) {
             throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
         }
         String loginId = ((CustomUserDetails) principal).getUsername();
-
-        //loginId로 User 엔티티 조회
-        User user = userRepository.findByLoginId(loginId)
+        return userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
+    }
+
+    @Override
+    public boolean toggleReviewLike(Long reviewId) {
+        User user = getLoginUser();
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewLikeException("리뷰를 찾을 수 없습니다."));
 
         //좋아요(도움이 돼요)가 존재하는지 확인
         Optional<ReviewLike> reviewLike = reviewLikeRepository.findByReviewAndUser(review, user);
@@ -62,7 +64,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService{
     @Override
     public int countReviewLike(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ReviewLikeException("리뷰를 찾을 수 없습니다."));
         return reviewLikeRepository.countByReviewAndDeletedFalse(review);
     }
 }
