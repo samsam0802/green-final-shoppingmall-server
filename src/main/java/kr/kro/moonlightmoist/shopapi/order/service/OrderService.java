@@ -20,7 +20,7 @@ public interface OrderService {
     void deleteOneOrder(Long orderId);
     PageResponseDTO<OrderResBySearch> searchOrdersByCondition(OrderSearchCondition condition, String sort, PageRequestDTO pageRequestDTO);
     void comfirmOrder(Long orderId);
-    void changeOrderProductStatus(Long orderId, OrderProductStatus status);
+    void changeOrderProductStatus(Long orderId, OrderProductStatus status, String reason);
     void checkRefundable(String merchantUid, Long currentUserId);
     Map<String, Long> getOrderStatusSummary(Long userId, LocalDate startDate, LocalDate endDate);
 }

@@ -10,4 +10,5 @@ import lombok.*;
 @Builder
 public class OrderStatusRequest {
     private OrderProductStatus status;
+    private String reason;
 }

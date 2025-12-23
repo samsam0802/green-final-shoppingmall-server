@@ -293,10 +293,13 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void changeOrderProductStatus(Long orderId, OrderProductStatus status) {
+    public void changeOrderProductStatus(Long orderId, OrderProductStatus status, String reason) {
         Order order = orderRepository.findById(orderId).get();
         for(OrderProduct orderProduct : order.getOrderProducts()) {
             orderProduct.updateStatus(status);
+            if(status == OrderProductStatus.RETURN_REQUESTED) {
+                orderProduct.setReturnReason(reason);
+            }
         }
     }
 

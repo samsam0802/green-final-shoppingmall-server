@@ -37,12 +37,18 @@ public class OrderProduct extends BaseTimeEntity {
     @Column(nullable = false)
     private OrderProductStatus orderProductStatus;
 
+    // 반품 사유
+    @Column(nullable = true)
+    private String returnReason;
+
     @Column(nullable = false, name = "is_deleted")
     private boolean deleted;
 
     public void updateStatus(OrderProductStatus orderProductStatus) {
         this.orderProductStatus=orderProductStatus;
     }
+
+    public void setReturnReason(String returnReason) {this.returnReason=returnReason;}
 
     public void deleteOrderProduct() {
         this.deleted=true;
@@ -57,6 +63,7 @@ public class OrderProduct extends BaseTimeEntity {
                 .imageUrl(this.getProductOption().getProduct().getMainImages().stream().filter(i->i.getImageType()== ImageType.THUMBNAIL).findFirst().get().getImageUrl())
                 .totalAmount(this.getPurchasedPrice()*this.getQuantity())
                 .orderProductStatus(this.getOrderProductStatus())
+                .returnReason(this.getReturnReason())
                 .productId(this.getProductOption().getProduct().getId())
                 .build();
         return orderProductRes;

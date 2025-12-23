@@ -85,7 +85,8 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public ResponseEntity<String> changeOrderProductStatus(@PathVariable Long orderId, @RequestBody OrderStatusRequest request) {
-        orderService.changeOrderProductStatus(orderId, request.getStatus());
+//        log.info("changeOrderProductStatus => orderId:{}, status:{}, reason:{}", orderId, request.getStatus(), request.getReason());
+        orderService.changeOrderProductStatus(orderId, request.getStatus(), request.getReason());
         return ResponseEntity.ok("주문 상태 변경 완료");
     }
 
