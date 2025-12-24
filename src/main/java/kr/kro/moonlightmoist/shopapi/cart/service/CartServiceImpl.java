@@ -36,7 +36,19 @@ public class CartServiceImpl implements CartService{
 
         //CartProductDTO에 저장된 userId로 cart 조회
         User user = userRepository.findById(userId).orElseThrow();
-        Cart cart = cartRepository.findByOwner(user).orElseThrow();
+//        Cart cart = cartRepository.findByOwner(user).orElseThrow();
+        Optional<Cart> cartOptional = cartRepository.findByOwner(user);
+
+        // 만약 장바구니가 생성되지 않았으면 먼저 장바구니부터 생성함
+        if(cartOptional.isEmpty()) {
+            Cart cart = Cart.builder()
+                    .owner(user)
+                    .build();
+            cartRepository.save(cart);
+            cartOptional = cartRepository.findByOwner(user);
+        }
+
+        Cart cart = cartOptional.get();
 
         // 장바구니에서 수량 변경할 때는 id가 null이 아니다.
         if(id != null) {
