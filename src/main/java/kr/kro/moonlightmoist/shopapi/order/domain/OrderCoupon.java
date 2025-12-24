@@ -23,7 +23,7 @@ public class OrderCoupon extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    @JoinColumn(name = "order_id",nullable = false)
+    @JoinColumn(name = "order_id", unique = true, nullable = false)
     private Order order;
     @ManyToOne
     @JoinColumn(name = "user_coupon_id",nullable = false)

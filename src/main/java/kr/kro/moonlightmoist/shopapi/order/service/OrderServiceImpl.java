@@ -72,14 +72,16 @@ public class OrderServiceImpl implements OrderService{
     public int calcTotalProductAmount(List<OrderProductRequestDTO> orderProducts) {
         int totalProductAmount = 0;
         for(OrderProductRequestDTO item : orderProducts){
-            ProductOption productOption = productOptionRepository.findById(item.getProductOptionId()).get();
+            ProductOption productOption = productOptionRepository.findById(item.getProductOptionId())
+                    .orElseThrow(()-> new RuntimeException("상품 옵션을 찾을 수 없습니다."));
             totalProductAmount += productOption.getSellingPrice() * item.getQuantity();
         }
         return totalProductAmount;
     }
 
     public int calcDeliveryFee(int totalProductAmount, List<OrderProductRequestDTO> orderProducts) {
-        ProductOption productOption = productOptionRepository.findById(orderProducts.get(0).getProductOptionId()).get();
+        ProductOption productOption = productOptionRepository.findById(orderProducts.get(0).getProductOptionId())
+                .orElseThrow(()-> new RuntimeException("상품 옵션을 찾을 수 없습니다."));
         int basicDeliveryFee = productOption.getProduct().getDeliveryPolicy().getBasicDeliveryFee();
         int freeConditionAmount = productOption.getProduct().getDeliveryPolicy().getFreeConditionAmount();
         if(totalProductAmount >= freeConditionAmount) return 0;
@@ -89,7 +91,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public Long createOrder(OrderRequestDTO dto, Long userId) {
         log.info("OrderService createOrder dto=>{}, userId=>{}",dto,userId);
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         // 1) 주문 번호 생성
         String orderNumber = createOrderNumber();
@@ -128,7 +130,8 @@ public class OrderServiceImpl implements OrderService{
                 .build();
 
         for(OrderProductRequestDTO item : dto.getOrderProducts()) {
-            ProductOption productOption = productOptionRepository.findById(item.getProductOptionId()).get();
+            ProductOption productOption = productOptionRepository.findById(item.getProductOptionId())
+                    .orElseThrow(()-> new RuntimeException("상품 옵션을 찾을 수 없습니다."));
 
             // 상품 옵션 재고 차감
             productOption.decreaseStock(item.getQuantity());
@@ -151,7 +154,8 @@ public class OrderServiceImpl implements OrderService{
         // 주문에 사용된 쿠폰 정보를 db에 저장
         if(dto.getUserCouponId() != null && discountAmount > 0) {
             Long orderCouponId = orderCouponService.saveCoupon(order.getId(), dto.getUserCouponId(), discountAmount);
-            OrderCoupon orderCoupon = orderCouponRepository.findById(orderCouponId).get();
+            OrderCoupon orderCoupon = orderCouponRepository.findById(orderCouponId)
+                    .orElseThrow(()-> new RuntimeException("주문에 사용된 쿠폰을 찾을 수 없습니다."));
 
             // 주문 엔티티에 주문에 사용된 쿠폰 저장
             order.applyOrderCoupon(orderCoupon);
@@ -163,7 +167,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional(readOnly = true)
     public OrderResponseDTO getOneOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).get();
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException("주문을 찾을 수 없습니다."));
         OrderResponseDTO orderResponseDTO = order.toDto();
         return orderResponseDTO;
     }
@@ -205,13 +209,16 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public BigDecimal getExpectedAmount(String merchantUid) {
-        return BigDecimal.valueOf(orderRepository.findByMerchantUid(merchantUid).get().getFinalAmount());
+        return BigDecimal.valueOf(orderRepository.findByMerchantUid(merchantUid)
+                .orElseThrow(()-> new RuntimeException("해당 주문 번호로 주문을 찾을 수 없습니다."))
+                .getFinalAmount());
     }
 
     @Override
     public void completeOrder(String merchantUid, String impUid) {
         // 1. 주문 조회
-        Order order = orderRepository.findByMerchantUid(merchantUid).get();
+        Order order = orderRepository.findByMerchantUid(merchantUid)
+                .orElseThrow(()-> new RuntimeException("해당 주문 번호로 주문을 찾을 수 없습니다."));
         // 2. 포트원 시스템에서 생성한 결제 고유 번호 저장
         order.applyImpUid(impUid);
         // 3. 주문 상품들의 상태를 PAID로 변경
@@ -229,7 +236,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void deleteOneOrder(Long orderId) {
         log.info("deleteOneOrder 메서드 실행 orderId:{}",orderId);
-        Order order = orderRepository.findById(orderId).get();
+        Order order = orderRepository.findById(orderId).orElseThrow(()->new RuntimeException("주문을 찾을 수 없습니다."));
 
         // 쿠폰 복구
         OrderCoupon orderCoupon = order.getOrderCoupon();
