@@ -11,6 +11,7 @@ import java.util.List;
 public interface OrderProductRepository extends JpaRepository<OrderProduct, Long> {
     @Query("SELECT op.orderProductStatus, COUNT(op) FROM OrderProduct op " +
             "WHERE op.order.user.id=:userId AND op.order.createdAt BETWEEN :start AND :end " +
+            "AND op.deleted=false " +
             "GROUP BY op.orderProductStatus")
     List<Object[]> countStatusByUserIdAndPeriod(
             @Param("userId") Long userId,
