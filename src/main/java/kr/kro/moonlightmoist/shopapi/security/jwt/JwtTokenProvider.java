@@ -3,6 +3,7 @@ package kr.kro.moonlightmoist.shopapi.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
+import kr.kro.moonlightmoist.shopapi.user.exception.InvalidTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -104,7 +105,7 @@ public class JwtTokenProvider {
             log.error("만료된 JWT 토큰");
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 JWT 토큰");
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             log.error("JWT 토큰이 잘못되었습니다");
         }
         return false;

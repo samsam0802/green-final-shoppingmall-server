@@ -3,8 +3,10 @@ package kr.kro.moonlightmoist.shopapi.helpcenter.service;
 import jakarta.transaction.Transactional;
 import kr.kro.moonlightmoist.shopapi.helpcenter.domain.Inquiry;
 import kr.kro.moonlightmoist.shopapi.helpcenter.dto.*;
+import kr.kro.moonlightmoist.shopapi.helpcenter.exception.InquiryNotFoundException;
 import kr.kro.moonlightmoist.shopapi.helpcenter.repository.InquiryRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
+import kr.kro.moonlightmoist.shopapi.user.exception.UserNotFoundException;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class InquiryServiceImpl implements InquiryService{
     public InquiryCreateResponse registerInquiry(InquiryCreateRequest createRequest) {
         // 등록 서비스
         User user = userRepository.findByLoginId(createRequest.getLoginId())
-                .orElseThrow(()-> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
 //        SELECT * FROM users WHERE login_id = 'user1';
 //        조회된 모든 컬럼을 User 엔티티 객체로 매핑
 //      1)  loginId는 단순히 검색 조건
@@ -53,16 +55,17 @@ public class InquiryServiceImpl implements InquiryService{
 
     @Override
     public InquiryListDTO getInquiryList(String loginId) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+            User user = userRepository.findByLoginId(loginId)
+                    .orElseThrow(UserNotFoundException::new);
 //        SELECT * FROM inquiry WHERE user_id = ?
 
-        List<Inquiry> inquiries = inquiryRepository.findByUser(user);
+            List<Inquiry> inquiries = inquiryRepository.findByUser(user);
 
-        List<InquiryDTO> response = inquiries.stream()
-                .map(inquiry -> InquiryDTO.toInquiryDTO(inquiry)).collect(Collectors.toList());
+            List<InquiryDTO> response = inquiries.stream()
+                    .map(inquiry -> InquiryDTO.toInquiryDTO(inquiry)).collect(Collectors.toList());
 
-        return new InquiryListDTO(response, response.size());
+            return new InquiryListDTO(response, response.size());
 
     }
 
@@ -71,11 +74,11 @@ public class InquiryServiceImpl implements InquiryService{
 
         // loginId로 사용자를 찾고
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException());
 
         // 해당 찾은 사용자의 문의를 찾음
         Inquiry inquiry = inquiryRepository.findById(InquiryId)
-                .orElseThrow(() -> new RuntimeException("해당 문의가 없습니다."));
+                .orElseThrow(() -> new InquiryNotFoundException());
 
         inquiry.updateInquiry(request);
 
@@ -94,7 +97,7 @@ public class InquiryServiceImpl implements InquiryService{
     @Override
     public void deleteInquiry(Long id, String loginId) {
         Inquiry inquiry = inquiryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("문의 없음"));
+                .orElseThrow(() -> new InquiryNotFoundException("해당 문의가 존재하지 않습니다"));
 
         inquiryRepository.delete(inquiry);
     }

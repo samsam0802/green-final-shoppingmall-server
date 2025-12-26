@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetailsService;
+import kr.kro.moonlightmoist.shopapi.user.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,12 +77,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 상속
                 log.info("JWT 인증 성공 => 로그인아이디 : {}", loginId);
 
             }
-        } catch(Exception e) {
-          log.error("JWT 인증 처리 중 오류 발생 : ", e);
-          log.error(e.getMessage());
+        } catch(InvalidTokenException e) {
+            log.error("JWT 인증 처리 중 오류 발생 :{} ", e.getMessage());
+            request.setAttribute("exception",e);
 
-          Gson gson = new Gson();
-          String message = gson.toJson(Map.of("error","ERROR_ACCESS_TOKEN"));
+        } catch ( Exception e) {
+            log.error("JWT 인증 처리 중 예상치 못한 오류 발생:", e);
         }
 
         filterChain.doFilter(request,response);
@@ -102,7 +103,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 상속
                 }
             }
         }
-        log.info("여기는 JWT 토큰 추출 실패: 쿠키나 Authorization 헤더에서 토큰을 찾지 못함 ");
+        log.info("1) 여기는 JWT 토큰 추출 실패: 쿠키나 Authorization 헤더에서 토큰을 찾지 못함 ");
+        log.debug("2) 여기는 JWT 토큰 추출 실패: 쿠키나 Authorization 헤더에서 토큰을 찾지 못함 ");
         return null;
     }
 

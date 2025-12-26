@@ -4,12 +4,15 @@ package kr.kro.moonlightmoist.shopapi.user.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.kro.moonlightmoist.shopapi.common.exception.BusinessException;
 import kr.kro.moonlightmoist.shopapi.security.CustomUserDetails;
 import kr.kro.moonlightmoist.shopapi.security.jwt.JwtTokenProvider;
 import kr.kro.moonlightmoist.shopapi.security.jwt.RefreshToken;
 import kr.kro.moonlightmoist.shopapi.security.jwt.RefreshTokenRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.dto.*;
+import kr.kro.moonlightmoist.shopapi.user.exception.DuplicateLoginIdException;
+import kr.kro.moonlightmoist.shopapi.user.exception.InvalidTokenException;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import kr.kro.moonlightmoist.shopapi.user.service.UserService;
 import kr.kro.moonlightmoist.shopapi.user.service.UserWithdrawalService;
@@ -47,18 +50,24 @@ public class UserController {
     @PostMapping("/signup") // RequestMapping + ??
     public ResponseEntity<Map<String,Object>> userResister(@RequestBody UserSignUpRequest userSignUpRequest) {
         // @RequestBody JSON 데이터를 Java 객체로 자동 변환해주는 어노테이션
-        User registeredUser = userRepository.save(userService.registerUser(userSignUpRequest));
-        Long registeredCouponUser = userCouponService.issue(registeredUser.getId(), 1L);
-        log.info("회원가입 컨트롤러 신규쿠폰 유저 등록완료 : {} ", registeredCouponUser);
-        log.info("회원가입 컨트롤러 신규쿠폰 등록완료된 유저는 : {} ", registeredUser.getLoginId());
-        System.out.println("======================================================================");
-        log.info("유저정보 Controller => {}"  ,userSignUpRequest);
-        log.info("DB에서 꺼낸 저장된 정보 => {}"  ,registeredUser);
-        Map<String,Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "회원가입이 완료되었습니다.");
-        response.put("coupon","💕신규쿠폰이 발급되었습니다💕");
-        return ResponseEntity.ok(response);
+        try {
+            User registeredUser = userRepository.save(userService.registerUser(userSignUpRequest));
+            Long registeredCouponUser = userCouponService.issue(registeredUser.getId(), 1L);
+            log.info("회원가입 컨트롤러 신규쿠폰 유저 등록완료 : {} ", registeredCouponUser);
+            log.info("회원가입 컨트롤러 신규쿠폰 등록완료된 유저는 : {} ", registeredUser.getLoginId());
+            System.out.println("======================================================================");
+            log.info("유저정보 Controller => {}", userSignUpRequest);
+            log.info("DB에서 꺼낸 저장된 정보 => {}", registeredUser);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "회원가입이 완료되었습니다.");
+            response.put("coupon", "💕신규쿠폰이 발급되었습니다💕");
+            return ResponseEntity.ok(response);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("회원가입 처리중 오류가 발생 하였습니다");
+        }
     }
 
 
@@ -154,13 +163,12 @@ public class UserController {
             // 추출한 토큰이 없다면 예외
             if (refreshToken == null){
                 log.warn("Refresh Token이 없습니다.");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                throw new InvalidTokenException(" 존재하지 않는 Token 입니다.");
             }
             // 토큰이 있을경우
             // 해당 토큰의 유효성을 검사
             if (!jwtTokenProvider.validateToken(refreshToken)) {
-                log.warn("유효하지 않은 Refresh Token 입니다.");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                throw new InvalidTokenException();
             }
 
             // 유효성 검사까지 완료되었다면 토큰을 찾아서 꺼내온다.
@@ -169,13 +177,13 @@ public class UserController {
             // DB에서 꺼낸 토큰이 없다면
             if (storedToken == null) {
                 log.info("DB에 존재하지않는 Refresh Token 입니다.");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                throw new InvalidTokenException("DB에 존재하지않는 Refresh Token 입니다.");
             }
 
             if ( storedToken.isExpired()) {
-                log.warn("만료된 refresh Toekn 입니다.");
+                log.warn("만료된 refresh Token 입니다.");
                 refreshTokenRepository.delete(storedToken);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                throw new InvalidTokenException("만료된 Token 입니다");
             }
 
             //사용자정보 조회해서 DB에서 꺼내오기

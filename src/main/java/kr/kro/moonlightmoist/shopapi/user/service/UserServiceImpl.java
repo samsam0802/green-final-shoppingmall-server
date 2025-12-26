@@ -1,12 +1,10 @@
 package kr.kro.moonlightmoist.shopapi.user.service;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import kr.kro.moonlightmoist.shopapi.common.exception.BusinessException;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.dto.*;
-import kr.kro.moonlightmoist.shopapi.user.exception.InvalidPasswordException;
-import kr.kro.moonlightmoist.shopapi.user.exception.PasswordChangeException;
-import kr.kro.moonlightmoist.shopapi.user.exception.UserModificationException;
-import kr.kro.moonlightmoist.shopapi.user.exception.UserNotFoundException;
+import kr.kro.moonlightmoist.shopapi.user.exception.*;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(UserSignUpRequest userSignUpRequest) {
+        if(userRepository.existsByLoginId(userSignUpRequest.getLoginId())){
+            throw new DuplicateLoginIdException();
+        }
 
         String encodePassword = passwordEncoder.encode(userSignUpRequest.getPassword());
 
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileResponse getUserProfile(String loginId) {
         User findUser = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(UserNotFoundException::new);
 
             return UserProfileResponse.builder()
                     .loginId(findUser.getLoginId())
