@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order,Long>, OrderCustomRepository {
-    Page<Order> findByUserId(Long userId, Pageable pageable);
+//    Page<Order> findByUserId(Long userId, Pageable pageable);
 
     @Query("select o from Order o where o.orderNumber=:merchantUid and o.deleted=false")
     Optional<Order> findByMerchantUid(@Param("merchantUid") String merchantUid);

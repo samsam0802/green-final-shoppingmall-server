@@ -100,4 +100,12 @@ public class OrderController {
             ) {
         return ResponseEntity.ok(orderService.getOrderStatusSummary(userId, startDate, endDate));
     }
+
+    @PutMapping("/complete")
+    public ResponseEntity<String> completeOrder(@RequestBody Map<String,String> request) {
+        String impUid = request.get("imp_uid");
+        String merchantUid = request.get("merchant_uid");
+        orderService.completeOrder(merchantUid, impUid);
+        return ResponseEntity.ok("주문의 상태를 결제완료로 변경하였습니다.");
+    }
 }

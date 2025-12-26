@@ -18,20 +18,20 @@ public class PaymentController {
     private final PaymentService paymentService;
 
 
-    @PostMapping("/verify")
-    public ResponseEntity<String> verifyPayment(@RequestBody Map<String, String> requestData) {
-        String impUid = requestData.get("imp_uid");
-        String merchantUid = requestData.get("merchant_uid");
-
-        try {
-            // Service의 검증 로직 호출
-            paymentService.verifyPaymentAndCompleteOrder(impUid, merchantUid);
-            return ResponseEntity.ok("결제 검증 및 주문 처리가 완료되었습니다.");
-        } catch (Exception e) {
-            // 검증 실패 시 400 에러 반환
-            return ResponseEntity.status(400).body("결제 검증 실패: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/verify")
+//    public ResponseEntity<String> verifyPayment(@RequestBody Map<String, String> requestData) {
+//        String impUid = requestData.get("imp_uid");
+//        String merchantUid = requestData.get("merchant_uid");
+//
+//        try {
+//            // Service의 검증 로직 호출
+//            paymentService.verifyPaymentAndCompleteOrder(impUid, merchantUid);
+//            return ResponseEntity.ok("결제 검증 및 주문 처리가 완료되었습니다.");
+//        } catch (Exception e) {
+//            // 검증 실패 시 400 에러 반환
+//            return ResponseEntity.status(400).body("결제 검증 실패: " + e.getMessage());
+//        }
+//    }
 
     @PostMapping("/refund/{orderId}")
     public ResponseEntity<String> refundPayment(@PathVariable Long orderId, @RequestBody String reason) {

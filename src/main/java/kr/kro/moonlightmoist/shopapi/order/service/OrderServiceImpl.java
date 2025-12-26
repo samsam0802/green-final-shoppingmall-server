@@ -207,12 +207,12 @@ public class OrderServiceImpl implements OrderService{
 //                .build();
 //    }
 
-    @Override
-    public BigDecimal getExpectedAmount(String merchantUid) {
-        return BigDecimal.valueOf(orderRepository.findByMerchantUid(merchantUid)
-                .orElseThrow(()-> new RuntimeException("해당 주문 번호로 주문을 찾을 수 없습니다."))
-                .getFinalAmount());
-    }
+//    @Override
+//    public BigDecimal getExpectedAmount(String merchantUid) {
+//        return BigDecimal.valueOf(orderRepository.findByMerchantUid(merchantUid)
+//                .orElseThrow(()-> new RuntimeException("해당 주문 번호로 주문을 찾을 수 없습니다."))
+//                .getFinalAmount());
+//    }
 
     @Override
     public void completeOrder(String merchantUid, String impUid) {
@@ -321,7 +321,7 @@ public class OrderServiceImpl implements OrderService{
         }
 
         // 3. 주문 상태 확인
-        // 결제 완료(PAID) 또는 배송완료(DELIVERED) 상태일 때만 환불 가능. 이미 환불(REFUNDED)되었거나 배송 준비중(PREPARING) 또는 배송중(SHIPPING)이면 불가.
+        // 결제 완료(PAID) 또는 환불 신청(REFUND_REQUESTED) 상태일 때만 환불 가능. 이미 환불(REFUNDED)되었거나 배송 준비중(PREPARING) 또는 배송중(SHIPPING) 또는 배송완료(DELIVERED)이면 불가.
         OrderProduct orderProduct = order.getOrderProducts().get(0);
             if(!(orderProduct.getOrderProductStatus() == OrderProductStatus.PAID) && !(orderProduct.getOrderProductStatus() == OrderProductStatus.RETURN_REQUESTED)) {
                 if(orderProduct.getOrderProductStatus() == OrderProductStatus.RETURNED) {
