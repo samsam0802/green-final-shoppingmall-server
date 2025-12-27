@@ -82,8 +82,8 @@ public class Order extends BaseTimeEntity {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted;
 
-    // 조회 전용
-    @OneToOne
+    // 조회 전용 //(mappedBy = "order", fetch = FetchType.LAZY) 추가 by 병국
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
     private OrderCoupon orderCoupon;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
