@@ -19,7 +19,9 @@ import kr.kro.moonlightmoist.shopapi.user.service.UserWithdrawalService;
 import kr.kro.moonlightmoist.shopapi.usercoupon.service.UserCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -100,19 +102,23 @@ public class UserController {
 
             log.info("로그인 성공 로그인아이디: {}, JWT 생성 및 발급 완료", userDetails.getUser().getLoginId());
 
-            Cookie accesscookie = new Cookie("accessToken", accessToken); // 해당 정보를 가진 쿠키를 생성
-            accesscookie.setHttpOnly(true); // JavaScript 접근 불가
-            accesscookie.setSecure(false); // HTTPS true/false로 설정
-            accesscookie.setPath("/"); // 모든경로
-            accesscookie.setMaxAge(60 * 30); // 30분 설정 만료일 설정
-            httpServletResponse.addCookie(accesscookie); // 해당 repsonse에 쿠키를 추가
+            // 기존 코드 주석 처리함 by 병국
+            //Cookie accesscookie = new Cookie("accessToken", accessToken); // 해당 정보를 가진 쿠키를 생성
+            //accesscookie.setHttpOnly(true); // JavaScript 접근 불가
+            //accesscookie.setSecure(false); // HTTPS true/false로 설정
+            //accesscookie.setPath("/"); // 모든경로
+            //accesscookie.setMaxAge(60 * 30); // 30분 설정 만료일 설정
+            //httpServletResponse.addCookie(accesscookie); // 해당 repsonse에 쿠키를 추가
 
-            Cookie refreshcookie = new Cookie("refreshToken", refreshToken); // 해당 정보를 가진 쿠키 생성
-            refreshcookie.setHttpOnly(true); // JavaScript 접근 불가
-            refreshcookie.setSecure(false); // HTTPS true/false로 설정
-            refreshcookie.setPath("/"); // 모든경로
-            refreshcookie.setMaxAge(60 * 60 * 24); // 1일 설정 만료일 설정
-            httpServletResponse.addCookie(refreshcookie); // 해당 response에 쿠키를 추가
+            //Cookie refreshcookie = new Cookie("refreshToken", refreshToken); // 해당 정보를 가진 쿠키 생성
+            //refreshcookie.setHttpOnly(true); // JavaScript 접근 불가
+            //refreshcookie.setSecure(false); // HTTPS true/false로 설정
+            //refreshcookie.setPath("/"); // 모든경로
+            //refreshcookie.setMaxAge(60 * 60 * 24); // 1일 설정 만료일 설정
+            //httpServletResponse.addCookie(refreshcookie); // 해당 response에 쿠키를 추가
+
+            // 쿠키 설정 (ResponseCookie 사용)
+            setTokenCookies(httpServletResponse, accessToken, refreshToken);
 
             // 기존에 있던 Token 삭제. 
             refreshTokenRepository.deleteByUserId(userDetails.getUser().getId());
@@ -204,19 +210,20 @@ public class UserController {
             ));
 
             // 새 토큰을 쿠키에 설정
-            Cookie newAccessCookie = new Cookie("accessToken", newAccessToken);
-            newAccessCookie.setHttpOnly(true);
-            newAccessCookie.setSecure(false);
-            newAccessCookie.setPath("/");
-            newAccessCookie.setMaxAge(60 * 30); // 30분
-            response.addCookie(newAccessCookie);
-
-            Cookie newRefreshCookie = new Cookie("refreshToken", newRefreshToken);
-            newRefreshCookie.setHttpOnly(true);
-            newRefreshCookie.setSecure(false);
-            newRefreshCookie.setPath("/");
-            newRefreshCookie.setMaxAge(60 * 60 * 24 ); // 1일
-            response.addCookie(newRefreshCookie);
+            setTokenCookies(response, newAccessToken, newRefreshToken);
+//            Cookie newAccessCookie = new Cookie("accessToken", newAccessToken);
+//            newAccessCookie.setHttpOnly(true);
+//            newAccessCookie.setSecure(false);
+//            newAccessCookie.setPath("/");
+//            newAccessCookie.setMaxAge(60 * 30); // 30분
+//            response.addCookie(newAccessCookie);
+//
+//            Cookie newRefreshCookie = new Cookie("refreshToken", newRefreshToken);
+//            newRefreshCookie.setHttpOnly(true);
+//            newRefreshCookie.setSecure(false);
+//            newRefreshCookie.setPath("/");
+//            newRefreshCookie.setMaxAge(60 * 60 * 24 ); // 1일
+//            response.addCookie(newRefreshCookie);
 
             // 응답
             Map<String, Object> result = new HashMap<>();
@@ -238,24 +245,14 @@ public class UserController {
         log.info("로그아웃 요청 호출");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null && authentication.getPrincipal() instanceof CustomUserDetails) {
+        // authentication == null 로 되어있던 부분 != 로 수정 by 병국
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             refreshTokenRepository.deleteByUserId(userDetails.getUser().getId());
         }
 
-        Cookie accessToken =  new Cookie("accessToken", null);
-        accessToken.setHttpOnly(true);
-        accessToken.setSecure(false);
-        accessToken.setPath("/");
-        accessToken.setMaxAge(0);
-        httpServletResponse.addCookie(accessToken);
-
-        Cookie refreshToken =  new Cookie("refreshToken", null);
-        refreshToken.setHttpOnly(true);
-        refreshToken.setSecure(false);
-        refreshToken.setPath("/");
-        refreshToken.setMaxAge(0);
-        httpServletResponse.addCookie(refreshToken);
+        // 쿠키 삭제
+        deleteTokenCookies(httpServletResponse);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -349,6 +346,50 @@ public class UserController {
         UserWithdrawalResponse response = userWithdrawalService.withdrawUser(request);
         log.info("여기는 회원탈퇴 컨트롤러 : {} ", response);
         return ResponseEntity.ok(response);
+    }
+
+
+    private void setTokenCookies(HttpServletResponse response, String accessToken, String refreshToken) {
+        // 배포 환경에서는 secure(true), sameSite("None") 필수
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .path("/")
+                .httpOnly(true)
+                .secure(true) // HTTPS 필수
+                .sameSite("None")
+                .maxAge(60 * 30)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .path("/")
+                .httpOnly(true)
+                .secure(true) // HTTPS 필수
+                .sameSite("None")
+                .maxAge(60 * 60 * 24)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
+
+    private void deleteTokenCookies(HttpServletResponse response) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 
     private String getRefreshTokenFromCookie(HttpServletRequest request) {

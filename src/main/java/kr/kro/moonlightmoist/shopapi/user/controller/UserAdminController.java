@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/admin/user") //관리자 전용 경로
-@CrossOrigin(origins = "http://localhost:5137")
+//@CrossOrigin(origins = "http://localhost:5137") BY 병국 (주석처리함)
 public class UserAdminController {
 
     private final UserAdminService userAdminService;
