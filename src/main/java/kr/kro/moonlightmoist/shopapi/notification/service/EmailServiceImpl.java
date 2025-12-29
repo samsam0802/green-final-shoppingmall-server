@@ -56,10 +56,12 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
+    @Transactional
     public boolean verifyCode(String email, String code) {
         // DB에서 가장 최근의 미인증 코드 조회
         Optional<EmailVerification> verificationOpt =
                 verificationRepository.findTopByEmailAndVerifiedFalseOrderByCreatedAtDesc(email);
+        log.info("여기는 verifyCode DB에 저장되어있는 인증코드 불러오기 : {}", verificationOpt);
 
         if (verificationOpt.isEmpty()) {
             log.warn("인증 코드 없음 - 이메일: {}", email);
@@ -80,9 +82,13 @@ public class EmailServiceImpl implements EmailService{
             return false;
         }
 
+
+
         // 인증 성공 처리
         verification.verify();
         verificationRepository.save(verification);
+        log.info("여기는 이메일 인증 코드 성공 확인 : {}", code);
+        log.info("여기는 이메일 인증 객체 성공 확인 : {}", verification);
         log.info("이메일 인증 성공 - 이메일: {}", email);
 
         return true;
