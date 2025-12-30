@@ -103,7 +103,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 상속
                 }
             }
         }
-        log.info("1) 여기는 JWT 토큰 추출 실패: 쿠키나 Authorization 헤더에서 토큰을 찾지 못함 ");
         log.debug("2) 여기는 JWT 토큰 추출 실패: 쿠키나 Authorization 헤더에서 토큰을 찾지 못함 ");
         return null;
     }

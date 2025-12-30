@@ -139,7 +139,7 @@ public class UserController {
             refreshTokenRepository.save(new RefreshToken(
                     userDetails.getUser().getId(),
                     refreshToken,
-                    LocalDateTime.now()
+                    LocalDateTime.now().plusDays(1)
             ));
 
             int activePoint = pointHistoryService.getActivePoint(userDetails.getUser().getId());
@@ -179,7 +179,7 @@ public class UserController {
             log.info("토큰 갱신 요청");
 
 
-            // 리퀘스트에서 쿠키의 토큰을 추출
+            // 리퀘스트에서 쿠키의 토큰을 추출duf
             String refreshToken = getRefreshTokenFromCookie(request);
 
             // 추출한 토큰이 없다면 예외
@@ -222,7 +222,7 @@ public class UserController {
             refreshTokenRepository.save(new RefreshToken(
                     findUser.getId(),
                     newRefreshToken,
-                    LocalDateTime.now()
+                    LocalDateTime.now().plusDays(1)
             ));
 
             // 새 토큰을 쿠키에 설정

@@ -58,6 +58,7 @@ public class SecurityConfig {
 
                 // 어떤 요청을 허용하고, 막을지를 설정하는 메서드
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("api/user/refresh").permitAll()
                         .anyRequest().permitAll());
 //            anyRequest() 모든요청을 의미, premitAll() 모든요청 허용
         return http.build(); // 해당 http를 만들어서 반환
