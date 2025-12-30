@@ -25,27 +25,35 @@ public class OrderCouponServiceImpl implements OrderCouponService{
     @Override
     public int calcAndUseCoupon(int totalProductAmount, Long userCouponId) {
 //        log.info("OrderCouponServiceImpl -> userCouponId:{}",userCouponId);
-        if(userCouponId != null) {
-            UserCoupon userCoupon = userCouponRepository.findById(userCouponId).orElseThrow(()->new RuntimeException("쿠폰을 찾을 수 없습니다."));
-            Coupon coupon = userCoupon.getCoupon();
-            // 최소 주문 금액 제한이 없거나 최소 주문 금액보다 더 많이 주문했을때
-            if (!coupon.getLimitMinOrderAmount() || (coupon.getLimitMinOrderAmount() && (totalProductAmount >= coupon.getMinOrderAmount()))) {
-                userCoupon.useCoupon(); // 쿠폰 사용 처리
-                if (coupon.getDiscountType() == DiscountType.FIXED) { // 할인 타입이 FIXED일 경우
-                    return coupon.getFixedDiscountAmount();
-                } else {// 할인 타입이 PERCENTAGE일 경우
-                    int discountAmount = totalProductAmount * coupon.getDiscountPercentage() / 100;
-                    if (discountAmount > coupon.getMaxDiscountAmount()) {
-                        return coupon.getMaxDiscountAmount();
-                    }
-                    return discountAmount;
-                }
-            } else { // 최소 주문 금액이 미달일 경우
-                return 0;
-            }
-        } else { // userCouponId가 null일 경우(쿠폰을 선택하지 않았을 경우)
+        if(userCouponId == null) return 0;
+
+        UserCoupon userCoupon = userCouponRepository.findById(userCouponId)
+                .orElseThrow(()->new RuntimeException("쿠폰을 찾을 수 없습니다."));
+        Coupon coupon = userCoupon.getCoupon();
+
+        // 1. 최소 주문 금액 조건 체크
+        if(Boolean.TRUE.equals(coupon.getLimitMinOrderAmount()) && totalProductAmount < coupon.getMinOrderAmount()) {
             return 0;
         }
+
+        // 2. 할인 금액 계산
+        int discountAmount = 0;
+        if(coupon.getDiscountType() == DiscountType.FIXED) {
+            discountAmount = coupon.getFixedDiscountAmount();
+        } else {
+            discountAmount = (int) ((long) totalProductAmount * coupon.getDiscountPercentage() / 100);
+
+            //최대 할인 금액 제한 적용
+            if(Boolean.TRUE.equals(coupon.getLimitMaxDiscountAmount()) &&
+                    discountAmount > coupon.getMaxDiscountAmount()) {
+                discountAmount = coupon.getMaxDiscountAmount();
+            }
+        }
+
+        // 3. 쿠폰 사용 처리
+        userCoupon.useCoupon();
+
+        return discountAmount;
     }
 
     @Override
