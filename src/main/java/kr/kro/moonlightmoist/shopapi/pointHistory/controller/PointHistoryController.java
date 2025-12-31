@@ -7,6 +7,7 @@ import kr.kro.moonlightmoist.shopapi.pointHistory.service.PointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class PointHistoryController {
 
     private final PointHistoryService pointHistoryService;
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Integer> getActivePoints(@PathVariable("userId") Long userId) {
         int activePoint = pointHistoryService.getActivePoint(userId);
@@ -24,18 +26,21 @@ public class PointHistoryController {
         return ResponseEntity.ok(activePoint);
     }
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @PostMapping("/earn")
     public ResponseEntity<String> earnPoint(@RequestBody PointEarnReq dto) {
         pointHistoryService.earnPoint(dto.getUserId(), dto.getOrderId(), dto.getPointValue());
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @PostMapping("/use")
     public ResponseEntity<String> usePoint(@RequestBody PointUseReq dto) {
         pointHistoryService.usePoint(dto.getUserId(), dto.getOrderId(), dto.getAmountToUse());
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @GetMapping("/rollback/{orderId}")
     public ResponseEntity<String> rollbackPoint(@PathVariable(name = "orderId") Long orderId) {
         pointHistoryService.rollbackPoint(orderId);

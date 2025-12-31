@@ -7,6 +7,7 @@ import kr.kro.moonlightmoist.shopapi.usercoupon.service.UserCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserCouponController {
 
     private final UserCouponService userCouponService;
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("")
     public ResponseEntity<String> issueCoupon(@RequestBody CouponIssueReq dto) {
         System.out.println("dto = " + dto);
@@ -27,6 +29,7 @@ public class UserCouponController {
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<List<UserCouponRes>> getUserCoupons(@PathVariable Long userId) {
         List<UserCouponRes> userCoupons = userCouponService.getUserCouponsByUserId(userId);
@@ -34,6 +37,7 @@ public class UserCouponController {
         return ResponseEntity.ok(userCoupons);
     }
 
+    @PreAuthorize("hasAnyRole('USER','MANAGER','ADMIN')")
     @PostMapping("/code")
     public ResponseEntity<String> issueCouponByCode(@RequestBody CouponIssueReq dto) {
         System.out.println("userId = " + dto.getUserId());
@@ -43,6 +47,7 @@ public class UserCouponController {
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("/manual")
     public ResponseEntity<String> issueManualCoupon(@RequestBody CouponsIssueReq dto) {
         System.out.println("userId = " + dto.getUserIds());

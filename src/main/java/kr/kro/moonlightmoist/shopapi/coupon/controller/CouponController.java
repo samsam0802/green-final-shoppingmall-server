@@ -6,6 +6,7 @@ import kr.kro.moonlightmoist.shopapi.coupon.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CouponController {
 
     private final CouponService couponService;
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("")
     public ResponseEntity<String> registerCoupon(@RequestBody CouponDto dto) {
 
@@ -28,6 +30,7 @@ public class CouponController {
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("/search")
     public ResponseEntity<List<CouponDto>> searchCoupons(@RequestBody CouponSearchCondition condition) {
         System.out.println("condition = " + condition);
@@ -35,6 +38,7 @@ public class CouponController {
         return ResponseEntity.ok(coupons);
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<CouponDto> getCouponData(@PathVariable("id") Long id) {
         System.out.println("id = " + id);
@@ -42,6 +46,7 @@ public class CouponController {
         return ResponseEntity.ok(coupon);
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("/modify")
     public ResponseEntity<Long> modifyCoupon(@RequestBody CouponDto dto) {
 
@@ -50,12 +55,14 @@ public class CouponController {
         return ResponseEntity.ok(id);
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCoupon(@PathVariable("id") Long id) {
         couponService.deleteCoupon(id);
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @GetMapping("/manual")
     public ResponseEntity<List<CouponDto>> findManualCoupons() {
         List<CouponDto> coupons = couponService.getManualCoupons();

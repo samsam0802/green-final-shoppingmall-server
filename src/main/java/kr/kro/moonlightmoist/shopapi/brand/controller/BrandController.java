@@ -5,6 +5,7 @@ import kr.kro.moonlightmoist.shopapi.brand.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class BrandController {
 
     private final BrandService brandService;
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("")
     public ResponseEntity<String> register(@RequestBody BrandDTO dto) {
         System.out.println("dto = " + dto);

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -27,6 +28,7 @@ public class ProductController {
     private final ProductService productService;
     private final S3UploadService s3UploadService;
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("")
     public ResponseEntity<String> productRegister(
             @RequestPart("product") ProductRequest product,
@@ -77,6 +79,7 @@ public class ProductController {
         return ResponseEntity.ok("ok");
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<String> modifyProduct(
             @PathVariable(name = "id") Long id,
@@ -152,6 +155,7 @@ public class ProductController {
         return ResponseEntity.ok(res);
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @PostMapping("/search")
     public ResponseEntity<PageResponseDTO<ProductResForList>> searchProductsByCondition(
             @RequestBody ProductSearchCondition condition,
@@ -183,6 +187,7 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
