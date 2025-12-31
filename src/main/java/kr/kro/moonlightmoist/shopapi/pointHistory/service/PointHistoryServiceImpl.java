@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -101,7 +100,7 @@ public class PointHistoryServiceImpl implements PointHistoryService{
             }
         }
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         // 사용 history 를 남겨야함
         PointHistory usedHistory = PointHistory.builder()
                 .user(user)

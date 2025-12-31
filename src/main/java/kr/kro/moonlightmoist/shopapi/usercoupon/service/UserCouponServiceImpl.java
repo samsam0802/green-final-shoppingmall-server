@@ -5,7 +5,6 @@ import jakarta.persistence.EntityNotFoundException;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
 import kr.kro.moonlightmoist.shopapi.coupon.exception.InvalidCouponCodeException;
 import kr.kro.moonlightmoist.shopapi.coupon.repository.CouponRepository;
-import kr.kro.moonlightmoist.shopapi.order.repository.OrderCouponRepository;
 import kr.kro.moonlightmoist.shopapi.user.domain.User;
 import kr.kro.moonlightmoist.shopapi.user.repository.UserRepository;
 import kr.kro.moonlightmoist.shopapi.usercoupon.domain.CouponUsageStatus;
@@ -29,12 +28,11 @@ public class UserCouponServiceImpl implements UserCouponService{
     private final UserCouponRepository userCouponRepository;
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
-    private final OrderCouponRepository orderCouponRepository;
 
     @Override
     public Long issue(Long userId, Long couponId) {
-        User user = userRepository.findById(userId).get();
-        Coupon coupon = couponRepository.findById(couponId).get();
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(EntityNotFoundException::new);
         coupon.addIssueCount();
 
         UserCoupon userCoupon = UserCoupon.builder()
@@ -59,7 +57,7 @@ public class UserCouponServiceImpl implements UserCouponService{
     @Override
     @Transactional
     public void useCoupon(Long userId, Long couponId) {
-        UserCoupon userCoupon = userCouponRepository.findByUserIdAndCouponId(userId, couponId).get();
+        UserCoupon userCoupon = userCouponRepository.findByUserIdAndCouponId(userId, couponId).orElseThrow(EntityNotFoundException::new);
         userCoupon.useCoupon();
     }
 

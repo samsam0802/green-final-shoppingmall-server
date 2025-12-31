@@ -1,7 +1,6 @@
 package kr.kro.moonlightmoist.shopapi.pointHistory.service;
 
 import kr.kro.moonlightmoist.shopapi.pointHistory.domain.PointHistory;
-import kr.kro.moonlightmoist.shopapi.pointHistory.domain.PointStatus;
 import kr.kro.moonlightmoist.shopapi.pointHistory.repository.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

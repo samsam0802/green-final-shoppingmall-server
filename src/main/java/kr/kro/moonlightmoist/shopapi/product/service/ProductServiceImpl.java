@@ -198,10 +198,10 @@ public class ProductServiceImpl implements ProductService{
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다. id: " + id));
 
-        Category category = categoryRepository.findById(dto.getCategory().getId()).get();
-        Brand brand = brandRepository.findById(dto.getBrand().getId()).get();
-        DeliveryPolicy deliveryPolicy = deliveryPolicyRepository.findById(dto.getDeliveryPolicy().getId()).get();
-        DetailInfo detailInfo = detailInfoRepository.findById(dto.getDetailInfo().getId()).get();
+        Category category = categoryRepository.findById(dto.getCategory().getId()).orElseThrow(EntityNotFoundException::new);
+        Brand brand = brandRepository.findById(dto.getBrand().getId()).orElseThrow(EntityNotFoundException::new);
+        DeliveryPolicy deliveryPolicy = deliveryPolicyRepository.findById(dto.getDeliveryPolicy().getId()).orElseThrow(EntityNotFoundException::new);
+        DetailInfo detailInfo = detailInfoRepository.findById(dto.getDetailInfo().getId()).orElseThrow(EntityNotFoundException::new);
 
         DetailInfo modifiedDetailInfo = detailInfo.changeDetailInfo(dto.getDetailInfo());
 

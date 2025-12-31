@@ -1,6 +1,7 @@
 package kr.kro.moonlightmoist.shopapi.coupon.service;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import kr.kro.moonlightmoist.shopapi.coupon.domain.Coupon;
 import kr.kro.moonlightmoist.shopapi.coupon.dto.CouponDto;
 import kr.kro.moonlightmoist.shopapi.coupon.dto.CouponSearchCondition;
@@ -36,14 +37,14 @@ public class CouponServiceImpl implements CouponService{
 
     @Override
     public CouponDto findCoupon(Long id) {
-        CouponDto coupon = couponRepository.findById(id).get().toDto();
+        CouponDto coupon = couponRepository.findById(id).orElseThrow(EntityNotFoundException::new).toDto();
         return coupon;
     }
 
     @Override
     @Transactional
     public Long modifyCoupon(CouponDto dto) {
-        Coupon coupon = couponRepository.findById(dto.getId()).get();
+        Coupon coupon = couponRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
         coupon.changeCoupon(dto);
         return dto.getId();
     }
