@@ -20,9 +20,10 @@ jobs:
           envs: APPLICATION_PROPERTIES
           script_stop: true
           script:
-            cd /home/ubuntu/green-final-shoppingmall-server
-            rm -rf src/main/resources/application.properties
+            cd /home/ubuntu/green-final-shoppingmall-server || exit 1
+            pwd
             git pull origin main
+            rm -f src/main/resources/application.properties
             echo "$APPLICATION_PROPERTIES" > src/main/resources/application.properties
             sudo chmod +x gradlew
             ./gradlew clean build -x test
