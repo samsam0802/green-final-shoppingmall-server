@@ -27,6 +27,9 @@ public class AdminInquiryDTO {
     private String userName;
     private String loginId;
 
+    private boolean emailAgreement;
+    private boolean smsAgreement;
+
     public static AdminInquiryDTO toEntity(Inquiry inquiry) {
         return AdminInquiryDTO.builder()
                 .id(inquiry.getId())
@@ -39,6 +42,8 @@ public class AdminInquiryDTO {
                 .answerCreatedAt(inquiry.getAnswerCreatedAt())
                 .userName(inquiry.getUser().getName())
                 .loginId(inquiry.getUser().getLoginId())
+                .emailAgreement(inquiry.isEmailAgreement())
+                .smsAgreement(inquiry.isSmsAgreement())
                 .build();
     }
 
