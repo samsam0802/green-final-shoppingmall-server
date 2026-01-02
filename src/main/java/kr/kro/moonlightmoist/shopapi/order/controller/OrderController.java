@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+@PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
 public class OrderController {
     private final PointHistoryRepository pointHistoryRepository;
 
