@@ -70,7 +70,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173",
                 "http://green-final-shoppingmall-react-ikg8.vercel.app",
-                "https://green-final-shoppingmall-react-ikg8.vercel.app"
+                "https://green-final-shoppingmall-react-ikg8.vercel.app",
+                "http://green-final-shoppingmall-react.vercel.app",
+                "https://green-final-shoppingmall-react.vercel.app",
+                "http://moisture-village.kro.kr",
+                "https://moisture-village.kro.kr"
                 ));
 //        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowedHeaders(List.of("*")); // 수정 BY 병국
