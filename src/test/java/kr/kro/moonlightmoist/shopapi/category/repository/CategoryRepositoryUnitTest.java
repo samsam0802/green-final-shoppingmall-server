@@ -60,7 +60,7 @@ class CategoryRepositoryUnitTest {
 
         Category category = Category.builder()
                 .name("메이크업")
-                .depth(0)
+                .depth(1)
                 .displayOrder(0)
                 .deleted(false)
                 .build();
@@ -69,7 +69,7 @@ class CategoryRepositoryUnitTest {
 
         assertThat(savedCategory.getId()).isNotNull();
         assertThat(savedCategory.getName()).isEqualTo("메이크업");
-        assertThat(savedCategory.getDepth()).isEqualTo(0);
+        assertThat(savedCategory.getDepth()).isEqualTo(1);
         assertThat(savedCategory.getDisplayOrder()).isEqualTo(0);
         assertThat(savedCategory.isDeleted()).isFalse();
         assertThat(savedCategory.getCreatedAt()).isNotNull();
