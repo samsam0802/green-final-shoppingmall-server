@@ -101,7 +101,7 @@ public class ReviewRepositoryUnitTest {
                 .orderProduct(orderProduct)
                 .build();
         review = reviewRepository.save(review);
-        reviewComment = reviewCommentRepository.save(EntityFactory.createReviewComment(review));
+        reviewComment = reviewCommentRepository.save(EntityFactory.createReviewComment(user, review));
         reviewLike = reviewLikeRepository.save(EntityFactory.createReviewLike(user, review));
     }
 
@@ -133,6 +133,7 @@ public class ReviewRepositoryUnitTest {
         assertThat(foundReview.get().getOrderProduct().getId()).isEqualTo(product.getId());
 
         assertThat(reviewComment.getId()).isNotNull();
+        assertThat(reviewComment.getUser()).isNotNull();
         assertThat(reviewComment.getContent()).isEqualTo("리뷰댓글");
         assertThat(reviewComment.isVisible()).isTrue();
         assertThat(reviewComment.isDeleted()).isFalse();
@@ -140,6 +141,7 @@ public class ReviewRepositoryUnitTest {
         assertThat(reviewComment.getReview().getId()).isEqualTo(foundReview.get().getId());
 
         assertThat(reviewLike.getId()).isNotNull();
+        assertThat(reviewComment.getUser()).isNotNull();
         assertThat(reviewLike.isDeleted()).isFalse();
         assertThat(reviewLike.getReview()).isNotNull();
         assertThat(reviewLike.getReview().getId()).isEqualTo(foundReview.get().getId());

@@ -139,8 +139,9 @@ public class EntityFactory {
                 .build();
     }
 
-    public static ReviewComment createReviewComment(Review review){
+    public static ReviewComment createReviewComment(User user, Review review){
         return ReviewComment.builder()
+                .user(user)
                 .review(review)
                 .visible(true)
                 .deleted(false)
